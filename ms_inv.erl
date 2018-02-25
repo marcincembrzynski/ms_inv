@@ -4,16 +4,19 @@
 -export([get_from_node/3]).
 -export([get/2,add/3,remove/3]).
 -export([start/1]).
+-export([start_local/1]).
 -export([handle_call/3,handle_cast/2]).
 -behaviour(gen_server).
 
 %% initialize with list of nodes...
-
-start(N) ->
+%% move to test file
+start_local(N) ->
 	Nodes = ['n1@Marcins-MBP','n2@Marcins-MBP','n3@Marcins-MBP'],
 	ms_inv:start_link(Nodes, "i" ++ integer_to_list(N)).
 
-
+start(NodesFile) ->
+	Nodes = {ok,[Nodes]} = file:consult(NodesFile),
+	ms_inv:start_link(Nodes, "inventory_db").
 	
 
 start_link(Nodes,DBName) ->

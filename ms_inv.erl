@@ -15,7 +15,7 @@ start_local(N) ->
 	ms_inv:start_link(Nodes, "i" ++ integer_to_list(N)).
 
 start(NodesFile) ->
-	Nodes = {ok,[Nodes]} = file:consult(NodesFile),
+	{ok,[Nodes]} = file:consult(NodesFile),
 	ms_inv:start_link(Nodes, "inventory_db").
 	
 

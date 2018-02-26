@@ -2,6 +2,7 @@
 -export([test/2]).
 -export([start/1]).
 -export([populate_db/1]).
+-export([populate_db/0]).
 
 start(N) -> 
 	ms_inv_test:test(N, erlang:timestamp()).

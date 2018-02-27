@@ -6,6 +6,7 @@
 -export([start/1]).
 -export([start/0]).
 -export([start_local/1]).
+-export([terminate/2]).
 -export([handle_call/3,handle_cast/2]).
 -behaviour(gen_server).
 
@@ -60,7 +61,7 @@ cast(Node, Msg) ->
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Exteranl API for http module ????
+%%% External API for http module ????
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -72,7 +73,7 @@ get(ProductId, CountryId) ->
 	call({get_from_all, {ProductId, CountryId}}).
 
 
-%% substracts given quantity from the product inventory
+%% subtracts given quantity from the product inventory
 %% returns 
 %% {ok, {ProductId, CountryId, Version, Quantity}}
 %% {error, not_found}
@@ -219,7 +220,7 @@ get_from_all_(ProductId, CountryId, LoopData) ->
 	
 			{_Node,LatestIventory} = lists:nth(1,Sorted), 
 
-			update_nodes_with_latest_inventory(InventoryResponses,LatestIventory),
+			update_nodes_with_correct_inventory(InventoryResponses,LatestIventory),
 			%%io:format("### InventoryResponses WithoutErrorResponses: ~p~n", [InventoryResponses]),
 			
 			LatestIventory
@@ -326,24 +327,21 @@ sort_products(ProductResponses) ->
 
 
 
+%% Updates all the nodes with the correct inventory
 
+update_nodes_with_correct_inventory(InventoryResponses, CorrectIventory) ->
 
-
-%% Updates all the nodes with the latest repository
-
-update_nodes_with_latest_inventory(InventoryResponses,LatestIventory) ->
-
-	{ok,{ProductId,CountryId,Quantity,Version}} = LatestIventory,
+	{ok,{ProductId,CountryId,Quantity,Version}} = CorrectIventory,
 
 	% 1. Creates the lists of InventoryResponses not equal to LatestInventory
 
-  Filter = fun({_,Other}) -> LatestIventory /= Other end,
-	List = lists:filter(Filter,InventoryResponses),
+  Filter = fun({_,Other}) -> CorrectIventory /= Other end,
+	NotCorrectInventories = lists:filter(Filter,InventoryResponses),
 
-  % 2. Creates lists of nodes to update
+  % 2. Basesd on this creates list of nodes to update
 
   MapToNodes = fun({Node,_}) -> Node end,
-	NodesToUpdate = lists:map(MapToNodes,List),
+	NodesToUpdate = lists:map(MapToNodes, NotCorrectInventories),
 	io:format("Nodes to update ~p~n", [NodesToUpdate]),
 
 

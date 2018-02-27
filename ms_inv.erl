@@ -4,6 +4,7 @@
 -export([get_from_node/3]).
 -export([get/2,add/3,remove/3]).
 -export([start/1]).
+-export([start/0]).
 -export([start_local/1]).
 -export([handle_call/3,handle_cast/2]).
 -behaviour(gen_server).
@@ -13,6 +14,8 @@
 start_local(N) ->
 	Nodes = ['n1@Marcins-MBP','n2@Marcins-MBP','n3@Marcins-MBP'],
 	ms_inv:start_link(Nodes, "i" ++ integer_to_list(N)).
+
+start() -> start(nodes).
 
 start(NodesFile) ->
 	{ok,[Nodes]} = file:consult(NodesFile),
@@ -33,7 +36,7 @@ init([{nodes, Nodes},{dbname, DBName}]) ->
 
  	{ok, DB} = dets:open_file(DBName, [{type, set}, {file, DBName}]), 
 	
-	{ok, [{nodes, Nodes},{dbname, DBName}]}.
+	{ok, [{nodes, Nodes},{dbname, DB}]}.
 
 
 
@@ -57,34 +60,33 @@ cast(Node, Msg) ->
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Exteranl API for http module
+%%% Exteranl API for http module ????
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %% returns 
 %% {ok, {ProductId, CountryId, Version, Quantity}}
 %% {error, not_found}
-%% {erorr, locked}
+
 get(ProductId, CountryId) -> 
 	call({get_from_all, {ProductId, CountryId}}).
-%	Response = get_from_all(ProductId, CountryId), 
-%	Response.
+
 
 %% substracts given quantity from the product inventory
 %% returns 
 %% {ok, {ProductId, CountryId, Version, Quantity}}
 %% {error, not_found}
 %% {error, not_available_quantity}
+
 remove(ProductId, CountryId, Quantity) -> 
 	call({remove_from_all,{ProductId, CountryId, Quantity}}).
 
 
 
-%% adds given quantity to the prodcuct inventory
+%% adds given quantity to the product inventory
 %% returns 
 %% {ok, {ProductId, CountryId, Version, Quantity}}
-%% {error, not_found } ?? adds the new product??
-%add(ProductId, CountryId, Quantity) -> ok. 
+%% {error, not_found}
 
 add(ProductId, CountryId, Quantity) -> 
 	call({add_to_all,{ProductId, CountryId, Quantity}}).
@@ -93,28 +95,6 @@ add(ProductId, CountryId, Quantity) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Internal API
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% locks all the Exteranl API methods (get, remove, add), 
-% if locked request is rejected, 
-% questions, lock on the product level??? instead of locking whole set???
-% adds the product lock in the ets table? Loop data??
-
-%lock(ProductId, CountryId) -> oks.
-
-%unlock(ProductId, CountryId) -> ok. 
-
-% returns the product with the highest version number from all the nodes
-% returns {ok, {ProductId, CountryId, Version, Quantity}}
-
-
-% updates all the nodes with the new quantity and version
-% returns ok
-% questions, should it be cast?? 
-
-
-update_all(ProductId, CountryId, Quantity, Version) -> 
-	call({update_all,{ProductId, CountryId, Quantity, Version}}).
-
 
 %%%% Internal Calls to nodes 
 
@@ -134,6 +114,9 @@ update_node(Node, ProductId, CountryId, Quantity, Version) ->
 
 update_node_cast(Node, ProductId, CountryId, Quantity, Version) ->
 	cast(Node, {update_node_cast, {ProductId, CountryId, Quantity, Version}}).
+
+
+
 
 %%%%%%%%%%%%%%%
 %%% Call handlers
@@ -159,9 +142,13 @@ handle_call({add_to_all, {ProductId, CountryId, Quantity}}, _From, LoopData) ->
 	{reply, update_all(ProductId, CountryId, Quantity, Operation, LoopData), LoopData}.
 
 
+
+
 handle_cast({update_node_cast, ProductInventory}, LoopData) ->
 	update_node_(ProductInventory, LoopData),
 	{noreply, LoopData}.
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   update node handler    %
@@ -260,7 +247,7 @@ update_all(ProductId, CountryId, UpdateQuantity, Operation, LoopData) ->
 			case NewQuantity >= 0 of
 				
 				false -> 
-					{error, not_allowed};
+					{error, not_available_quantity};
 				true ->
 					NewProductInventory = {ProductId, CountryId, NewQuantity, Version},
 					update_all(NewProductInventory, LoopData)
@@ -296,7 +283,7 @@ update_all(ProductInventory, LoopData) ->
 %
 %
 
-db([{nodes, _Nodes},{dbname, DBName}]) -> DBName.
+db([{nodes, _Nodes},{dbname, DB}]) -> DB.
 
 inv_nodes([{nodes, Nodes},{dbname, _DBName}]) -> Nodes.
 

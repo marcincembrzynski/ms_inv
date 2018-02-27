@@ -219,8 +219,7 @@ get_from_all_(ProductId, CountryId, LoopData) ->
 	
 			{_Node,LatestIventory} = lists:nth(1,Sorted), 
 
-			NodesToUpdate = nodes_to_update(InventoryResponses,LatestIventory),
-			io:format("### nodes to update: ~p~n", [NodesToUpdate]),
+			update_nodes_with_latest_inventory(InventoryResponses,LatestIventory),
 			%%io:format("### InventoryResponses WithoutErrorResponses: ~p~n", [InventoryResponses]),
 			
 			LatestIventory
@@ -329,22 +328,27 @@ sort_products(ProductResponses) ->
 
 
 
-%%% filter
-%% list of the nodes to update, nodes which have different inventory...
-nodes_to_update(InventoryResponses,LatestIventory) ->
-	
-	Filter = fun({_,Other}) -> LatestIventory /= Other end, 
+
+%% Updates all the nodes with the latest repository
+
+update_nodes_with_latest_inventory(InventoryResponses,LatestIventory) ->
+
+	{ok,{ProductId,CountryId,Quantity,Version}} = LatestIventory,
+
+	% 1. Creates the lists of InventoryResponses not equal to LatestInventory
+
+  Filter = fun({_,Other}) -> LatestIventory /= Other end,
 	List = lists:filter(Filter,InventoryResponses),
 
+  % 2. Creates lists of nodes to update
 
-	MapToNodes = fun({Node,_}) -> Node end,
-
+  MapToNodes = fun({Node,_}) -> Node end,
 	NodesToUpdate = lists:map(MapToNodes,List),
-	io:format("### Nodes to update ~p~n", [NodesToUpdate]),
+	io:format("Nodes to update ~p~n", [NodesToUpdate]),
 
 
-	UpdateNodeCast = fun(Node) -> 
-		{ok,{ProductId,CountryId,Quantity,Version}} = LatestIventory,
+  % 3. Updates all the nodes from the list with the latest repository
+	UpdateNodeCast = fun(Node) ->
 		ms_inv:update_node_cast(Node, ProductId,CountryId,Quantity,Version) 
 	end,
 

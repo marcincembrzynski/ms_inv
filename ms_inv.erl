@@ -267,11 +267,8 @@ inv_nodes([{nodes, Nodes},{dbname, _DBName}]) -> Nodes.
 
 exclude_current_node(Nodes) ->
 
-	Filter = fun(Node) ->
-		Node /= node()
-	end,
-
-	lists:filter(Filter, Nodes).
+	Filter = fun(Node) -> Node /= node() end,
+  lists:filter(Filter, Nodes).
 
 %%%%
 %%%% excludes error respones 
@@ -283,13 +280,12 @@ exclude_error_responses(InventoryResponses) ->
 
   lists:filter(Filter, InventoryResponses).
 
-
 not_error_response({_,{error, _}}) -> false;
 not_error_response({_,{ok,_}}) -> true.
 
-%%%%
+
 sort_inventories(InventoryResponses) ->
-	
+
   ReverseSort = fun(A,B) ->
     {_,{ok,{_, _, _, T1}}} = A,
     {_,{ok,{_, _, _, T2}}} = B,

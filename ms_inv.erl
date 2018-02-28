@@ -329,7 +329,7 @@ sort_inventories(InventoryResponses) ->
 
 update_nodes_with_latest_inventory(InventoryResponses, LatestInventory) ->
 
-	{ok,{ProductId, CountryId, Quantity, Version}} = LatestInventory,
+  {ok,{ProductId, CountryId, Quantity, Version}} = LatestInventory,
 
 	% 1. Creates the lists of InventoryResponses not equal to LatestInventory
 
@@ -344,7 +344,7 @@ update_nodes_with_latest_inventory(InventoryResponses, LatestInventory) ->
 
 
   % 3. Updates all the nodes from the list with the latest repository
-	UpdateNodeCast = fun(Node) ->
+  UpdateNodeCast = fun(Node) ->
 		ms_inv:update_node_cast(Node, ProductId, CountryId, Quantity, Version)
 	end,
 

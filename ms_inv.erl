@@ -32,31 +32,27 @@ start_link(Nodes,DBName) ->
 
 init([{nodes, Nodes},{dbname, DBName}]) -> 
 
-	PingNode = fun(N) -> net_adm:ping(N) end,
-	lists:foreach(PingNode, Nodes),
-
- 	{ok, DB} = dets:open_file(DBName, [{type, set}, {file, DBName}]), 
-	
-	{ok, [{nodes, Nodes},{dbname, DB}]}.
-
-
+  PingNode = fun(N) -> net_adm:ping(N) end,
+  lists:foreach(PingNode, Nodes),
+  {ok, DB} = dets:open_file(DBName, [{type, set}, {file, DBName}]),
+  {ok, [{nodes, Nodes},{dbname, DB}]}.
 
 stop() ->
-	gen_server:cast(?MODULE, stop).
+  gen_server:cast(?MODULE, stop).
 
 
 terminate(_Reason, DB) ->
-	dets:close(DB),
-	ok.
+  dets:close(DB),
+  ok.
 
 call(Msg) -> 
-	gen_server:call(?MODULE, Msg).
+  gen_server:call(?MODULE, Msg).
 
 call(Node, Msg) -> 
-	gen_server:call({?MODULE,Node}, Msg).
+  gen_server:call({?MODULE,Node}, Msg).
 
 cast(Node, Msg) -> 
-	gen_server:cast({?MODULE,Node}, Msg).
+  gen_server:cast({?MODULE,Node}, Msg).
 
 
 
@@ -70,7 +66,7 @@ cast(Node, Msg) ->
 %% {error, not_found}
 
 get(ProductId, CountryId) -> 
-	call({get_from_all, {ProductId, CountryId}}).
+  call({get_from_all, {ProductId, CountryId}}).
 
 
 %% subtracts given quantity from the product inventory
@@ -90,7 +86,7 @@ remove(ProductId, CountryId, Quantity) ->
 %% {error, not_found}
 
 add(ProductId, CountryId, Quantity) -> 
-	call({add_to_all,{ProductId, CountryId, Quantity}}).
+  call({add_to_all,{ProductId, CountryId, Quantity}}).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -315,9 +315,7 @@ sort_inventories(InventoryResponses) ->
     T1 >= T2
   end,
 
-	
-	lists:sort(ReverseSort, InventoryResponses).
-
+  lists:sort(ReverseSort, InventoryResponses).
 
 
 %% Updates all the nodes with the correct inventory

@@ -240,7 +240,7 @@ update_all(ProductId, CountryId, UpdateQuantity, Operation, LoopData) ->
         false ->
           {error, not_available_quantity};
         true ->
-	        NewProductInventory = {ProductId, CountryId, NewQuantity, Version},
+          NewProductInventory = {ProductId, CountryId, NewQuantity, Version},
           update_all(NewProductInventory, LoopData)
       end
   end.

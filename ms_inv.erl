@@ -309,16 +309,11 @@ not_error_response({_,{ok,_}}) -> true.
 %%%%
 sort_inventories(InventoryResponses) ->
 	
-	ReverseSort = fun(A,B) ->
-	
-		{_,{ok,{_, _, _, T1}}} = A,
-		{_,{ok,{_, _, _, T2}}} = B,
-
-		case (T1 >= T2) of 
-			true -> true;
-			false -> false 
-		end
-	end,
+  ReverseSort = fun(A,B) ->
+    {_,{ok,{_, _, _, T1}}} = A,
+    {_,{ok,{_, _, _, T2}}} = B,
+    T1 >= T2
+  end,
 
 	
 	lists:sort(ReverseSort, InventoryResponses).

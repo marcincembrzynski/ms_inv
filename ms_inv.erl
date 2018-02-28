@@ -339,16 +339,16 @@ update_nodes_with_latest_inventory(InventoryResponses, LatestInventory) ->
   % 2. Based on this creates list of nodes to update
 
   MapToNodes = fun({Node,_}) -> Node end,
-	NodesToUpdate = lists:map(MapToNodes, NotCorrectInventories),
-	io:format("Nodes to update ~p~n", [NodesToUpdate]),
+  NodesToUpdate = lists:map(MapToNodes, NotCorrectInventories),
+  io:format("Nodes to update ~p~n", [NodesToUpdate]),
 
 
   % 3. Updates all the nodes from the list with the latest repository
   UpdateNodeCast = fun(Node) ->
-		ms_inv:update_node_cast(Node, ProductId, CountryId, Quantity, Version)
-	end,
+    ms_inv:update_node_cast(Node, ProductId, CountryId, Quantity, Version)
+  end,
 
-	lists:foreach(UpdateNodeCast, NodesToUpdate),
+  lists:foreach(UpdateNodeCast, NodesToUpdate),
 
 	ok.
 

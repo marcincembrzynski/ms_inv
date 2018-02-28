@@ -180,19 +180,16 @@ get_from_node_response([]) -> {error, not_found}.
 %
 
 get_latest_inventory(ProductId, CountryId, LoopData) ->
-	
-	Nodes = exclude_current_node(inv_nodes(LoopData)),
 
-	GetFromNode = fun(Node, List) ->
+  Nodes = exclude_current_node(inv_nodes(LoopData)),
 
-    %%%
-		try ms_inv:get_from_node(Node, ProductId, CountryId) of
-
-			ProductResponse -> [{Node, ProductResponse}] ++ List
-		catch 
-			_:_ -> List
-		end
-	end, 
+  GetFromNode = fun(Node, List) ->
+    try ms_inv:get_from_node(Node, ProductId, CountryId) of
+      ProductResponse -> [{Node, ProductResponse}] ++ List
+    catch
+      _:_ -> List
+    end
+  end,
 
 	%%% initialize list with the value from the current node
 	List = [{node(),get_from_node_(ProductId,CountryId,LoopData)}],

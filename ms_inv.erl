@@ -220,8 +220,7 @@ update_all(ProductId, CountryId, UpdateQuantity, Operation, LoopData) ->
 
   case ProductInventoryResponse of
 		
-    {error, Error} ->
-      {error, Error};
+    {error, Error} -> {error, Error};
 
     {ok, ProductInventory} ->
       {ProductId, CountryId, Quantity, Version} = ProductInventory,
@@ -287,7 +286,7 @@ sort_inventories(InventoryResponses) ->
   lists:sort(ReverseSort, InventoryResponses).
 
 
-%% Updates all the nodes with the correct inventory
+%% Updates all the nodes with the latest inventory
 
 update_nodes_with_latest_inventory(InventoryResponses, LatestInventory) ->
 
@@ -303,7 +302,6 @@ update_nodes_with_latest_inventory(InventoryResponses, LatestInventory) ->
   MapToNodes = fun({Node,_}) -> Node end,
   NodesToUpdate = lists:map(MapToNodes, NotCorrectInventories),
   io:format("Nodes to update ~p~n", [NodesToUpdate]),
-
 
   % 3. Updates all the nodes from the list with the latest repository
   UpdateNodeCast = fun(Node) ->

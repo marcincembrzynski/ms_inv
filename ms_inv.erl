@@ -13,8 +13,8 @@
 %% initialize with list of nodes...
 %% move to test file
 start_local(N) ->
-	Nodes = ['n1@Marcins-MBP','n2@Marcins-MBP','n3@Marcins-MBP'],
-	ms_inv:start_link(Nodes, "i" ++ integer_to_list(N)).
+  Nodes = ['n1@Marcins-MBP','n2@Marcins-MBP','n3@Marcins-MBP'],
+  ms_inv:start_link(Nodes, "i" ++ integer_to_list(N)).
 
 start() -> start(nodes).
 
@@ -301,7 +301,7 @@ exclude_error_responses(InventoryResponses) ->
     not_error_response(ProductResponse)
   end,
 
-	lists:filter(Filter, InventoryResponses).
+  lists:filter(Filter, InventoryResponses).
 
 not_error_response({_,{error, _}}) -> false;
 not_error_response({_,{ok,_}}) -> true.

@@ -173,7 +173,7 @@ get_from_node_response([]) -> {error, not_found}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   get from all handler  %
+%   get latest inventory  %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Gets inventories from all nodes
@@ -191,19 +191,19 @@ get_latest_inventory(ProductId, CountryId, LoopData) ->
     end
   end,
 
-	%%% initialize list with the value from the current node
-	List = [{node(),get_from_node_(ProductId,CountryId,LoopData)}],
+  %%% initialize list with the value from the current node
+  List = [{node(),get_from_node_(ProductId,CountryId,LoopData)}],
 	
-	%%% get values from all the nodes
-	InventoryResponses = lists:foldl(GetFromNode, List, Nodes), 
-	%%io:format("##### All InventoryResponses: ~p~n", [InventoryResponses]),
+  %%% get values from all the nodes
+  InventoryResponses = lists:foldl(GetFromNode, List, Nodes),
+  %%io:format("##### All InventoryResponses: ~p~n", [InventoryResponses]),
 	
-	%%% 1. Filter
+  %%% 1. Filter
 
-	WithoutErrorResponses = exclude_error_responses(InventoryResponses),
-	io:format("##### WithoutErrorResponses: ~p~n", [WithoutErrorResponses]),
+  WithoutErrorResponses = exclude_error_responses(InventoryResponses),
+  io:format("##### WithoutErrorResponses: ~p~n", [WithoutErrorResponses]),
 
-	case WithoutErrorResponses of
+  case WithoutErrorResponses of
 		
 		[] 	  -> {error,not_found};
 		

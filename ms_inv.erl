@@ -99,9 +99,6 @@ add(ProductId, CountryId, Quantity) ->
 
 %%%% Internal Calls to nodes 
 
-%lock(Node, ProductId, CountryId) -> ok. 
-
-%unlock(Node, ProductId, CountryId) -> ok. 
 
 %%% 
 %%$ returns {ok, Product}
@@ -187,7 +184,8 @@ get_latest_inventory(ProductId, CountryId, LoopData) ->
 	Nodes = exclude_current_node(inv_nodes(LoopData)),
 
 	GetFromNode = fun(Node, List) ->
-		%%% is alive function
+
+    %%%
 		try ms_inv:get_from_node(Node, ProductId, CountryId) of
 
 			ProductResponse -> [{Node, ProductResponse}] ++ List

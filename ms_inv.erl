@@ -19,12 +19,12 @@ start_local(N) ->
 start() -> start(nodes).
 
 start(NodesFile) ->
-	{ok,[Nodes]} = file:consult(NodesFile),
-	ms_inv:start_link(Nodes, "inventory_db").
+  {ok,[Nodes]} = file:consult(NodesFile),
+  ms_inv:start_link(Nodes, "inventory_db").
 	
 
 start_link(Nodes,DBName) ->
-	gen_server:start_link({local, ?MODULE}, ?MODULE, [{nodes, Nodes},{dbname, DBName}], []).
+  gen_server:start_link({local, ?MODULE}, ?MODULE, [{nodes, Nodes},{dbname, DBName}], []).
 
 
 %%% initialize with nodes....

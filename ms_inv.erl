@@ -76,7 +76,7 @@ get(ProductId, CountryId) ->
 %% {error, not_available_quantity}
 
 remove(ProductId, CountryId, Quantity) -> 
-	call({remove_from_all,{ProductId, CountryId, Quantity}}).
+  call({remove_from_all,{ProductId, CountryId, Quantity}}).
 
 
 
@@ -118,29 +118,27 @@ update_node_cast(Node, ProductId, CountryId, Quantity, Version) ->
 %%%
 % {ProductId, CountryId, Quantity, Version}
 handle_call({update_node, Product}, _From, LoopData) ->
-	{reply, update_node_(Product, LoopData), LoopData};
+  {reply, update_node_(Product, LoopData), LoopData};
 
 
 handle_call({get_from_node, {ProductId, CountryId}}, _From, LoopData) ->
-	{reply, get_from_node_(ProductId, CountryId, LoopData), LoopData};
+  {reply, get_from_node_(ProductId, CountryId, LoopData), LoopData};
 
 handle_call({get_from_all, {ProductId, CountryId}}, _From, LoopData) ->
-	{reply, get_latest_inventory(ProductId, CountryId, LoopData), LoopData};
+  {reply, get_latest_inventory(ProductId, CountryId, LoopData), LoopData};
 
 handle_call({remove_from_all, {ProductId, CountryId, Quantity}}, _From, LoopData) ->
-	Operation = fun(A,B) -> A - B end,
-	{reply, update_all(ProductId, CountryId, Quantity, Operation, LoopData), LoopData};
+  Operation = fun(A,B) -> A - B end,
+  {reply, update_all(ProductId, CountryId, Quantity, Operation, LoopData), LoopData};
 
 handle_call({add_to_all, {ProductId, CountryId, Quantity}}, _From, LoopData) ->
-	Operation = fun(A,B) -> A + B end,
-	{reply, update_all(ProductId, CountryId, Quantity, Operation, LoopData), LoopData}.
-
-
+  Operation = fun(A,B) -> A + B end,
+  {reply, update_all(ProductId, CountryId, Quantity, Operation, LoopData), LoopData}.
 
 
 handle_cast({update_node_cast, ProductInventory}, LoopData) ->
-	update_node_(ProductInventory, LoopData),
-	{noreply, LoopData}.
+  update_node_(ProductInventory, LoopData),
+  {noreply, LoopData}.
 
 
 

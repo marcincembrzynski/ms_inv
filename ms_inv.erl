@@ -1,11 +1,9 @@
 -module(ms_inv).
 -export([start_link/2,init/1,stop/0]).
--export([update_node/5,update_node_cast/5]).
+-export([update_node_cast/5]).
 -export([get_from_node/3]).
 -export([get/2,add/3,remove/3]).
--export([start/1]).
--export([start/0]).
--export([start_local/1]).
+-export([start/1,start/0,start_local/1]).
 -export([terminate/2]).
 -export([handle_call/3,handle_cast/2]).
 -behaviour(gen_server).
@@ -210,7 +208,6 @@ get_latest_inventory(ProductId, CountryId, LoopData) ->
       %%io:format("### InventoryResponses WithoutErrorResponses: ~p~n", [InventoryResponses]),
 			
       LatestIventory
-      %%{LatestIventory, {nodes_to_update, NodesToUpdate}, {inventory_reponses, InventoryResponses}}
   end.
 
 	%%%

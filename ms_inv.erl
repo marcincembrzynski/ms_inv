@@ -331,7 +331,7 @@ update_nodes_with_latest_inventory(InventoryResponses, LatestInventory) ->
 
   {ok,{ProductId, CountryId, Quantity, Version}} = LatestInventory,
 
-	% 1. Creates the lists of InventoryResponses not equal to LatestInventory
+  % 1. Creates the lists of InventoryResponses not equal to LatestInventory
 
   Filter = fun({_,Other}) -> LatestInventory /= Other end,
 	NotCorrectInventories = lists:filter(Filter, InventoryResponses),

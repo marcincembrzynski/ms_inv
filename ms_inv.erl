@@ -66,7 +66,7 @@ cast(Node, Msg) ->
 
 
 %% returns 
-%% {ok, {ProductId, CountryId, Version, Quantity}}
+%% {ok, {ProductId, CountryId, Quantity, Version}}
 %% {error, not_found}
 
 get(ProductId, CountryId) -> 
@@ -75,7 +75,7 @@ get(ProductId, CountryId) ->
 
 %% subtracts given quantity from the product inventory
 %% returns 
-%% {ok, {ProductId, CountryId, Version, Quantity}}
+%% {ok, {ProductId, CountryId, Quantity, Version}}
 %% {error, not_found}
 %% {error, not_available_quantity}
 
@@ -86,7 +86,7 @@ remove(ProductId, CountryId, Quantity) ->
 
 %% adds given quantity to the product inventory
 %% returns 
-%% {ok, {ProductId, CountryId, Version, Quantity}}
+%% {ok, {ProductId, CountryId, Quantity, Version}}
 %% {error, not_found}
 
 add(ProductId, CountryId, Quantity) -> 
@@ -277,8 +277,6 @@ update_all(ProductInventory, LoopData) ->
 	get_from_node_(ProductId, CountryId, LoopData).
 
 
-
-	
 
 %%%%%%
 % helper functions 

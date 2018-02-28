@@ -132,7 +132,7 @@ handle_call({get_from_node, {ProductId, CountryId}}, _From, LoopData) ->
 	{reply, get_from_node_(ProductId, CountryId, LoopData), LoopData};
 
 handle_call({get_from_all, {ProductId, CountryId}}, _From, LoopData) ->
-	{reply, get_from_all_(ProductId, CountryId, LoopData), LoopData};
+	{reply, get_latest_inventory(ProductId, CountryId, LoopData), LoopData};
 
 handle_call({remove_from_all, {ProductId, CountryId, Quantity}}, _From, LoopData) ->
 	Operation = fun(A,B) -> A - B end,
@@ -179,8 +179,10 @@ get_from_node_response([]) -> {error, not_found}.
 %   get from all handler  %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Gets inventories from all nodes
+%
 
-get_from_all_(ProductId, CountryId, LoopData) -> 
+get_latest_inventory(ProductId, CountryId, LoopData) ->
 	
 	Nodes = exclude_current_node(inv_nodes(LoopData)),
 
@@ -213,14 +215,14 @@ get_from_all_(ProductId, CountryId, LoopData) ->
 		[_|_] ->  
 			
 			%%% 2. Sort 
-			Sorted = sort_products(WithoutErrorResponses),
+			Sorted = sort_inventories(WithoutErrorResponses),
 
 			%%% 3 cast for tail of the sorted list??? node needed
 			%%% get tail of the, 
 	
 			{_Node,LatestIventory} = lists:nth(1,Sorted), 
 
-			update_nodes_with_correct_inventory(InventoryResponses,LatestIventory),
+			update_nodes_with_latest_inventory(InventoryResponses,LatestIventory),
 			%%io:format("### InventoryResponses WithoutErrorResponses: ~p~n", [InventoryResponses]),
 			
 			LatestIventory
@@ -232,7 +234,7 @@ get_from_all_(ProductId, CountryId, LoopData) ->
 
 update_all(ProductId, CountryId, UpdateQuantity, Operation, LoopData) ->
 	
-	ProductInventoryResponse = get_from_all_(ProductId, CountryId, LoopData),
+	ProductInventoryResponse = get_latest_inventory(ProductId, CountryId, LoopData),
 	io:format("ProductInventoryResponse ##, ~p~n", [ProductInventoryResponse]), 
 
 	case ProductInventoryResponse of
@@ -258,7 +260,7 @@ update_all(ProductId, CountryId, UpdateQuantity, Operation, LoopData) ->
 
 
 
-
+%%%%% change name
 
 update_all(ProductInventory, LoopData) ->
 	{ProductId, CountryId, Quantity, Version} = ProductInventory,
@@ -297,19 +299,19 @@ exclude_current_node(Nodes) ->
 
 %%%%
 %%%% excludes error respones 
-exclude_error_responses(ProductResponses) ->
+exclude_error_responses(InventoryResponses) ->
 	
 	Filter = fun(ProductResponse) ->
-		correct_response(ProductResponse)
+		not_error_response(ProductResponse)
 	end,
 
-	lists:filter(Filter,ProductResponses).
+	lists:filter(Filter, InventoryResponses).
 
-correct_response({_,{error, _}}) -> false;
-correct_response({_,{ok,_}}) -> true.
+not_error_response({_,{error, _}}) -> false;
+not_error_response({_,{ok,_}}) -> true.
 
 %%%%
-sort_products(ProductResponses) ->
+sort_inventories(InventoryResponses) ->
 	
 	ReverseSort = fun(A,B) ->
 	
@@ -323,22 +325,22 @@ sort_products(ProductResponses) ->
 	end,
 
 	
-	lists:sort(ReverseSort, ProductResponses).
+	lists:sort(ReverseSort, InventoryResponses).
 
 
 
 %% Updates all the nodes with the correct inventory
 
-update_nodes_with_correct_inventory(InventoryResponses, CorrectIventory) ->
+update_nodes_with_latest_inventory(InventoryResponses, LatestInventory) ->
 
-	{ok,{ProductId,CountryId,Quantity,Version}} = CorrectIventory,
+	{ok,{ProductId, CountryId, Quantity, Version}} = LatestInventory,
 
 	% 1. Creates the lists of InventoryResponses not equal to LatestInventory
 
-  Filter = fun({_,Other}) -> CorrectIventory /= Other end,
-	NotCorrectInventories = lists:filter(Filter,InventoryResponses),
+  Filter = fun({_,Other}) -> LatestInventory /= Other end,
+	NotCorrectInventories = lists:filter(Filter, InventoryResponses),
 
-  % 2. Basesd on this creates list of nodes to update
+  % 2. Based on this creates list of nodes to update
 
   MapToNodes = fun({Node,_}) -> Node end,
 	NodesToUpdate = lists:map(MapToNodes, NotCorrectInventories),
@@ -347,7 +349,7 @@ update_nodes_with_correct_inventory(InventoryResponses, CorrectIventory) ->
 
   % 3. Updates all the nodes from the list with the latest repository
 	UpdateNodeCast = fun(Node) ->
-		ms_inv:update_node_cast(Node, ProductId,CountryId,Quantity,Version) 
+		ms_inv:update_node_cast(Node, ProductId, CountryId, Quantity, Version)
 	end,
 
 	lists:foreach(UpdateNodeCast, NodesToUpdate),

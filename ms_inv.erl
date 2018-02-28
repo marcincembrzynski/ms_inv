@@ -350,6 +350,6 @@ update_nodes_with_latest_inventory(InventoryResponses, LatestInventory) ->
 
   lists:foreach(UpdateNodeCast, NodesToUpdate),
 
-	ok.
+  ok.
 
 

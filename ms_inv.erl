@@ -101,11 +101,6 @@ add(ProductId, CountryId, Quantity) ->
 get_from_node(Node, ProductId, CountryId) ->
 	call(Node, {get_from_node, {ProductId, CountryId}}). 
 
-%%%
-update_node(Node, ProductId, CountryId, Quantity, Version) -> 
-	call(Node, {update_node, {ProductId, CountryId, Quantity, Version}}). 
-
-
 update_node_cast(Node, ProductId, CountryId, Quantity, Version) ->
 	cast(Node, {update_node_cast, {ProductId, CountryId, Quantity, Version}}).
 

@@ -223,28 +223,27 @@ get_latest_inventory(ProductId, CountryId, LoopData) ->
 
 update_all(ProductId, CountryId, UpdateQuantity, Operation, LoopData) ->
 	
-	ProductInventoryResponse = get_latest_inventory(ProductId, CountryId, LoopData),
-	io:format("ProductInventoryResponse ##, ~p~n", [ProductInventoryResponse]), 
+  ProductInventoryResponse = get_latest_inventory(ProductId, CountryId, LoopData),
+  io:format("ProductInventoryResponse ##, ~p~n", [ProductInventoryResponse]),
 
-	case ProductInventoryResponse of
+  case ProductInventoryResponse of
 		
-		{error, Error} -> 
-			{error, Error};
+    {error, Error} ->
+      {error, Error};
 
-		{ok, ProductInventory} ->		
-			{ProductId, CountryId, Quantity, Version} = ProductInventory,
-			NewQuantity = apply(Operation,[Quantity,UpdateQuantity]),
+    {ok, ProductInventory} ->
+      {ProductId, CountryId, Quantity, Version} = ProductInventory,
+      NewQuantity = apply(Operation,[Quantity,UpdateQuantity]),
 
-			case NewQuantity >= 0 of
+      case NewQuantity >= 0 of
 				
-				false -> 
-					{error, not_available_quantity};
-				true ->
-					NewProductInventory = {ProductId, CountryId, NewQuantity, Version},
-					update_all(NewProductInventory, LoopData)
-			end
-
-	end.
+        false ->
+          {error, not_available_quantity};
+        true ->
+	        NewProductInventory = {ProductId, CountryId, NewQuantity, Version},
+          update_all(NewProductInventory, LoopData)
+      end
+  end.
 
 
 

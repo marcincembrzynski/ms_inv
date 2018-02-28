@@ -118,11 +118,11 @@ update_node_cast(Node, ProductId, CountryId, Quantity, Version) ->
 %%%
 % {ProductId, CountryId, Quantity, Version}
 handle_call({update_node, Product}, _From, LoopData) ->
-  {reply, update_node_(Product, LoopData), LoopData};
+  {reply, update_current_node(Product, LoopData), LoopData};
 
 
 handle_call({get_from_node, {ProductId, CountryId}}, _From, LoopData) ->
-  {reply, get_from_node_(ProductId, CountryId, LoopData), LoopData};
+  {reply, get_from_current_node(ProductId, CountryId, LoopData), LoopData};
 
 handle_call({get_from_all, {ProductId, CountryId}}, _From, LoopData) ->
   {reply, get_latest_inventory(ProductId, CountryId, LoopData), LoopData};
@@ -137,7 +137,7 @@ handle_call({add_to_all, {ProductId, CountryId, Quantity}}, _From, LoopData) ->
 
 
 handle_cast({update_node_cast, ProductInventory}, LoopData) ->
-  update_node_(ProductInventory, LoopData),
+  update_current_node(ProductInventory, LoopData),
   {noreply, LoopData}.
 
 
@@ -147,7 +147,7 @@ handle_cast({update_node_cast, ProductInventory}, LoopData) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-update_node_(ProductInventory, LoopData) -> 
+update_current_node(ProductInventory, LoopData) ->
 	{ProductId, CountryId, Quantity, Version} = ProductInventory,
 	dets:insert(db(LoopData), {{ProductId, CountryId}, Quantity, Version}),
 	{ok, ProductInventory}.
@@ -156,14 +156,14 @@ update_node_(ProductInventory, LoopData) ->
 %   get from node handler  %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-get_from_node_(ProductId, CountryId, LoopData) ->
+get_from_current_node(ProductId, CountryId, LoopData) ->
 	Result = dets:lookup(db(LoopData), {ProductId, CountryId}),
-	get_from_node_response(Result).
+	get_from_current_node_response(Result).
 
-get_from_node_response([{{ProductId,CountryId},Quantity,Version}]) ->
+get_from_current_node_response([{{ProductId,CountryId},Quantity,Version}]) ->
 	{ok, {ProductId,CountryId,Quantity,Version}};
 
-get_from_node_response([]) -> {error, not_found}.
+get_from_current_node_response([]) -> {error, not_found}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -186,7 +186,7 @@ get_latest_inventory(ProductId, CountryId, LoopData) ->
   end,
 
   %%% initialize list with the value from the current node
-  List = [{node(),get_from_node_(ProductId,CountryId,LoopData)}],
+  List = [{node(), get_from_current_node(ProductId,CountryId,LoopData)}],
 	
   %%% get values from all the nodes
   InventoryResponses = lists:foldl(GetFromNode, List, Nodes),
@@ -240,29 +240,19 @@ update_all(ProductId, CountryId, UpdateQuantity, Operation, LoopData) ->
         false ->
           {error, not_available_quantity};
         true ->
-          NewProductInventory = {ProductId, CountryId, NewQuantity, Version},
-          update_all(NewProductInventory, LoopData)
+          Nodes = exclude_current_node(inv_nodes(LoopData)),
+          NewVersion = Version + 1,
+          update_current_node({ProductId, CountryId, NewQuantity, NewVersion}, LoopData),
+
+          UpdateNode = fun(Node) ->
+            ms_inv:update_node_cast(Node, ProductId,CountryId, NewQuantity, NewVersion)
+          end,
+
+          lists:foreach(UpdateNode,Nodes),
+          get_from_current_node(ProductId, CountryId, LoopData)
       end
   end.
 
-
-
-
-%%%%% change name
-
-update_all(ProductInventory, LoopData) ->
-	{ProductId, CountryId, Quantity, Version} = ProductInventory,
-	Nodes = exclude_current_node(inv_nodes(LoopData)),
-	NewVersion = Version + 1,
-	update_node_({ProductId, CountryId, Quantity, NewVersion}, LoopData),
-
-	UpdateNode = fun(Node) ->
-		ms_inv:update_node_cast(Node, ProductId,CountryId, Quantity, NewVersion) 
-	end,
-
-	lists:foreach(UpdateNode,Nodes),
-	io:format("#### after update..."),
-	get_from_node_(ProductId, CountryId, LoopData).
 
 
 
@@ -292,6 +282,7 @@ exclude_error_responses(InventoryResponses) ->
   end,
 
   lists:filter(Filter, InventoryResponses).
+
 
 not_error_response({_,{error, _}}) -> false;
 not_error_response({_,{ok,_}}) -> true.

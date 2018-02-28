@@ -205,24 +205,24 @@ get_latest_inventory(ProductId, CountryId, LoopData) ->
 
   case WithoutErrorResponses of
 		
-		[] 	  -> {error,not_found};
+    [] 	  -> {error,not_found};
 		
-		[_|_] ->  
+    [_|_] ->
 			
-			%%% 2. Sort 
-			Sorted = sort_inventories(WithoutErrorResponses),
+      %%% 2. Sort
+      Sorted = sort_inventories(WithoutErrorResponses),
 
-			%%% 3 cast for tail of the sorted list??? node needed
-			%%% get tail of the, 
+      %%% 3 cast for tail of the sorted list??? node needed
+      %%% get tail of the,
 	
-			{_Node,LatestIventory} = lists:nth(1,Sorted), 
+      {_Node,LatestIventory} = lists:nth(1,Sorted),
 
-			update_nodes_with_latest_inventory(InventoryResponses,LatestIventory),
-			%%io:format("### InventoryResponses WithoutErrorResponses: ~p~n", [InventoryResponses]),
+      update_nodes_with_latest_inventory(InventoryResponses,LatestIventory),
+      %%io:format("### InventoryResponses WithoutErrorResponses: ~p~n", [InventoryResponses]),
 			
-			LatestIventory
-			%%{LatestIventory, {nodes_to_update, NodesToUpdate}, {inventory_reponses, InventoryResponses}}
-	end.
+      LatestIventory
+      %%{LatestIventory, {nodes_to_update, NodesToUpdate}, {inventory_reponses, InventoryResponses}}
+  end.
 
 	%%%
 

@@ -297,9 +297,9 @@ exclude_current_node(Nodes) ->
 %%%% excludes error respones 
 exclude_error_responses(InventoryResponses) ->
 	
-	Filter = fun(ProductResponse) ->
-		not_error_response(ProductResponse)
-	end,
+  Filter = fun(ProductResponse) ->
+    not_error_response(ProductResponse)
+  end,
 
 	lists:filter(Filter, InventoryResponses).
 

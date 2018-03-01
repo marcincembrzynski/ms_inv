@@ -1,32 +1,18 @@
 -module(ms_inv).
--export([start_link/2,init/1,stop/0]).
+-export([start_link/0,init/1,stop/0]).
 -export([update_node_cast/5]).
 -export([get_from_node/3]).
 -export([get/2,add/3,remove/3]).
--export([start/1,start/0,start_local/1]).
 -export([terminate/2]).
 -export([handle_call/3,handle_cast/2]).
 -behaviour(gen_server).
 
-%% initialize with list of nodes...
-%% move to test file
-start_local(N) ->
-  Nodes = ['n1@Marcins-MBP','n2@Marcins-MBP','n3@Marcins-MBP'],
-  ms_inv:start_link(Nodes, "i" ++ integer_to_list(N)).
 
-start() -> start(nodes).
-
-start(NodesFile) ->
-  {ok,[Nodes]} = file:consult(NodesFile),
-  ms_inv:start_link(Nodes, "inventory_db").
-	
-
-start_link(Nodes,DBName) ->
+start_link() ->
+  [DBName|_] = string:split(atom_to_list(node()),"@"),
+  {ok,[Nodes]} = file:consult(nodes),
   gen_server:start_link({local, ?MODULE}, ?MODULE, [{nodes, Nodes},{dbname, DBName}], []).
 
-
-%%% initialize with nodes....
-%%% db names... 	
 
 init([{nodes, Nodes},{dbname, DBName}]) -> 
 
@@ -129,6 +115,8 @@ handle_call({add_to_all, {ProductId, CountryId, Quantity}}, _From, LoopData) ->
   {reply, update_all(ProductId, CountryId, Quantity, Operation, LoopData), LoopData}.
 
 
+handle_cast(stop, LoopData) -> {stop, normal, LoopData};
+
 handle_cast({update_node_cast, ProductInventory}, LoopData) ->
   update_current_node(ProductInventory, LoopData),
   {noreply, LoopData}.
@@ -141,9 +129,9 @@ handle_cast({update_node_cast, ProductInventory}, LoopData) ->
 
 
 update_current_node(ProductInventory, LoopData) ->
-	{ProductId, CountryId, Quantity, Version} = ProductInventory,
-	dets:insert(db(LoopData), {{ProductId, CountryId}, Quantity, Version}),
-	{ok, ProductInventory}.
+  {ProductId, CountryId, Quantity, Version} = ProductInventory,
+  ok = dets:insert(db(LoopData), {{ProductId, CountryId}, Quantity, Version}),
+  {ok, ProductInventory}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   get from node handler  %
@@ -245,11 +233,8 @@ update_all(ProductId, CountryId, UpdateQuantity, Operation, LoopData) ->
   end.
 
 
-
-
 %%%%%%
 % helper functions 
-%
 %
 
 db([{nodes, _Nodes},{dbname, DB}]) -> DB.

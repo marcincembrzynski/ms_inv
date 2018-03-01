@@ -176,7 +176,7 @@ get_latest_inventory(ProductId, CountryId, LoopData) ->
   %%% 1. Filter
 
   WithoutErrorResponses = exclude_error_responses(InventoryResponses),
-  io:format("##### WithoutErrorResponses: ~p~n", [WithoutErrorResponses]),
+  %%io:format("##### WithoutErrorResponses: ~p~n", [WithoutErrorResponses]),
 
   case WithoutErrorResponses of
 		
@@ -204,7 +204,7 @@ get_latest_inventory(ProductId, CountryId, LoopData) ->
 update_all(ProductId, CountryId, UpdateQuantity, Operation, LoopData) ->
 	
   ProductInventoryResponse = get_latest_inventory(ProductId, CountryId, LoopData),
-  io:format("ProductInventoryResponse ##, ~p~n", [ProductInventoryResponse]),
+  %%io:format("ProductInventoryResponse ##, ~p~n", [ProductInventoryResponse]),
 
   case ProductInventoryResponse of
 		
@@ -286,7 +286,7 @@ update_nodes_with_latest_inventory(InventoryResponses, LatestInventory) ->
 
   MapToNodes = fun({Node,_}) -> Node end,
   NodesToUpdate = lists:map(MapToNodes, NotCorrectInventories),
-  io:format("Nodes to update ~p~n", [NodesToUpdate]),
+  %%io:format("Nodes to update ~p~n", [NodesToUpdate]),
 
   % 3. Updates all the nodes from the list with the latest repository
   UpdateNodeCast = fun(Node) ->

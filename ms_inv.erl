@@ -5,6 +5,7 @@
 -export([get/2,add/3,remove/3]).
 -export([terminate/2]).
 -export([handle_call/3,handle_cast/2]).
+-export([lock/0,unlock/0]).
 -behaviour(gen_server).
 
 
@@ -12,15 +13,15 @@ start_link() ->
   [DBName|_] = string:split(atom_to_list(node()),"@"),
   {ok,[Nodes]} = file:consult(nodes),
   io:format("# initializing with nodes ~p~n",[Nodes]),
-  gen_server:start_link({local, ?MODULE}, ?MODULE, [{nodes, Nodes},{dbname, DBName}], []).
+  gen_server:start_link({local, ?MODULE}, ?MODULE, [{{nodes, Nodes},{dbname, DBName},{locked,false}}], []).
 
 
-init([{nodes, Nodes},{dbname, DBName}]) -> 
+init([{{nodes, Nodes},{dbname, DBName},{locked,false}}]) ->
 
   PingNode = fun(N) -> net_adm:ping(N) end,
   lists:foreach(PingNode, Nodes),
   {ok, DB} = dets:open_file(DBName, [{type, set}, {file, DBName}]),
-  {ok, [{nodes, Nodes},{dbname, DB}]}.
+  {ok, [{{nodes, Nodes},{dbname, DB},{lock,false}}]}.
 
 stop() ->
   gen_server:cast(?MODULE, stop).
@@ -58,7 +59,7 @@ get(ProductId, CountryId) ->
 %% {ok, {ProductId, CountryId, Quantity, Version}}
 %% {error, not_found}
 %% {error, not_available_quantity}
-remove(ProductId, CountryId, Quantity) -> 
+remove(ProductId, CountryId, Quantity) ->
   call({remove_from_all,{ProductId, CountryId, Quantity}}).
 
 
@@ -68,6 +69,11 @@ remove(ProductId, CountryId, Quantity) ->
 %% {error, not_found}
 add(ProductId, CountryId, Quantity) -> 
   call({add_to_all,{ProductId, CountryId, Quantity}}).
+
+
+lock() -> call({lock, true}).
+
+unlock() -> call({lock, false}).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -107,12 +113,37 @@ handle_call({get_from_all, {ProductId, CountryId}}, _From, LoopData) ->
   {reply, get_latest_inventory(ProductId, CountryId, LoopData), LoopData};
 
 handle_call({remove_from_all, {ProductId, CountryId, Quantity}}, _From, LoopData) ->
+
+
   Operation = fun(A,B) -> A - B end,
-  {reply, update_all(ProductId, CountryId, Quantity, Operation, LoopData), LoopData};
+  %Reply = update_all(ProductId, CountryId, Quantity, Operation, LoopData),
+  %{reply, Reply, LoopData};
+  check_lock(ProductId, CountryId, Quantity, LoopData, Operation);
+
+
 
 handle_call({add_to_all, {ProductId, CountryId, Quantity}}, _From, LoopData) ->
   Operation = fun(A,B) -> A + B end,
-  {reply, update_all(ProductId, CountryId, Quantity, Operation, LoopData), LoopData}.
+  %Reply = update_all(ProductId, CountryId, Quantity, Operation, LoopData),
+  check_lock(ProductId, CountryId, Quantity, LoopData, Operation).
+
+
+
+check_lock(ProductId, CountryId, Quantity, LoopData, Operation) ->
+
+  IsFree = pushbutton:is_free(),
+  io:format("# is free ~p~n", [IsFree]),
+
+  case pushbutton:is_free() of
+    false ->
+      {reply, {error, locked}, LoopData};
+    true ->
+      pushbutton:toggle(),
+      Reply = update_all(ProductId, CountryId, Quantity, Operation, LoopData),
+      pushbutton:toggle(),
+
+      {reply, Reply, LoopData}
+  end.
 
 
 handle_cast(stop, LoopData) -> {stop, normal, LoopData};
@@ -203,9 +234,12 @@ get_latest_inventory(ProductId, CountryId, LoopData) ->
 
 
 update_all(ProductId, CountryId, UpdateQuantity, Operation, LoopData) ->
-	
+
+  %io:format("#enter update all ~n"),
   ProductInventoryResponse = get_latest_inventory(ProductId, CountryId, LoopData),
-  %%io:format("ProductInventoryResponse ##, ~p~n", [ProductInventoryResponse]),
+  %%%io:format("ProductInventoryResponse ##, ~p~n", [ProductInventoryResponse]),
+
+  %io:format("### is locked ~p~n",[isLocked(LoopData)]),
 
   case ProductInventoryResponse of
 		
@@ -218,11 +252,12 @@ update_all(ProductId, CountryId, UpdateQuantity, Operation, LoopData) ->
       case NewQuantity >= 0 of
 				
         false ->
-          {error, not_available_quantity};
+          {error, not_available_quantity}, LoopData;
         true ->
           NewVersion = Version + 1,
           UpdateNode = update_node_fun_node(ProductId,CountryId, NewQuantity, NewVersion, LoopData),
           lists:foreach(UpdateNode,inv_nodes(LoopData)),
+          %%io:format("#leave update all ~n"),
           get_from_current_node(ProductId, CountryId, LoopData)
       end
   end.
@@ -232,9 +267,9 @@ update_all(ProductId, CountryId, UpdateQuantity, Operation, LoopData) ->
 % helper functions 
 %
 
-db([{nodes, _Nodes},{dbname, DB}]) -> DB.
+db([{_,{dbname, DB},_}]) -> DB.
 
-inv_nodes([{nodes, Nodes},{dbname, _DBName}]) -> Nodes.
+inv_nodes([{{nodes, Nodes},_,_}]) -> Nodes.
 
 exclude_current_node(Nodes) ->
 

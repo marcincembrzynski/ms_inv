@@ -2,7 +2,7 @@
 -behaviour(gen_server).
 -export([write/2,read/1]).
 -export([start_link/0,init/1,handle_call/3,handle_cast/2,stop/0]).
--export([read_from_local/1,read_from_remote/2,write_to_local/2,write_to_remote/3]).
+-export([read_from_local/1,read_from_remote/2,write_to_local/3,write_to_remote/4]).
 
 
 start_link() ->
@@ -41,12 +41,12 @@ read_from_remote(Node, Key) ->
   call(Node, {read_from_remote, Key}).
 
 
-write_to_local(Key, Value) ->
-  call({write_to_local, {Key, Value}}).
+write_to_local(Key, Value, Version) ->
+  call({write_to_local, {Key, Value, Version}}).
 
 
-write_to_remote(Node, Key, Value) ->
-  call(Node, {write_to_local, {Key, Value}}).
+write_to_remote(Node, Key, Value, Version) ->
+  call(Node, {write_to_local, {Key, Value, Version}}).
 
 %%% internal
 
@@ -54,10 +54,13 @@ write_to_remote(Node, Key, Value) ->
 
 
 handle_call({write, {Key, Value}}, _From, LoopData) ->
-  {reply, {write, {Key, Value}}, LoopData};
+  {reply, write_to_all(Key, Value, LoopData), LoopData};
 
-handle_call({write_to_local, {Key, Value}}, _From, LoopData) ->
-  {reply, write_to_local(Key, Value, LoopData), LoopData};
+handle_call({write_to_local, {Key, Value, Version}}, _From, LoopData) ->
+  {reply, write_to_local(Key, Value, Version, LoopData), LoopData};
+
+handle_call({write_to_remote, {Key, Value, Version}}, _From, LoopData) ->
+  {reply, write_to_local(Key, Value, Version, LoopData), LoopData};
 
 handle_call({read, Key}, _From, LoopData) ->
   {reply, read_from_all(Key,LoopData), LoopData};
@@ -89,9 +92,11 @@ read_from_all(Key,LoopData) ->
   List = [{node(), read_from_local(Key,LoopData)}],
 
   Responses = lists:foldl(GetFromNode, List, Nodes),
+  io:format("REsponses: ~p~n", [Responses]),
+
 
   WithoutErrorResponses = exclude_error_responses(Responses),
-  %%io:format("##### WithoutErrorResponses: ~p~n", [WithoutErrorResponses]),
+  io:format("##### WithoutErrorResponses: ~p~n", [WithoutErrorResponses]),
 
   case WithoutErrorResponses of
 
@@ -100,17 +105,85 @@ read_from_all(Key,LoopData) ->
     [_|_] ->
 
       %%% 2. Sort
-      Sorted = sort_inventories(WithoutErrorResponses),
+      Sorted = sort_responses(WithoutErrorResponses),
 
       %%% 3 cast for tail of the sorted list??? node needed
       %%% get tail of the,
 
-      {_Node,LatestIventory} = lists:nth(1,Sorted),
+      {_Node,Latest} = lists:nth(1,Sorted),
 
-      %update_nodes_with_latest_inventory(Responses,LatestIventory,LoopData),
+      update_nodes_with_latest(Responses, Latest, LoopData),
       %%io:format("### InventoryResponses WithoutErrorResponses: ~p~n", [InventoryResponses]),
 
-      LatestIventory
+      Latest
+  end.
+
+
+update_nodes_with_latest(Responses, Latest, LoopData) ->
+
+  {ok,{Key, Value, Version}} = Latest,
+  %io:format("#latest inventories ~p~n", [LatestInventory]),
+
+  % 1. Creates the lists of InventoryResponses not equal to LatestInventory
+
+  Filter = fun({_,Other}) -> Latest /= Other end,
+  NotCorrectInventories = lists:filter(Filter, Responses),
+
+  % 2. Based on this creates list of nodes to update
+
+  MapToNodes = fun({Node,_}) -> Node end,
+  NodesToUpdate = lists:map(MapToNodes, NotCorrectInventories),
+  %io:format("Nodes to update ~p~n", [NodesToUpdate]),
+
+  % 3. Updates all the nodes from the list with the latest repository
+  % what about the current node?
+  % remove current node...
+
+  UpdateNode = update_node_fun_node(Key, Value, Version, LoopData),
+  io:format("#nodesToupdate: ~p~n", [NodesToUpdate]),
+
+  lists:foreach(UpdateNode, NodesToUpdate),
+
+  ok.
+
+
+update_node_fun_node(Key, Value, Version, LoopData) ->
+  fun(Node) ->
+    case (node() == Node) of
+      true ->
+        write_to_local(Key,Value,Version,LoopData);
+      false ->
+        try ms_db:write_to_remote(Node, Key,Value,Version) of
+          _ -> ok
+        catch
+          _:_ ->
+            io:format("#error writing to remote~n"),
+            error
+        end
+    end
+  end.
+
+
+
+write_to_all(Key, Value, LoopData) ->
+
+  %io:format("#enter update all ~n"),
+  Response = read_from_all(Key, LoopData),
+  %%%io:format("ProductInventoryResponse ##, ~p~n", [ProductInventoryResponse]),
+  case Response of
+
+    {error, Error} -> {error, Error};
+
+    {ok, Latest} ->
+
+      io:format("### read from all ~p~n", [Latest]),
+      {Key, _, Version} = Latest,
+      %%NewQuantity = apply(Operation,[Quantity,UpdateQuantity]),
+      NewVersion = Version + 1,
+      UpdateNode = update_node_fun_node(Key, Value, NewVersion, LoopData),
+      lists:foreach(UpdateNode,db_nodes(LoopData)),
+      read_from_local(Key, LoopData)
+
   end.
 
 
@@ -118,14 +191,16 @@ read_from_all(Key,LoopData) ->
 
 read_from_local(Key, LoopData) ->
   %% process resulsts
-  Result = dets:lookup(db_ref(LoopData), Key).
+  Result = dets:lookup(db_ref(LoopData), Key),
+  case Result of
+    [] -> {error, not_found};
+    [Found] -> {ok, Found}
+  end.
 
 
-write_to_local(Key, Value, LoopData) ->
-  ok = dets:insert(db_ref(LoopData), {Key, Value}),
-  {ok, {Key,Value}}.
-
-
+write_to_local(Key, Value, Version, LoopData) ->
+  ok = dets:insert(db_ref(LoopData), {Key, Value, Version}),
+  {ok, {Key, Value, Version}}.
 
 
 db_nodes([{{nodes, Nodes},_}]) -> Nodes.
@@ -146,15 +221,15 @@ exclude_error_responses(InventoryResponses) ->
   lists:filter(Filter, InventoryResponses).
 
 
-sort_inventories(InventoryResponses) ->
+sort_responses(Responses) ->
 
   ReverseSort = fun(A,B) ->
-    {_,{ok,{_, _, _, T1}}} = A,
-    {_,{ok,{_, _, _, T2}}} = B,
+    {_,{ok,{_, _, T1}}} = A,
+    {_,{ok,{_, _, T2}}} = B,
     T1 >= T2
   end,
 
-  lists:sort(ReverseSort, InventoryResponses).
+  lists:sort(ReverseSort, Responses).
 
 
 not_error_response({_,{error, _}}) -> false;

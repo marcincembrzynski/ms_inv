@@ -3,35 +3,49 @@
 
 
 start(Processes, Requests) ->
-  init(Processes, Requests).
+  init(Processes, Requests, erlang:timestamp()).
 
-init(0,_) -> ok;
+init(0, _, _) -> ok;
 
-init(Processes,Requests) ->
+init(Processes,Requests, StartTime) ->
   Pid = spawn(?MODULE, loop, []),
-  Pid ! {requests, Requests},
+
+  Pid ! {requests, Requests, StartTime},
   NewProcesses = Processes - 1,
-  timer:sleep(10),
-  init(NewProcesses, Requests).
+  timer:sleep(2),
+  init(NewProcesses, Requests, StartTime).
 
 
 loop() ->
   receive
-    {requests, 0} ->
-      io:format("finish..... ~n");
-
-    {requests, N} ->
-
-      {ok,{9999,pl,10000, _}} = ms_inv:add(9999,pl,1),
-      {ok,{9999,pl,9999, _}} = ms_inv:remove(9999,pl,1),
-      io:format("ok ~p~n",[N]),
-
-      %{ok, {9999, pl, Q, _V}} = ms_inv:get(9999,pl),
-      %9999 = Q,
-      timer:sleep(25),
+    {requests, 0, StartTime} ->
+      io:format("#~p~n",[ms_inv:get(9999,pl)]),
+      Time = timer:now_diff(erlang:timestamp(),StartTime),
+      io:format("time: ~p~n", [Time / 1000000]);
 
 
-      self() ! {requests, N - 1},
+    {requests, N, StartTime} ->
+
+
+
+
+      ResponseRemove = ms_inv:remove(9999,pl,1),
+      case ResponseRemove of
+        {ok, _} -> ok;
+        {error, _} -> io:format("remove error ~p~n", [ResponseRemove])
+      end,
+
+      timer:sleep(2),
+
+      Response = ms_inv:add(9999,pl,1),
+      case Response of
+        {ok, _Data} -> ok;
+        {error, Error} -> io:format("add error ~p~n", [Error])
+      end,
+
+      timer:sleep(2),
+
+      self() ! {requests, N - 1, StartTime},
       loop()
 
   end.

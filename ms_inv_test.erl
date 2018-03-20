@@ -1,8 +1,12 @@
 -module(ms_inv_test).
 -export([test/2]).
 -export([test2/0]).
--export([start/1]).
+-export([start/1, start/2]).
 -export([populate_db/0]).
+
+
+start(Processes, Requests) ->
+
 
 start(N) -> 
 	ms_inv_test:test(N, erlang:timestamp()).

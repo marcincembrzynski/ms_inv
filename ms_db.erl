@@ -3,6 +3,7 @@
 -export([write/2,read/1]).
 -export([start_link/0,init/1,handle_call/3,handle_cast/2,stop/0]).
 -export([read_from_local/1,read_from_remote/2,write_to_local/3,write_to_remote/4]).
+-export([lock/0,unlock/1]).
 
 
 start_link() ->
@@ -18,7 +19,10 @@ init([{{nodes, Nodes},{dbname, DBName}}]) ->
   PingNode = fun(N) -> net_adm:ping(N) end,
   lists:foreach(PingNode, Nodes),
   {ok, DB} = dets:open_file(DBName, [{type, set}, {file, DBName}]),
-  {ok, [{{nodes, Nodes},{dbname, DB}}]}.
+  LockTable = ets:new(lockTable, []),
+  ets:delete(LockTable, lock),
+  process_flag(trap_exit, true),
+  {ok, [{{nodes, Nodes},{dbname, DB},{lockTable, LockTable}}]}.
 
 call(Msg) ->
   gen_server:call(?MODULE, Msg).
@@ -29,6 +33,14 @@ call(Node, Msg) ->
 
 write(Key, Value) ->
   call({write, {Key, Value}}).
+
+
+lock() ->
+  call(lock).
+
+unlock(Ref) ->
+  call({unlock, Ref}).
+
 
 read(Key) ->
   call({read, Key}).
@@ -48,12 +60,20 @@ write_to_local(Key, Value, Version) ->
 write_to_remote(Node, Key, Value, Version) ->
   call(Node, {write_to_local, {Key, Value, Version}}).
 
-%%% internal
 
 
+
+handle_call(lock, _From, LoopData) ->
+  {reply, lock(LoopData), LoopData};
+
+
+
+handle_call({unlock, Ref}, _From, LoopData) ->
+  {reply, unlock(Ref, LoopData), LoopData};
 
 
 handle_call({write, {Key, Value}}, _From, LoopData) ->
+
   {reply, write_to_all(Key, Value, LoopData), LoopData};
 
 handle_call({write_to_local, {Key, Value, Version}}, _From, LoopData) ->
@@ -92,11 +112,11 @@ read_from_all(Key,LoopData) ->
   List = [{node(), read_from_local(Key,LoopData)}],
 
   Responses = lists:foldl(GetFromNode, List, Nodes),
-  io:format("REsponses: ~p~n", [Responses]),
+  %io:format("REsponses: ~p~n", [Responses]),
 
 
   WithoutErrorResponses = exclude_error_responses(Responses),
-  io:format("##### WithoutErrorResponses: ~p~n", [WithoutErrorResponses]),
+  %io:format("##### WithoutErrorResponses: ~p~n", [WithoutErrorResponses]),
 
   case WithoutErrorResponses of
 
@@ -140,7 +160,7 @@ update_nodes_with_latest(Responses, Latest, LoopData) ->
   % remove current node...
 
   UpdateNode = update_node_fun_node(Key, Value, Version, LoopData),
-  io:format("#nodesToupdate: ~p~n", [NodesToUpdate]),
+  %io:format("#nodesToupdate: ~p~n", [NodesToUpdate]),
 
   lists:foreach(UpdateNode, NodesToUpdate),
 
@@ -157,7 +177,6 @@ update_node_fun_node(Key, Value, Version, LoopData) ->
           _ -> ok
         catch
           _:_ ->
-            io:format("#error writing to remote~n"),
             error
         end
     end
@@ -176,7 +195,7 @@ write_to_all(Key, Value, LoopData) ->
 
     {ok, Latest} ->
 
-      io:format("### read from all ~p~n", [Latest]),
+      %%io:format("### read from all ~p~n", [Latest]),
       {Key, _, Version} = Latest,
       %%NewQuantity = apply(Operation,[Quantity,UpdateQuantity]),
       NewVersion = Version + 1,
@@ -203,8 +222,9 @@ write_to_local(Key, Value, Version, LoopData) ->
   {ok, {Key, Value, Version}}.
 
 
-db_nodes([{{nodes, Nodes},_}]) -> Nodes.
-db_ref([{_,{dbname, DB}}]) -> DB.
+db_nodes([{{nodes, Nodes} ,_ ,_}]) -> Nodes.
+db_ref([{_,{dbname, DB},_}]) -> DB.
+lock_table([{_,_,{lockTable, LockTable}}]) -> LockTable.
 
 exclude_current_node(Nodes) ->
 
@@ -234,3 +254,23 @@ sort_responses(Responses) ->
 
 not_error_response({_,{error, _}}) -> false;
 not_error_response({_,{ok,_}}) -> true.
+
+lock(LoopData) ->
+  Result = ets:lookup(lock_table(LoopData), lock),
+  case Result of
+    [] ->
+      Ref = erlang:make_ref(),
+      ets:insert(lock_table(LoopData),{lock,Ref}),
+      {ok,Ref};
+
+    _ -> {error, locked}
+
+  end.
+
+unlock(Ref, LoopData) ->
+  Result = ets:lookup(lock_table(LoopData), lock),
+  case Result of
+    [{lock, Ref}] ->
+      ets:delete(lock_table(LoopData), lock);
+    _ -> {error, locked}
+  end .

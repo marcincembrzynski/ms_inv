@@ -10,7 +10,7 @@ stop() ->
   exit(whereis(?MODULE), shutdown).
 
 init(_) ->
-  ChildSpecList = [child(ms_inv)], {ok,{{one_for_one, 1, 10}, ChildSpecList}}.
+  ChildSpecList = [child(ms_db), child(ms_inv)], {ok,{{one_for_one, 1, 10}, ChildSpecList}}.
 
 child(Module) ->
   {Module, {Module, start_link, []},

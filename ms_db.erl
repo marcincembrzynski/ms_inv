@@ -3,7 +3,8 @@
 -export([write/2,read/1]).
 -export([start_link/0,init/1,handle_call/3,handle_cast/2,stop/0]).
 -export([read_from_local/1,read_from_remote/2,write_to_local/3,write_to_remote/4]).
--export([lock/0,unlock/1]).
+-export([write_cast/4]).
+
 
 
 start_link() ->
@@ -22,7 +23,7 @@ init([{{nodes, Nodes},{dbname, DBName}}]) ->
   LockTable = ets:new(lockTable, []),
   ets:delete(LockTable, lock),
   process_flag(trap_exit, true),
-  {ok, [{{nodes, Nodes},{dbname, DB},{lockTable, LockTable}}]}.
+  {ok, [{{nodes, Nodes},{dbname, DB}}]}.
 
 call(Msg) ->
   gen_server:call(?MODULE, Msg).
@@ -31,19 +32,18 @@ call(Node, Msg) ->
   gen_server:call({?MODULE,Node}, Msg).
 
 
+cast(Node, Msg) ->
+  gen_server:cast({?MODULE, Node}, Msg).
+
+
 write(Key, Value) ->
   call({write, {Key, Value}}).
 
 
-lock() ->
-  call(lock).
-
-unlock(Ref) ->
-  call({unlock, Ref}).
-
-
 read(Key) ->
   call({read, Key}).
+
+
 
 % remove
 read_from_local(Key) ->
@@ -60,16 +60,8 @@ write_to_local(Key, Value, Version) ->
 write_to_remote(Node, Key, Value, Version) ->
   call(Node, {write_to_local, {Key, Value, Version}}).
 
-
-
-
-handle_call(lock, _From, LoopData) ->
-  {reply, lock(LoopData), LoopData};
-
-
-
-handle_call({unlock, Ref}, _From, LoopData) ->
-  {reply, unlock(Ref, LoopData), LoopData};
+write_cast(Node, Key, Value, Version) ->
+  cast(Node, {write_to_local, {Key, Value, Version}}).
 
 
 handle_call({write, {Key, Value}}, _From, LoopData) ->
@@ -92,12 +84,19 @@ handle_call({read_from_remote, Key}, _From, LoopData) ->
   {reply, read_from_local(Key, LoopData), LoopData}.
 
 
-handle_cast(stop, LoopData) -> {stop, normal, LoopData}.
+handle_cast(stop, LoopData) -> {stop, normal, LoopData};
+
+
+handle_cast({write_to_local, {Key, Value, Version}}, LoopData) ->
+  ok = dets:insert(db_ref(LoopData), {Key, Value, Version}),
+  {noreply,LoopData}.
 
 
 read_from_all(Key,LoopData) ->
 
+
   Nodes = exclude_current_node(db_nodes(LoopData)),
+
   %io:format("# nodes, ~p~n",[Nodes]),
 
   GetFromNode = fun(Node, List) ->
@@ -173,12 +172,7 @@ update_node_fun_node(Key, Value, Version, LoopData) ->
       true ->
         write_to_local(Key,Value,Version,LoopData);
       false ->
-        try ms_db:write_to_remote(Node, Key,Value,Version) of
-          _ -> ok
-        catch
-          _:_ ->
-            error
-        end
+        ms_db:write_cast(Node, Key,Value,Version)
     end
   end.
 
@@ -206,8 +200,6 @@ write_to_all(Key, Value, LoopData) ->
   end.
 
 
-
-
 read_from_local(Key, LoopData) ->
   %% process resulsts
   Result = dets:lookup(db_ref(LoopData), Key),
@@ -222,9 +214,8 @@ write_to_local(Key, Value, Version, LoopData) ->
   {ok, {Key, Value, Version}}.
 
 
-db_nodes([{{nodes, Nodes} ,_ ,_}]) -> Nodes.
-db_ref([{_,{dbname, DB},_}]) -> DB.
-lock_table([{_,_,{lockTable, LockTable}}]) -> LockTable.
+db_nodes([{{nodes, Nodes}, _ }]) -> Nodes.
+db_ref([{_,{dbname, DB}}]) -> DB.
 
 exclude_current_node(Nodes) ->
 
@@ -254,23 +245,3 @@ sort_responses(Responses) ->
 
 not_error_response({_,{error, _}}) -> false;
 not_error_response({_,{ok,_}}) -> true.
-
-lock(LoopData) ->
-  Result = ets:lookup(lock_table(LoopData), lock),
-  case Result of
-    [] ->
-      Ref = erlang:make_ref(),
-      ets:insert(lock_table(LoopData),{lock,Ref}),
-      {ok,Ref};
-
-    _ -> {error, locked}
-
-  end.
-
-unlock(Ref, LoopData) ->
-  Result = ets:lookup(lock_table(LoopData), lock),
-  case Result of
-    [{lock, Ref}] ->
-      ets:delete(lock_table(LoopData), lock);
-    _ -> {error, locked}
-  end .

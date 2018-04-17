@@ -6,11 +6,8 @@
 -record(inventoryKey, {productId, warehouseId}).
 -record(inventory, {inventoryKey = #inventoryKey{}, quantity}).
 
-
-
 start_link() ->
   gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
-
 
 init(_Args) ->
   process_flag(trap_exit, true),
@@ -89,8 +86,6 @@ get_inventory(ProductId, CountryId) ->
         {error, Error}
   end.
 
-
-
 remove_inventory(ProductId, CountryId, RemoveQuantity, _From, _LoopData) ->
 
   Response = ms_db:read({ProductId,CountryId}),
@@ -106,8 +101,6 @@ remove_inventory(ProductId, CountryId, RemoveQuantity, _From, _LoopData) ->
     {error, Error} ->
       {error, Error}
   end.
-
-
 
 add_inventory(ProductId, CountryId, AddQuantity, _From, _LoopData) ->
 

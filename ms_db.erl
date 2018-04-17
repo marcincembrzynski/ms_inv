@@ -1,9 +1,10 @@
 -module(ms_db).
 -behaviour(gen_server).
 -export([write/2,read/1]).
--export([start_link/0,init/1,handle_call/3,handle_cast/2,stop/0]).
+-export([start_link/0,init/1,handle_call/3,handle_cast/2,stop/0,terminate/2]).
 -export([read_from_local/1,read_from_remote/2,write_to_local/3,write_to_remote/4]).
 -export([write_cast/4]).
+
 
 
 
@@ -23,7 +24,16 @@ init([{{nodes, Nodes},{dbname, DBName}}]) ->
   LockTable = ets:new(lockTable, []),
   ets:delete(LockTable, lock),
   process_flag(trap_exit, true),
+
+  pg2:create(ms_db),
+  pg2:join(ms_db, self()),
+
   {ok, [{{nodes, Nodes},{dbname, DB}}]}.
+
+terminate(_Reason, DB) ->
+  pg2:leave(ms_inv, self()),
+  dets:close(DB),
+  ok.
 
 call(Msg) ->
   gen_server:call(?MODULE, Msg).
@@ -95,24 +105,27 @@ handle_cast({write_to_local, {Key, Value, Version}}, LoopData) ->
 read_from_all(Key,LoopData) ->
 
 
-  Nodes = exclude_current_node(db_nodes(LoopData)),
+  GetFromNode = fun(Pid, List) ->
 
-  %io:format("# nodes, ~p~n",[Nodes]),
+    Node = node(Pid),
+    case Node == node() of
+      false ->
 
-  GetFromNode = fun(Node, List) ->
-    try ms_db:read_from_remote(Node, Key) of
-      Response -> [{Node, Response}] ++ List
-    catch
-      _:_ -> List
+        try ms_db:read_from_remote(Node, Key) of
+          Response -> [{Node, Response}] ++ List
+        catch
+          _:_ -> List
+        end;
+
+      true ->
+        [{node(), read_from_local(Key,LoopData)}] ++ List
     end
+
   end,
 
-  %%% initialize list with the value from the current node
-  List = [{node(), read_from_local(Key,LoopData)}],
 
-  Responses = lists:foldl(GetFromNode, List, Nodes),
-  %io:format("REsponses: ~p~n", [Responses]),
-
+  Members = pg2:get_members(ms_db),
+  Responses = lists:foldl(GetFromNode,[], Members),
 
   WithoutErrorResponses = exclude_error_responses(Responses),
   %io:format("##### WithoutErrorResponses: ~p~n", [WithoutErrorResponses]),
@@ -216,11 +229,6 @@ write_to_local(Key, Value, Version, LoopData) ->
 
 db_nodes([{{nodes, Nodes}, _ }]) -> Nodes.
 db_ref([{_,{dbname, DB}}]) -> DB.
-
-exclude_current_node(Nodes) ->
-
-  Filter = fun(Node) -> Node /= node() end,
-  lists:filter(Filter, Nodes).
 
 
 exclude_error_responses(InventoryResponses) ->

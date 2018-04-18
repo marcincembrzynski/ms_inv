@@ -78,18 +78,16 @@ handle_cast({write_to_local, {Key, Value, Version}}, LoopData) ->
 read_from_all(Key,LoopData) ->
 
   GetFromNode = fun(Node, List) ->
-
     case Node == node() of
+      true ->
+        [{node(), read_from_local(Key,LoopData)}] ++ List;
       false ->
         try ms_db:read_from_remote(Node, Key) of
           Response -> [{Node, Response}] ++ List
         catch
           _:_ -> List
-        end;
-      true ->
-        [{node(), read_from_local(Key,LoopData)}] ++ List
+        end
     end
-
   end,
 
   Responses = lists:foldl(GetFromNode,[], db_nodes()),

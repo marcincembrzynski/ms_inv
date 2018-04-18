@@ -112,18 +112,17 @@ update_nodes_with_latest(Responses, Latest, LoopData) ->
 
   {ok,{Key, Value, Version}} = Latest,
 
-  % 1. Create the lists of InventoryResponses not equal to LatestInventory
+  % 1. Create the lists of Responses not equal to Latest
   Filter = fun({_,Other}) -> Latest /= Other end,
-  NotCorrectInventories = lists:filter(Filter, Responses),
+  NotCorrectResponses = lists:filter(Filter, Responses),
 
-  % 2. Based on this create list of nodes to update
-  MapToNodes = fun({Node,_}) -> Node end,
-  NodesToUpdate = lists:map(MapToNodes, NotCorrectInventories),
+  % 2. Create the list of nodes to update
+  NodesToUpdate = lists:map(fun({Node,_}) -> Node end, NotCorrectResponses),
 
   % 3. Update all the nodes from the list with the latest repository
-
   UpdateNode = update_node_fun_node(Key, Value, Version, LoopData),
   lists:foreach(UpdateNode, NodesToUpdate),
+
   ok.
 
 update_node_fun_node(Key, Value, Version, LoopData) ->
@@ -167,9 +166,9 @@ db_nodes() ->
 
 db_ref([{_,{dbname, DB}}]) -> DB.
 
-exclude_error_responses(InventoryResponses) ->
-  Filter = fun(ProductResponse) -> not_error_response(ProductResponse) end,
-  lists:filter(Filter, InventoryResponses).
+exclude_error_responses(Responses) ->
+  Filter = fun(Response) -> not_error_response(Response) end,
+  lists:filter(Filter, Responses).
 
 sort_responses(Responses) ->
   ReverseSort = fun(A,B) ->

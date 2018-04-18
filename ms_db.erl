@@ -102,17 +102,10 @@ read_from_all(Key,LoopData) ->
 
     [_|_] ->
 
-      %%% 2. Sort
       Sorted = sort_responses(WithoutErrorResponses),
-
-      %%% 3 cast for tail of the sorted list??? node needed
-      %%% get tail of the,
-
       {_Node,Latest} = lists:nth(1,Sorted),
 
       update_nodes_with_latest(Responses, Latest, LoopData),
-      %%io:format("### InventoryResponses WithoutErrorResponses: ~p~n", [InventoryResponses]),
-
       Latest
   end.
 
@@ -121,20 +114,15 @@ update_nodes_with_latest(Responses, Latest, LoopData) ->
 
   {ok,{Key, Value, Version}} = Latest,
 
-  % 1. Creates the lists of InventoryResponses not equal to LatestInventory
-
+  % 1. Create the lists of InventoryResponses not equal to LatestInventory
   Filter = fun({_,Other}) -> Latest /= Other end,
   NotCorrectInventories = lists:filter(Filter, Responses),
 
-  % 2. Based on this creates list of nodes to update
-
+  % 2. Based on this create list of nodes to update
   MapToNodes = fun({Node,_}) -> Node end,
   NodesToUpdate = lists:map(MapToNodes, NotCorrectInventories),
-  %io:format("Nodes to update ~p~n", [NodesToUpdate]),
 
-  % 3. Updates all the nodes from the list with the latest repository
-  % what about the current node?
-  % remove current node...
+  % 3. Update all the nodes from the list with the latest repository
 
   UpdateNode = update_node_fun_node(Key, Value, Version, LoopData),
   lists:foreach(UpdateNode, NodesToUpdate),

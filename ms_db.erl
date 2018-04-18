@@ -112,14 +112,14 @@ update_nodes_with_latest(Responses, Latest, LoopData) ->
 
   {ok,{Key, Value, Version}} = Latest,
 
-  % 1. Create the lists of Responses not equal to Latest
+  % 1. Create the lists of responses not equal to Latest
   Filter = fun({_,Other}) -> Latest /= Other end,
   NotCorrectResponses = lists:filter(Filter, Responses),
 
   % 2. Create the list of nodes to update
   NodesToUpdate = lists:map(fun({Node,_}) -> Node end, NotCorrectResponses),
 
-  % 3. Update all the nodes from the list with the latest repository
+  % 3. Update all the nodes from the list with the latest
   UpdateNode = update_node_fun_node(Key, Value, Version, LoopData),
   lists:foreach(UpdateNode, NodesToUpdate),
 

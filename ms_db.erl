@@ -6,8 +6,6 @@
 -export([write_cast/4]).
 
 
-
-
 start_link() ->
   [DBName|_] = string:split(atom_to_list(node()),"@"),
   {ok,[Nodes]} = file:consult(nodes),
@@ -21,13 +19,9 @@ init([{{nodes, Nodes},{dbname, DBName}}]) ->
   PingNode = fun(N) -> net_adm:ping(N) end,
   lists:foreach(PingNode, Nodes),
   {ok, DB} = dets:open_file(DBName, [{type, set}, {file, DBName}]),
-  LockTable = ets:new(lockTable, []),
-  ets:delete(LockTable, lock),
   process_flag(trap_exit, true),
-
   pg2:create(ms_db),
   pg2:join(ms_db, self()),
-
   {ok, [{{nodes, Nodes},{dbname, DB}}]}.
 
 terminate(_Reason, DB) ->
@@ -104,13 +98,11 @@ handle_cast({write_to_local, {Key, Value, Version}}, LoopData) ->
 
 read_from_all(Key,LoopData) ->
 
-
   GetFromNode = fun(Pid, List) ->
 
     Node = node(Pid),
     case Node == node() of
       false ->
-
         try ms_db:read_from_remote(Node, Key) of
           Response -> [{Node, Response}] ++ List
         catch
@@ -249,7 +241,6 @@ sort_responses(Responses) ->
   end,
 
   lists:sort(ReverseSort, Responses).
-
 
 not_error_response({_,{error, _}}) -> false;
 not_error_response({_,{ok,_}}) -> true.

@@ -138,9 +138,7 @@ update_nodes_with_latest(Responses, Latest, LoopData) ->
 
   UpdateNode = update_node_fun_node(Key, Value, Version, LoopData),
   lists:foreach(UpdateNode, NodesToUpdate),
-
   ok.
-
 
 update_node_fun_node(Key, Value, Version, LoopData) ->
   fun(Node) ->

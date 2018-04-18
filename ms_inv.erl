@@ -3,8 +3,6 @@
 -export([get/2,get/3,add/3,add/4,remove/3,remove/4]).
 -export([handle_call/3,handle_cast/2,terminate/2]).
 -behaviour(gen_server).
--record(inventoryKey, {productId, warehouseId}).
--record(inventory, {inventoryKey = #inventoryKey{}, quantity}).
 
 start_link() ->
   gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).

@@ -1,7 +1,7 @@
 -module(ms_inv_proxy).
 -export([start_link/0,init/1]).
--export([get/2, add/3, remove/3,stop_node/0]).
--export([handle_call/3]).
+-export([get/2, add/3, remove/3,stop/0,stop_node/0]).
+-export([handle_call/3,handle_cast/2]).
 -behaviour(gen_server).
 
 start_link() ->
@@ -29,9 +29,9 @@ remove(ProductId, CountryId, Quantity) ->
 add(ProductId, CountryId, Quantity) ->
   call({add,{ProductId, CountryId, Quantity}}).
 
-stop_node() ->
-  call(stop_node).
+stop() -> gen_server:cast(?MODULE, stop).
 
+stop_node() -> gen_server:cast(?MODULE, stop_node).
 
 handle_call({get, {ProductId, CountryId}}, _From, LoopData) ->
   {reply, get_inventory(ProductId, CountryId), LoopData};
@@ -41,10 +41,15 @@ handle_call({remove, {ProductId, CountryId, RemoveQuantity}}, _From, LoopData) -
 
 
 handle_call({add, {ProductId, CountryId, AddQuantity}}, _From, LoopData) ->
-  {reply, add_inventory(ProductId, CountryId, AddQuantity), LoopData};
+  {reply, add_inventory(ProductId, CountryId, AddQuantity), LoopData}.
 
-handle_call(stop_node, _From, LoopData) ->
-  {reply,  ms_inv:stop(get_active()) , LoopData}.
+handle_cast(stop_node, LoopData) ->
+  io:format("get_active(), ~p~n", get_active()),
+  ms_inv:stop(get_active()),
+  {noreply,LoopData};
+
+handle_cast(stop, LoopData) ->
+  {stop, normal, LoopData}.
 
 get_inventory(ProductId, CountryId) ->
   %%io:format("## active node: ~p~n", [get_active()]),

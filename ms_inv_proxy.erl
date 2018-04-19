@@ -44,7 +44,7 @@ handle_call({add, {ProductId, CountryId, AddQuantity}}, _From, LoopData) ->
   {reply, add_inventory(ProductId, CountryId, AddQuantity), LoopData}.
 
 handle_cast(stop_node, LoopData) ->
-  io:format("get_active(), ~p~n", get_active()),
+  io:format("get_active(), ~p~n", [get_active()]),
   ms_inv:stop(get_active()),
   {noreply,LoopData};
 
@@ -61,7 +61,8 @@ remove_inventory(ProductId, CountryId, RemoveQuantity) ->
   try ms_inv:remove(get_active(), ProductId, CountryId, RemoveQuantity) of
     Response -> Response
   catch
-    _:_ -> {error, error}
+    _:_ ->
+      remove_inventory(ProductId, CountryId, RemoveQuantity)
   end.
 
 
@@ -69,7 +70,7 @@ add_inventory(ProductId, CountryId, AddQuantity) ->
   try ms_inv:add(get_active(), ProductId, CountryId, AddQuantity) of
       Response -> Response
   catch
-    _:_ -> {error, error}
+    _:_ -> add_inventory(ProductId, CountryId, AddQuantity)
   end.
 
 

@@ -2,7 +2,7 @@
 -behaviour(gen_server).
 -export([write/2,read/1]).
 -export([start_link/0,init/1,handle_call/3,handle_cast/2,stop/0,terminate/2]).
--export([read_from_remote/2,write_to_local/3,write_to_remote/4,write_cast/4]).
+-export([read_from_remote/2,write_to_local/3,write_cast/4]).
 
 start_link() ->
   [DBName|_] = string:split(atom_to_list(node()),"@"),
@@ -19,7 +19,7 @@ init([{{nodes, Nodes},{dbname, DBName}}]) ->
   process_flag(trap_exit, true),
   pg2:create(ms_db),
   pg2:join(ms_db, self()),
-  {ok, [{{nodes, Nodes},{dbname, DB}}]}.
+  {ok, [{dbname, DB}]}.
 
 terminate(_Reason, DB) ->
   pg2:leave(ms_db, self()),
@@ -45,9 +45,6 @@ read_from_remote(Node, Key) ->
 write_to_local(Key, Value, Version) ->
   call({write_to_local, {Key, Value, Version}}).
 
-write_to_remote(Node, Key, Value, Version) ->
-  call(Node, {write_to_local, {Key, Value, Version}}).
-
 write_cast(Node, Key, Value, Version) ->
   cast(Node, {write_to_local, {Key, Value, Version}}).
 
@@ -55,9 +52,6 @@ handle_call({write, {Key, Value}}, _From, LoopData) ->
   {reply, write_to_all(Key, Value, LoopData), LoopData};
 
 handle_call({write_to_local, {Key, Value, Version}}, _From, LoopData) ->
-  {reply, write_to_local(Key, Value, Version, LoopData), LoopData};
-
-handle_call({write_to_remote, {Key, Value, Version}}, _From, LoopData) ->
   {reply, write_to_local(Key, Value, Version, LoopData), LoopData};
 
 handle_call({read, Key}, _From, LoopData) ->
@@ -164,7 +158,7 @@ write_to_local(Key, Value, Version, LoopData) ->
 db_nodes() ->
   lists:map(fun(E) -> node(E) end, pg2:get_members(ms_db)).
 
-db_ref([{_,{dbname, DB}}]) -> DB.
+db_ref([{dbname, DB}]) -> DB.
 
 exclude_error_responses(Responses) ->
   Filter = fun(Response) -> not_error_response(Response) end,

@@ -1,13 +1,17 @@
 -module(ms_inv).
--export([start_link/0,init/1,stop/0]).
+-export([start_link/0,init/1,stop/0,stop/1]).
 -export([get/2,get/3,add/3,add/4,remove/3,remove/4]).
 -export([handle_call/3,handle_cast/2,terminate/2]).
 -behaviour(gen_server).
 
 start_link() ->
-  gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
+  {ok,[Nodes]} = file:consult(nodes),
+  gen_server:start_link({local, ?MODULE}, ?MODULE, [{nodes, Nodes}], []).
 
-init(_Args) ->
+init(Args) ->
+  [{nodes, Nodes}] = Args,
+  lists:foreach(fun(N) -> net_adm:ping(N) end, Nodes),
+
   process_flag(trap_exit, true),
   LogTable = ets:new(logTable, [public]),
   pg2:create(ms_inv),
@@ -15,6 +19,8 @@ init(_Args) ->
   {ok, [LogTable]}.
 
 stop() -> gen_server:cast(?MODULE, stop).
+
+stop(Node) -> gen_server:cast({?MODULE, Node}, stop).
 
 terminate(_Reason, _) ->
   pg2:leave(ms_inv, self()),

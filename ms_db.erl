@@ -1,29 +1,33 @@
 -module(ms_db).
 -behaviour(gen_server).
 -export([write/2,read/1]).
--export([start_link/0,init/1,handle_call/3,handle_cast/2,stop/0,terminate/2]).
+-export([start_link/1,init/1,handle_call/3,handle_cast/2,stop/0,terminate/2]).
 -export([read_from_remote/2,write_to_local/3,write_cast/4]).
+-record(loopData, {nodes, db_name, group_name, db_ref}).
 
-start_link() ->
+start_link(GroupName) ->
   [DBName|_] = string:split(atom_to_list(node()),"@"),
   {ok,[Nodes]} = file:consult(nodes),
-  gen_server:start_link({local, ?MODULE}, ?MODULE, [{{nodes, Nodes},{dbname, DBName}}], []).
+  LoopData = #loopData{ nodes = Nodes, db_name = DBName, group_name = GroupName},
+  gen_server:start_link({local, ?MODULE}, ?MODULE, [LoopData], []).
 
 stop() ->
   gen_server:cast(?MODULE, stop).
 
-init([{{nodes, Nodes},{dbname, DBName}}]) ->
+init([LoopData]) ->
   PingNode = fun(N) -> net_adm:ping(N) end,
-  lists:foreach(PingNode, Nodes),
-  {ok, DB} = dets:open_file(DBName, [{type, set}, {file, DBName}]),
+  lists:foreach(PingNode, LoopData#loopData.nodes),
+  {ok, DB} = dets:open_file(LoopData#loopData.db_name, [{type, set}, {file, LoopData#loopData.db_name}]),
+  NewLoopData = LoopData#loopData{db_ref = DB},
+  io:format("NewLoopData, ~p~n", [NewLoopData]),
   process_flag(trap_exit, true),
-  pg2:create(ms_db),
-  pg2:join(ms_db, self()),
-  {ok, [{dbname, DB}]}.
+  pg2:create(LoopData#loopData.group_name),
+  pg2:join(LoopData#loopData.group_name, self()),
+  {ok, [NewLoopData]}.
 
-terminate(_Reason, DB) ->
+terminate(_Reason, LoopData) ->
   pg2:leave(ms_db, self()),
-  dets:close(DB), ok.
+  dets:close(LoopData#loopData.db_ref), ok.
 
 call(Msg) ->
   gen_server:call(?MODULE, Msg).
@@ -84,7 +88,7 @@ read_from_all(Key,LoopData) ->
     end
   end,
 
-  Responses = lists:foldl(GetFromNode,[], db_nodes()),
+  Responses = lists:foldl(GetFromNode,[], db_nodes(LoopData)),
 
   WithoutErrorResponses = exclude_error_responses(Responses),
 
@@ -140,7 +144,7 @@ write_to_all(Key, Value, LoopData) ->
       {Key, _, Version} = Latest,
       NewVersion = Version + 1,
       UpdateNode = update_node_fun_node(Key, Value, NewVersion, LoopData),
-      lists:foreach(UpdateNode,db_nodes()),
+      lists:foreach(UpdateNode,db_nodes(LoopData)),
       read_from_local(Key, LoopData)
   end.
 
@@ -155,10 +159,10 @@ write_to_local(Key, Value, Version, LoopData) ->
   ok = dets:insert(db_ref(LoopData), {Key, Value, Version}),
   {ok, {Key, Value, Version}}.
 
-db_nodes() ->
-  lists:map(fun(E) -> node(E) end, pg2:get_members(ms_db)).
+db_nodes(LoopData) ->
+  lists:map(fun(E) -> node(E) end, pg2:get_members(LoopData#loopData.group_name)).
 
-db_ref([{dbname, DB}]) -> DB.
+db_ref([LoopData]) -> LoopData#loopData.db_ref.
 
 exclude_error_responses(Responses) ->
   Filter = fun(Response) -> not_error_response(Response) end,

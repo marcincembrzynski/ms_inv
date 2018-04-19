@@ -3,31 +3,33 @@
 -export([write/2,read/1]).
 -export([start_link/1,init/1,handle_call/3,handle_cast/2,stop/0,terminate/2]).
 -export([read_from_remote/2,write_to_local/3,write_cast/4]).
--record(loopData, {nodes, db_name, group_name, db_ref}).
+-record(loopData, {nodes, dbname, groupname, dbref}).
 
 start_link(GroupName) ->
   [DBName|_] = string:split(atom_to_list(node()),"@"),
   {ok,[Nodes]} = file:consult(nodes),
-  LoopData = #loopData{ nodes = Nodes, db_name = DBName, group_name = GroupName},
-  gen_server:start_link({local, ?MODULE}, ?MODULE, [LoopData], []).
+  LoopData = #loopData{ nodes = Nodes, dbname = DBName, groupname = GroupName},
+  gen_server:start_link({local, ?MODULE}, ?MODULE, LoopData, []).
 
 stop() ->
   gen_server:cast(?MODULE, stop).
 
-init([LoopData]) ->
+init(LoopData) ->
   PingNode = fun(N) -> net_adm:ping(N) end,
   lists:foreach(PingNode, LoopData#loopData.nodes),
-  {ok, DB} = dets:open_file(LoopData#loopData.db_name, [{type, set}, {file, LoopData#loopData.db_name}]),
-  NewLoopData = LoopData#loopData{db_ref = DB},
+  {ok, DB} = dets:open_file(LoopData#loopData.dbname, [{type, set}, {file, LoopData#loopData.dbname}]),
+  NewLoopData = LoopData#loopData{dbref = DB},
   io:format("NewLoopData, ~p~n", [NewLoopData]),
+  io:format("NewLoopData, ~p~n", [NewLoopData#loopData.groupname]),
   process_flag(trap_exit, true),
-  pg2:create(LoopData#loopData.group_name),
-  pg2:join(LoopData#loopData.group_name, self()),
-  {ok, [NewLoopData]}.
+  pg2:create(NewLoopData#loopData.groupname),
+  pg2:join(NewLoopData#loopData.groupname, self()),
+  {ok, NewLoopData}.
 
 terminate(_Reason, LoopData) ->
-  pg2:leave(ms_db, self()),
-  dets:close(LoopData#loopData.db_ref), ok.
+  pg2:leave(LoopData#loopData.groupname, self()),
+  dets:close(LoopData#loopData.dbref),
+  ok.
 
 call(Msg) ->
   gen_server:call(?MODULE, Msg).
@@ -160,9 +162,9 @@ write_to_local(Key, Value, Version, LoopData) ->
   {ok, {Key, Value, Version}}.
 
 db_nodes(LoopData) ->
-  lists:map(fun(E) -> node(E) end, pg2:get_members(LoopData#loopData.group_name)).
+  lists:map(fun(E) -> node(E) end, pg2:get_members(LoopData#loopData.groupname)).
 
-db_ref([LoopData]) -> LoopData#loopData.db_ref.
+db_ref(LoopData) -> LoopData#loopData.dbref.
 
 exclude_error_responses(Responses) ->
   Filter = fun(Response) -> not_error_response(Response) end,

@@ -84,6 +84,7 @@ calculate_seconds(Start, Last) ->
 loop() ->
   receive
     {requests, 0, TestData} ->
+      
       ProductId = TestData#testData.productId,
       WarehouseId = TestData#testData.warehouseId,
       io:format("#~p~n",[ms_inv_proxy:get(ProductId,WarehouseId)]),
@@ -94,9 +95,6 @@ loop() ->
 
     {requests, N, TestData} ->
 
-      %% stop node
-
-      %%stop_node(TestData),
 
       ProductId = TestData#testData.productId,
       WarehouseId = TestData#testData.warehouseId,
@@ -110,9 +108,6 @@ loop() ->
         {error, _} -> io:format("remove error ~p~n", [ResponseRemove])
       end,
 
-
-      %% add call to ms_inv stop
-
       Response = ms_inv_proxy:add(ProductId, WarehouseId,1),
       ok = dets:insert(DBRef, {erlang:timestamp(), add, Response}),
       ets:update_counter(TestData#testData.counterRef, counter, 1),
@@ -125,20 +120,3 @@ loop() ->
       loop()
 
   end.
-
-stop_node(TestData) ->
-  [{counter, Counter}] = ets:lookup(TestData#testData.counterRef, counter),
-  IsStep = step(Counter, 10000),
-  case IsStep of
-    true ->
-      io:format("### stopping node, ~n"),
-      ms_inv_proxy:stop_node();
-    false ->
-      ok
-  end,
-  TestData.
-
-
-
-step(X,Step) when X < Step -> false;
-step(X,Step) -> ceil(X / Step) == floor(X / Step).

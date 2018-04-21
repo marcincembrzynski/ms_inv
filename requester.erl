@@ -1,6 +1,6 @@
 -module(requester).
 -export([start/2,loop/0,test/0,step/2]).
--record(testData, {startTime, dbRef, productId, warehouseId, counterRef}).
+-record(testData, {startTime, dbRef, productId, warehouseId, counterRef, totalRequests}).
 
 
 start(Processes, Requests) ->
@@ -10,7 +10,11 @@ start(Processes, Requests) ->
   ets:insert(CounterTable, {counter,0}),
   dets:delete_all_objects(DB),
   dets:insert(DB, {erlang:timestamp(), start, ms_inv_proxy:get(ProductId, WarehouseId)}),
-  TestData = #testData{ startTime = erlang:timestamp(), dbRef = DB, productId = ProductId, warehouseId = WarehouseId, counterRef = CounterTable},
+
+  TestData = #testData{
+    startTime = erlang:timestamp(), dbRef = DB, productId = ProductId,
+    warehouseId = WarehouseId, counterRef = CounterTable,
+    totalRequests = Processes * Requests},
   io:format("data: ~p~n",[TestData]),
   init(Processes, Requests, TestData).
 
@@ -24,6 +28,7 @@ init(Processes,Requests, TestData) ->
 
 test() ->
   {ok, DB} = dets:open_file(requests_db, [{type, set}, {file, requests_db}]),
+  %%% clean ets
   LogTable = ets:new(requestes_ets, [public]),
   dets:to_ets(DB, LogTable),
 
@@ -64,6 +69,8 @@ test() ->
   io:format("sorted list length, number of operations: ~p~n", [Operations]),
   io:format("Time taken: ~p~n", [Seconds]),
   io:format("Operations per second: ~p~n", [Operations/Seconds]),
+  ets:delete(LogTable),
+
 
   {acc, Acc, start, Start, last, Last, time, Seconds}.
 
@@ -89,8 +96,7 @@ loop() ->
 
       %% stop node
 
-      stop_node(TestData),
-
+      %%stop_node(TestData),
 
       ProductId = TestData#testData.productId,
       WarehouseId = TestData#testData.warehouseId,
@@ -114,8 +120,6 @@ loop() ->
         {ok, _Data} -> ok;
         {error, Error} -> io:format("add error ~p~n", [Error])
       end,
-
-      io:format("## counter: ~p~n", [ets:lookup(TestData#testData.counterRef, counter)]),
 
       self() ! {requests, N - 1, TestData},
       loop()

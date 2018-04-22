@@ -1,6 +1,6 @@
 -module(ms_inv_proxy).
 -export([start_link/0,init/1]).
--export([get/2, add/3, remove/3,stop/0,stop_node/0]).
+-export([get/2, add/3, remove/3,stop/0,stop_node/0,get_active/0,get_active_nodes/0]).
 -export([handle_call/3,handle_cast/2]).
 -behaviour(gen_server).
 
@@ -15,7 +15,6 @@ init(Args) ->
   PingNode = fun(N) -> net_adm:ping(N) end,
   lists:foreach(PingNode, Nodes),
   {ok, Args}.
-
 
 call(Msg) ->
   gen_server:call(?MODULE, Msg).
@@ -37,11 +36,11 @@ handle_call({get, {ProductId, CountryId}}, _From, LoopData) ->
   {reply, get_inventory(ProductId, CountryId), LoopData};
 
 handle_call({remove, {ProductId, CountryId, RemoveQuantity}}, _From, LoopData) ->
-  {reply, remove_inventory(ProductId, CountryId, RemoveQuantity), LoopData};
+  {reply, remove_inventory(get_active(), ProductId, CountryId, RemoveQuantity), LoopData};
 
 
 handle_call({add, {ProductId, CountryId, AddQuantity}}, _From, LoopData) ->
-  {reply, add_inventory(ProductId, CountryId, AddQuantity), LoopData}.
+  {reply, add_inventory(get_active(), ProductId, CountryId, AddQuantity), LoopData}.
 
 handle_cast(stop_node, LoopData) ->
   io:format("get_active(), ~p~n", [get_active()]),
@@ -56,25 +55,34 @@ get_inventory(ProductId, CountryId) ->
   ms_inv:get(get_active(), ProductId, CountryId).
 
 
-remove_inventory(ProductId, CountryId, RemoveQuantity) ->
+remove_inventory(Node, ProductId, CountryId, RemoveQuantity) ->
 
-  try ms_inv:remove(get_active(), ProductId, CountryId, RemoveQuantity) of
+  try ms_inv:remove(Node, ProductId, CountryId, RemoveQuantity) of
     Response -> Response
   catch
     _:_ ->
-      remove_inventory(ProductId, CountryId, RemoveQuantity)
+      io:format("#active nodes ~p~n", [get_active_nodes()]),
+      LastNode = lists:last(get_active_nodes()),
+      remove_inventory(LastNode, ProductId, CountryId, RemoveQuantity)
   end.
 
 
-add_inventory(ProductId, CountryId, AddQuantity) ->
-  try ms_inv:add(get_active(), ProductId, CountryId, AddQuantity) of
+add_inventory(Node, ProductId, CountryId, AddQuantity) ->
+  try ms_inv:add(Node, ProductId, CountryId, AddQuantity) of
       Response -> Response
   catch
-    _:_ -> add_inventory(ProductId, CountryId, AddQuantity)
+    _:_ ->
+      io:format("#active nodes ~p~n", [get_active_nodes()]),
+      LastNode = lists:last(get_active_nodes()),
+      add_inventory(LastNode, ProductId, CountryId, AddQuantity)
   end.
 
 
 get_active() ->
-  Members = pg2:get_members(ms_inv),
-  [Pid|_] = Members,
+  [Pid|_] = members(),
   node(Pid).
+
+get_active_nodes() ->
+  lists:map(fun(Pid) -> node(Pid) end, members()).
+
+members() -> pg2:get_members(ms_inv).

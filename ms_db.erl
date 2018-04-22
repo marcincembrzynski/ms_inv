@@ -19,8 +19,6 @@ init(LoopData) ->
   lists:foreach(PingNode, LoopData#loopData.nodes),
   {ok, DB} = dets:open_file(LoopData#loopData.dbname, [{type, set}, {file, LoopData#loopData.dbname}]),
   NewLoopData = LoopData#loopData{dbref = DB},
-  io:format("NewLoopData, ~p~n", [NewLoopData]),
-  io:format("NewLoopData, ~p~n", [NewLoopData#loopData.groupname]),
   process_flag(trap_exit, true),
   pg2:create(NewLoopData#loopData.groupname),
   pg2:join(NewLoopData#loopData.groupname, self()),

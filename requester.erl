@@ -1,5 +1,5 @@
 -module(requester).
--export([start/2,loop/0,test/0,step/2]).
+-export([start/2,loop/0,test/0]).
 -record(testData, {startTime, dbRef, productId, warehouseId, counterRef, totalRequests}).
 
 
@@ -26,65 +26,11 @@ init(Processes,Requests, TestData) ->
   NewProcesses = Processes - 1,
   init(NewProcesses, Requests, TestData).
 
-test() ->
-  {ok, DB} = dets:open_file(requests_db, [{type, set}, {file, requests_db}]),
-  %%% clean ets
-  LogTable = ets:new(requestes_ets, [public]),
-  dets:to_ets(DB, LogTable),
-
-
-  List = ets:tab2list(LogTable),
-  TimeStampSort = fun({T1 ,_ ,_ },{T2 ,_, _}) -> T1 =< T2 end,
-
-  SortedList = lists:sort(TimeStampSort, List),
-  Operations = length(SortedList) - 1,
-
-  [Start|Tail] = SortedList,
-
-  {_,start, {ok,{_,_,StartQuantity}}} = Start,
-
-  CorrectnessFun = fun(Elem, PreviousQuantity) ->
-
-    case Elem of
-      {_, remove, {ok, {_, _, NewQuantity}}} ->
-        true  = (PreviousQuantity - 1 == NewQuantity),
-        NewQuantity;
-
-      {_, add, {ok, {_, _, NewQuantity}}} ->
-
-        true = (PreviousQuantity + 1 == NewQuantity),
-        NewQuantity;
-
-      {_, add, {error,_}} -> PreviousQuantity;
-
-      {_, remove, {error,_}} -> PreviousQuantity
-
-    end
-   end,
-
-  Acc = lists:foldl(CorrectnessFun, StartQuantity, Tail),
-  Last = lists:last(SortedList),
-  Seconds = calculate_seconds(Start, Last),
-
-  io:format("sorted list length, number of operations: ~p~n", [Operations]),
-  io:format("Time taken: ~p~n", [Seconds]),
-  io:format("Operations per second: ~p~n", [Operations/Seconds]),
-  ets:delete(LogTable),
-
-
-  {acc, Acc, start, Start, last, Last, time, Seconds}.
-
-calculate_seconds(Start, Last) ->
-  {StartTimestamp, _, _} = Start,
-  {LastTimestamp, _, _} = Last,
-  Time = timer:now_diff(LastTimestamp, StartTimestamp),
-  Time / 1000000.
-
 
 loop() ->
   receive
     {requests, 0, TestData} ->
-      
+
       ProductId = TestData#testData.productId,
       WarehouseId = TestData#testData.warehouseId,
       io:format("#~p~n",[ms_inv_proxy:get(ProductId,WarehouseId)]),
@@ -120,3 +66,83 @@ loop() ->
       loop()
 
   end.
+
+
+test() ->
+  {ok, DB} = dets:open_file(requests_db, [{type, set}, {file, requests_db}]),
+  %%% clean ets
+  LogTable = ets:new(requestes_ets, [public]),
+  dets:to_ets(DB, LogTable),
+
+
+  List = ets:tab2list(LogTable),
+  TimeStampSort = fun({T1 ,_ ,_ },{T2 ,_, _}) -> T1 =< T2 end,
+
+  SortedList = lists:sort(TimeStampSort, List),
+  NumberOfOperations = length(SortedList) - 1,
+
+  [Start| Operations] = SortedList,
+
+  {_,start, {ok,{_,_,StartQuantity}}} = Start,
+
+  Acc = lists:foldl(correctness_fun(), StartQuantity, Operations),
+  Last = lists:last(SortedList),
+  {_,_,{_,{_,_,FinalQuantity}}} = Last,
+  Seconds = calculate_seconds(Start, Last),
+
+  NumberOfErrors = number_of_errors(Operations),
+
+
+  io:format("Number of write operations: ~p~n", [NumberOfOperations]),
+  io:format("Number of errors: ~p~n", [NumberOfErrors]),
+  io:format("Time taken: ~p~n", [Seconds]),
+  io:format("Operations per second: ~p~n", [NumberOfOperations /Seconds]),
+  io:format("Start quantity: ~p~n", [StartQuantity]),
+  io:format("Final quantity: ~p~n", [FinalQuantity]),
+
+  ets:delete(LogTable),
+
+
+  {acc, Acc, start, Start, last, Last, time, Seconds}.
+
+number_of_errors(Operations) ->
+  ErrorFilterFun = fun(Elem) ->
+    case Elem of
+      {_, add, {error, _}} -> true;
+
+      {_, remove, {error, _}} -> true;
+
+      _ -> false
+
+    end
+  end,
+  length(lists:filter(ErrorFilterFun, Operations)).
+
+
+correctness_fun() ->
+  fun(Elem, PreviousQuantity) ->
+
+    case Elem of
+      {_, remove, {ok, {_, _, NewQuantity}}} ->
+        true  = (PreviousQuantity - 1 == NewQuantity),
+        NewQuantity;
+
+      {_, add, {ok, {_, _, NewQuantity}}} ->
+
+        true = (PreviousQuantity + 1 == NewQuantity),
+        NewQuantity;
+
+      {_, add, {error,_}} -> PreviousQuantity;
+
+      {_, remove, {error,_}} -> PreviousQuantity
+
+    end
+  end.
+
+
+
+calculate_seconds(Start, Last) ->
+  {StartTimestamp, _, _} = Start,
+  {LastTimestamp, _, _} = Last,
+  Time = timer:now_diff(LastTimestamp, StartTimestamp),
+  Time / 1000000.

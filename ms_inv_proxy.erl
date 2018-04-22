@@ -77,7 +77,6 @@ add_inventory(Node, ProductId, CountryId, AddQuantity) ->
       add_inventory(LastNode, ProductId, CountryId, AddQuantity)
   end.
 
-
 get_active() ->
   [Pid|_] = members(),
   node(Pid).

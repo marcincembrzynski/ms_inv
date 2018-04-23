@@ -13,17 +13,16 @@ init(Args) ->
   lists:foreach(fun(N) -> net_adm:ping(N) end, Nodes),
 
   process_flag(trap_exit, true),
-  LogTable = ets:new(logTable, [public]),
-  pg2:create(ms_inv),
-  pg2:join(ms_inv, self()),
-  {ok, [LogTable]}.
+  pg2:create(?MODULE),
+  pg2:join(?MODULE, self()),
+  {ok, []}.
 
 stop() -> gen_server:cast(?MODULE, stop).
 
 stop(Node) -> gen_server:cast({?MODULE, Node}, stop).
 
 terminate(_Reason, _) ->
-  pg2:leave(ms_inv, self()),
+  pg2:leave(?MODULE, self()),
   ok.
 
 call(Msg) -> 
@@ -77,6 +76,7 @@ handle_call({add, {ProductId, CountryId, AddQuantity}}, From, LoopData) ->
   {reply, add_inventory(ProductId, CountryId, AddQuantity, From, LoopData), LoopData}.
 
 handle_cast(stop, LoopData) ->
+  pg2:leave(?MODULE, self()),
   {stop, normal, LoopData}.
 
 

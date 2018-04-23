@@ -92,9 +92,7 @@ get_inventory(ProductId, CountryId) ->
 
 remove_inventory(ProductId, CountryId, RemoveQuantity, _From, _LoopData) ->
 
-  Response = ms_db:read({ProductId,CountryId}),
-
-  case Response of
+  case ms_db:read({ProductId,CountryId}) of
     {ok, {_Key,0, _Version}} ->
       {error, not_available_quantity};
 
@@ -108,9 +106,7 @@ remove_inventory(ProductId, CountryId, RemoveQuantity, _From, _LoopData) ->
 
 add_inventory(ProductId, CountryId, AddQuantity, _From, _LoopData) ->
 
-  Response = ms_db:read({ProductId,CountryId}),
-
-  case Response of
+  case ms_db:read({ProductId,CountryId}) of
     {ok, {Key,Quantity,_}} ->
       {ok, {{ProductId, CountryId}, NewQuantity, _}} = ms_db:write(Key, Quantity + AddQuantity),
       {ok, {ProductId, CountryId, NewQuantity}};

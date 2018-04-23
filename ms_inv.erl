@@ -19,8 +19,6 @@ init(Args) ->
 
 stop() -> gen_server:cast(?MODULE, stop).
 
-stop(Node) -> gen_server:cast({?MODULE, Node}, stop).
-
 terminate(_Reason, _) ->
   pg2:leave(?MODULE, self()),
   ok.
@@ -32,7 +30,7 @@ call(Node, Msg) ->
   gen_server:call({?MODULE,Node}, Msg).
 
 %% returns 
-%% {ok, {ProductId, CountryId, Quantity, Version}}
+%% {ok, {ProductId, CountryId, Quantity}}
 %% {error, not_found}
 get(ProductId, CountryId) ->
   call({get, {ProductId, CountryId}}).
@@ -40,7 +38,6 @@ get(ProductId, CountryId) ->
 
 get(Node, ProductId, CountryId) ->
   call(Node, {get, {ProductId, CountryId}}).
-
 
 %% subtracts given quantity from the product inventory
 %% returns 
@@ -64,13 +61,11 @@ add(ProductId, CountryId, Quantity) ->
 add(Node, ProductId, CountryId, Quantity) ->
   call(Node, {add,{ProductId, CountryId, Quantity}}).
 
-
 handle_call({get, {ProductId, CountryId}}, _From, LoopData) ->
   {reply, get_inventory(ProductId, CountryId), LoopData};
 
 handle_call({remove, {ProductId, CountryId, RemoveQuantity}}, From, LoopData) ->
   {reply, remove_inventory(ProductId, CountryId, RemoveQuantity, From, LoopData), LoopData};
-
 
 handle_call({add, {ProductId, CountryId, AddQuantity}}, From, LoopData) ->
   {reply, add_inventory(ProductId, CountryId, AddQuantity, From, LoopData), LoopData}.
@@ -78,7 +73,6 @@ handle_call({add, {ProductId, CountryId, AddQuantity}}, From, LoopData) ->
 handle_cast(stop, LoopData) ->
   pg2:leave(?MODULE, self()),
   {stop, normal, LoopData}.
-
 
 get_inventory(ProductId, CountryId) ->
 

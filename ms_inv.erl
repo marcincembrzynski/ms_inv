@@ -1,5 +1,5 @@
 -module(ms_inv).
--export([start_link/0,init/1,stop/0,stop/1]).
+-export([start_link/0,init/1,stop/0]).
 -export([get/2,get/3,add/3,add/4,remove/3,remove/4]).
 -export([handle_call/3,handle_cast/2,terminate/2]).
 -behaviour(gen_server).
@@ -55,55 +55,55 @@ remove(Node, ProductId, CountryId, Quantity) ->
 %% returns 
 %% {ok, {ProductId, CountryId, Quantity}}
 %% {error, not_found}
-add(ProductId, CountryId, Quantity) -> 
-  call({add,{ProductId, CountryId, Quantity}}).
+add(ProductId, WarehouseId, Quantity) -> 
+  call({add,{ProductId, WarehouseId, Quantity}}).
 
-add(Node, ProductId, CountryId, Quantity) ->
-  call(Node, {add,{ProductId, CountryId, Quantity}}).
+add(Node, ProductId, WarehouseId, Quantity) ->
+  call(Node, {add,{ProductId, WarehouseId, Quantity}}).
 
-handle_call({get, {ProductId, CountryId}}, _From, LoopData) ->
-  {reply, get_inventory(ProductId, CountryId), LoopData};
+handle_call({get, {ProductId, WarehouseId}}, _From, LoopData) ->
+  {reply, get_inventory(ProductId, WarehouseId), LoopData};
 
-handle_call({remove, {ProductId, CountryId, RemoveQuantity}}, From, LoopData) ->
-  {reply, remove_inventory(ProductId, CountryId, RemoveQuantity, From, LoopData), LoopData};
+handle_call({remove, {ProductId, WarehouseId, RemoveQuantity}}, From, LoopData) ->
+  {reply, remove_inventory(ProductId, WarehouseId, RemoveQuantity, From, LoopData), LoopData};
 
-handle_call({add, {ProductId, CountryId, AddQuantity}}, From, LoopData) ->
-  {reply, add_inventory(ProductId, CountryId, AddQuantity, From, LoopData), LoopData}.
+handle_call({add, {ProductId, WarehouseId, AddQuantity}}, From, LoopData) ->
+  {reply, add_inventory(ProductId, WarehouseId, AddQuantity, From, LoopData), LoopData}.
 
 handle_cast(stop, LoopData) ->
   pg2:leave(?MODULE, self()),
   {stop, normal, LoopData}.
 
-get_inventory(ProductId, CountryId) ->
+get_inventory(ProductId, WarehouseId) ->
 
-  case ms_db:read({ProductId,CountryId}) of
-     {ok, {{ProductId, CountryId}, Quantity, _Version}} ->
-        {ok, {ProductId, CountryId, Quantity}};
+  case ms_db:read({ProductId, WarehouseId}) of
+     {ok, {{ProductId, WarehouseId}, Quantity, _Version}} ->
+        {ok, {ProductId, WarehouseId, Quantity}};
 
      {error, Error} ->
         {error, Error}
   end.
 
-remove_inventory(ProductId, CountryId, RemoveQuantity, _From, _LoopData) ->
+remove_inventory(ProductId, WarehouseId, RemoveQuantity, _From, _LoopData) ->
 
-  case ms_db:read({ProductId,CountryId}) of
+  case ms_db:read({ProductId, WarehouseId}) of
     {ok, {_Key,0, _Version}} ->
       {error, not_available_quantity};
 
     {ok, {Key,Quantity, _}} ->
-      {ok, {{ProductId, CountryId}, NewQuantity, _}} = ms_db:write(Key, Quantity - RemoveQuantity),
-      {ok, {ProductId, CountryId, NewQuantity}};
+      {ok, {{ProductId, WarehouseId}, NewQuantity, _}} = ms_db:write(Key, Quantity - RemoveQuantity),
+      {ok, {ProductId, WarehouseId, NewQuantity}};
 
     {error, Error} ->
       {error, Error}
   end.
 
-add_inventory(ProductId, CountryId, AddQuantity, _From, _LoopData) ->
+add_inventory(ProductId, WarehouseId, AddQuantity, _From, _LoopData) ->
 
-  case ms_db:read({ProductId,CountryId}) of
+  case ms_db:read({ProductId, WarehouseId}) of
     {ok, {Key,Quantity,_}} ->
-      {ok, {{ProductId, CountryId}, NewQuantity, _}} = ms_db:write(Key, Quantity + AddQuantity),
-      {ok, {ProductId, CountryId, NewQuantity}};
+      {ok, {{ProductId, WarehouseId}, NewQuantity, _}} = ms_db:write(Key, Quantity + AddQuantity),
+      {ok, {ProductId, WarehouseId, NewQuantity}};
 
     {error, Error} ->
       {error, Error}

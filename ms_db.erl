@@ -2,7 +2,7 @@
 -behaviour(gen_server).
 -export([write/2,read/1]).
 -export([start_link/1,init/1,handle_call/3,handle_cast/2,stop/0,terminate/2]).
--export([read_from_remote/2,write_to_local/3,write_cast/4]).
+-export([read_from_remote/2,write_cast/4]).
 -record(loopData, {nodes, dbname, groupname, dbref}).
 
 start_link(GroupName) ->
@@ -21,6 +21,7 @@ init(LoopData) ->
   NewLoopData = LoopData#loopData{dbref = DB},
   process_flag(trap_exit, true),
   pg2:create(NewLoopData#loopData.groupname),
+  io:format("# joining: ~p~n", [NewLoopData#loopData.groupname]),
   pg2:join(NewLoopData#loopData.groupname, self()),
   {ok, NewLoopData}.
 
@@ -29,8 +30,7 @@ terminate(_Reason, LoopData) ->
   dets:close(LoopData#loopData.dbref),
   ok.
 
-call(Msg) ->
-  gen_server:call(?MODULE, Msg).
+call(Msg) ->writegen_server:call(?MODULE, Msg).
 
 call(Node, Msg) ->
   gen_server:call({?MODULE,Node}, Msg).
@@ -45,9 +45,6 @@ read(Key) -> call({read, Key}).
 
 read_from_remote(Node, Key) ->
   call(Node, {read_from_remote, Key}).
-
-write_to_local(Key, Value, Version) ->
-  call({write_to_local, {Key, Value, Version}}).
 
 write_cast(Node, Key, Value, Version) ->
   cast(Node, {write_to_local, {Key, Value, Version}}).
@@ -75,20 +72,7 @@ handle_cast({write_to_local, {Key, Value, Version}}, LoopData) ->
 
 read_from_all(Key,LoopData) ->
 
-  GetFromNode = fun(Node, List) ->
-    case Node == node() of
-      true ->
-        [{node(), read_from_local(Key,LoopData)}] ++ List;
-      false ->
-        try ms_db:read_from_remote(Node, Key) of
-          Response -> [{Node, Response}] ++ List
-        catch
-          _:_ -> List
-        end
-    end
-  end,
-
-  Responses = lists:foldl(GetFromNode,[], db_nodes(LoopData)),
+  Responses = lists:foldl(get_from_node_fun(Key, LoopData),[], db_nodes(LoopData)),
 
   WithoutErrorResponses = exclude_error_responses(Responses),
 
@@ -105,6 +89,21 @@ read_from_all(Key,LoopData) ->
       Latest
   end.
 
+get_from_node_fun(Key, LoopData) ->
+  GetFromNode = fun(Node, List) ->
+    case Node == node() of
+      true ->
+        [{node(), read_from_local(Key, LoopData)}] ++ List;
+      false ->
+        try ms_db:read_from_remote(Node, Key) of
+          Response -> lists:append([{Node, Response}], List)
+        catch
+          _:_ -> List
+        end
+    end
+                end,
+  GetFromNode.
+
 
 update_nodes_with_latest(Responses, Latest, LoopData) ->
 
@@ -120,7 +119,6 @@ update_nodes_with_latest(Responses, Latest, LoopData) ->
   % 3. Update all the nodes from the list with the latest
   UpdateNode = update_node_fun_node(Key, Value, Version, LoopData),
   lists:foreach(UpdateNode, NodesToUpdate),
-
   ok.
 
 update_node_fun_node(Key, Value, Version, LoopData) ->

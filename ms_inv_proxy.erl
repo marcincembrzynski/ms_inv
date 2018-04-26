@@ -19,28 +19,28 @@ init(Args) ->
 call(Msg) ->
   gen_server:call(?MODULE, Msg).
 
-get(ProductId, CountryId) ->
-  call({get, {ProductId, CountryId}}).
+get(ProductId, WarehouseId) ->
+  call({get, {ProductId, WarehouseId}}).
 
-remove(ProductId, CountryId, Quantity) ->
-  call({remove,{ProductId, CountryId, Quantity}}).
+remove(ProductId, WarehouseId, Quantity) ->
+  call({remove,{ProductId, WarehouseId, Quantity}}).
 
-add(ProductId, CountryId, Quantity) ->
-  call({add,{ProductId, CountryId, Quantity}}).
+add(ProductId, WarehouseId, Quantity) ->
+  call({add,{ProductId, WarehouseId, Quantity}}).
 
 stop() -> gen_server:cast(?MODULE, stop).
 
 stop_node() -> gen_server:cast(?MODULE, stop_node).
 
-handle_call({get, {ProductId, CountryId}}, _From, LoopData) ->
-  {reply, get_inventory(ProductId, CountryId), LoopData};
+handle_call({get, {ProductId, WarehouseId}}, _From, LoopData) ->
+  {reply, get_inventory(ProductId, WarehouseId), LoopData};
 
-handle_call({remove, {ProductId, CountryId, RemoveQuantity}}, _From, LoopData) ->
-  {reply, remove_inventory(get_active(), ProductId, CountryId, RemoveQuantity), LoopData};
+handle_call({remove, {ProductId, WarehouseId, RemoveQuantity}}, _From, LoopData) ->
+  {reply, remove_inventory(get_active(), ProductId, WarehouseId, RemoveQuantity), LoopData};
 
 
-handle_call({add, {ProductId, CountryId, AddQuantity}}, _From, LoopData) ->
-  {reply, add_inventory(get_active(), ProductId, CountryId, AddQuantity), LoopData}.
+handle_call({add, {ProductId, WarehouseId, AddQuantity}}, _From, LoopData) ->
+  {reply, add_inventory(get_active(), ProductId, WarehouseId, AddQuantity), LoopData}.
 
 handle_cast(stop_node, LoopData) ->
   io:format("get_active(), ~p~n", [get_active()]),
@@ -50,31 +50,30 @@ handle_cast(stop_node, LoopData) ->
 handle_cast(stop, LoopData) ->
   {stop, normal, LoopData}.
 
-get_inventory(ProductId, CountryId) ->
-  %%io:format("## active node: ~p~n", [get_active()]),
-  ms_inv:get(get_active(), ProductId, CountryId).
+get_inventory(ProductId, WarehouseId) ->
+  ms_inv:get(get_active(), ProductId, WarehouseId).
 
 
-remove_inventory(Node, ProductId, CountryId, RemoveQuantity) ->
+remove_inventory(Node, ProductId, WarehouseId, RemoveQuantity) ->
 
-  try ms_inv:remove(Node, ProductId, CountryId, RemoveQuantity) of
+  try ms_inv:remove(Node, ProductId, WarehouseId, RemoveQuantity) of
     Response -> Response
   catch
     _:_ ->
       io:format("#active nodes ~p~n", [get_active_nodes()]),
       LastNode = lists:last(get_active_nodes()),
-      remove_inventory(LastNode, ProductId, CountryId, RemoveQuantity)
+      remove_inventory(LastNode, ProductId, WarehouseId, RemoveQuantity)
   end.
 
 
-add_inventory(Node, ProductId, CountryId, AddQuantity) ->
-  try ms_inv:add(Node, ProductId, CountryId, AddQuantity) of
+add_inventory(Node, ProductId, WarehouseId, AddQuantity) ->
+  try ms_inv:add(Node, ProductId, WarehouseId, AddQuantity) of
       Response -> Response
   catch
     _:_ ->
       io:format("#active nodes ~p~n", [get_active_nodes()]),
       LastNode = lists:last(get_active_nodes()),
-      add_inventory(LastNode, ProductId, CountryId, AddQuantity)
+      add_inventory(LastNode, ProductId, WarehouseId, AddQuantity)
   end.
 
 get_active() ->

@@ -30,30 +30,30 @@ call(Node, Msg) ->
   gen_server:call({?MODULE,Node}, Msg).
 
 %% returns 
-%% {ok, {ProductId, CountryId, Quantity}}
+%% {ok, {ProductId, WarehouseId, Quantity}}
 %% {error, not_found}
-get(ProductId, CountryId) ->
-  call({get, {ProductId, CountryId}}).
+get(ProductId, WarehouseId) ->
+  call({get, {ProductId, WarehouseId}}).
 
 
-get(Node, ProductId, CountryId) ->
-  call(Node, {get, {ProductId, CountryId}}).
+get(Node, ProductId, WarehouseId) ->
+  call(Node, {get, {ProductId, WarehouseId}}).
 
 %% subtracts given quantity from the product inventory
 %% returns 
-%% {ok, {ProductId, CountryId, Quantity}}
+%% {ok, {ProductId, WarehouseId, Quantity}}
 %% {error, not_found}
 %% {error, not_available_quantity}
-remove(ProductId, CountryId, Quantity) ->
-  call({remove,{ProductId, CountryId, Quantity}}).
+remove(ProductId, WarehouseId, Quantity) ->
+  call({remove,{ProductId, WarehouseId, Quantity}}).
 
-remove(Node, ProductId, CountryId, Quantity) ->
-  call(Node, {remove,{ProductId, CountryId, Quantity}}).
+remove(Node, ProductId, WarehouseId, Quantity) ->
+  call(Node, {remove,{ProductId, WarehouseId, Quantity}}).
 
 
 %% adds given quantity to the product inventory
 %% returns 
-%% {ok, {ProductId, CountryId, Quantity}}
+%% {ok, {ProductId, WarehouseId, Quantity}}
 %% {error, not_found}
 add(ProductId, WarehouseId, Quantity) -> 
   call({add,{ProductId, WarehouseId, Quantity}}).

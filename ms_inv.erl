@@ -1,6 +1,6 @@
 -module(ms_inv).
 -export([start_link/0,init/1,stop/0]).
--export([get/2,get/3,add/3,add/4,remove/3,remove/4]).
+-export([get/3,add/4,remove/4]).
 -export([handle_call/3,handle_cast/2,terminate/2]).
 -behaviour(gen_server).
 
@@ -23,19 +23,12 @@ terminate(_Reason, _) ->
   pg2:leave(?MODULE, self()),
   ok.
 
-call(Msg) -> 
-  gen_server:call(?MODULE, Msg).
-
 call(Node, Msg) ->
   gen_server:call({?MODULE,Node}, Msg).
 
 %% returns 
 %% {ok, {ProductId, WarehouseId, Quantity}}
 %% {error, not_found}
-get(ProductId, WarehouseId) ->
-  call({get, {ProductId, WarehouseId}}).
-
-
 get(Node, ProductId, WarehouseId) ->
   call(Node, {get, {ProductId, WarehouseId}}).
 
@@ -44,9 +37,6 @@ get(Node, ProductId, WarehouseId) ->
 %% {ok, {ProductId, WarehouseId, Quantity}}
 %% {error, not_found}
 %% {error, not_available_quantity}
-remove(ProductId, WarehouseId, Quantity) ->
-  call({remove,{ProductId, WarehouseId, Quantity}}).
-
 remove(Node, ProductId, WarehouseId, Quantity) ->
   call(Node, {remove,{ProductId, WarehouseId, Quantity}}).
 
@@ -55,9 +45,6 @@ remove(Node, ProductId, WarehouseId, Quantity) ->
 %% returns 
 %% {ok, {ProductId, WarehouseId, Quantity}}
 %% {error, not_found}
-add(ProductId, WarehouseId, Quantity) -> 
-  call({add,{ProductId, WarehouseId, Quantity}}).
-
 add(Node, ProductId, WarehouseId, Quantity) ->
   call(Node, {add,{ProductId, WarehouseId, Quantity}}).
 

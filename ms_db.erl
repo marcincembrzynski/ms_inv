@@ -30,7 +30,7 @@ terminate(_Reason, LoopData) ->
   dets:close(LoopData#loopData.dbref),
   ok.
 
-call(Msg) ->writegen_server:call(?MODULE, Msg).
+call(Msg) -> gen_server:call(?MODULE, Msg).
 
 call(Node, Msg) ->
   gen_server:call({?MODULE,Node}, Msg).
@@ -74,15 +74,13 @@ read_from_all(Key,LoopData) ->
 
   Responses = lists:foldl(get_from_node_fun(Key, LoopData),[], db_nodes(LoopData)),
 
-  WithoutErrorResponses = exclude_error_responses(Responses),
-
-  case WithoutErrorResponses of
+  case exclude_error_responses(Responses) of
 
     [] 	  -> {error,not_found};
 
-    [_|_] ->
+    ResponsesWithoutErrors ->
 
-      Sorted = sort_responses(WithoutErrorResponses),
+      Sorted = sort_responses(ResponsesWithoutErrors),
       {_Node,Latest} = lists:nth(1,Sorted),
 
       update_nodes_with_latest(Responses, Latest, LoopData),
@@ -90,7 +88,7 @@ read_from_all(Key,LoopData) ->
   end.
 
 get_from_node_fun(Key, LoopData) ->
-  GetFromNode = fun(Node, List) ->
+  fun(Node, List) ->
     case Node == node() of
       true ->
         [{node(), read_from_local(Key, LoopData)}] ++ List;
@@ -101,9 +99,7 @@ get_from_node_fun(Key, LoopData) ->
           _:_ -> List
         end
     end
-                end,
-  GetFromNode.
-
+  end.
 
 update_nodes_with_latest(Responses, Latest, LoopData) ->
 

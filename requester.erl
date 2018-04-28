@@ -1,9 +1,9 @@
 -module(requester).
 -export([start/2,loop/0,test/0]).
--record(testData, {startTime, dbRef, productId, warehouseId, counterRef, totalRequests}).
+-record(testData, {startTime, dbRef, productId, warehouseId, counterRef, messages}).
 
 
-start(Processes, Requests) ->
+start(Processes, Messages) ->
   {ok, [{inventory,{ProductId,WarehouseId}}]} = file:consult("requester.txt"),
   {ok, DB} = dets:open_file(requests_db, [{type, set}, {file, requests_db}]),
   CounterTable = ets:new(counter, [public]),
@@ -14,22 +14,25 @@ start(Processes, Requests) ->
   TestData = #testData{
     startTime = erlang:timestamp(), dbRef = DB, productId = ProductId,
     warehouseId = WarehouseId, counterRef = CounterTable,
-    totalRequests = Processes * Requests},
+    messages = Processes * Messages},
+  
   io:format("data: ~p~n",[TestData]),
-  init(Processes, Requests, TestData).
+  init(Processes, Messages, TestData).
 
 init(0, _, _) -> ok;
 
-init(Processes,Requests, TestData) ->
+init(Processes, Messages, TestData) ->
   Pid = spawn(?MODULE, loop, []),
-  Pid ! {requests, Requests, TestData},
+  send(Pid, Messages, TestData),
   NewProcesses = Processes - 1,
-  init(NewProcesses, Requests, TestData).
+  init(NewProcesses, Messages, TestData).
 
+send(Pid, Messages, TestData) ->
+  Pid ! {messages, Messages, TestData}.
 
 loop() ->
   receive
-    {requests, 0, TestData} ->
+    {messages, 0, TestData} ->
 
       ProductId = TestData#testData.productId,
       WarehouseId = TestData#testData.warehouseId,
@@ -39,7 +42,7 @@ loop() ->
       io:format("time: ~p~n", [Seconds]);
 
 
-    {requests, N, TestData} ->
+    {messages, N, TestData} ->
 
 
       ProductId = TestData#testData.productId,
@@ -62,7 +65,8 @@ loop() ->
         {error, Error} -> io:format("add error ~p~n", [Error])
       end,
 
-      self() ! {requests, N - 1, TestData},
+      send(self(), N - 1, TestData),
+
       loop()
 
   end.

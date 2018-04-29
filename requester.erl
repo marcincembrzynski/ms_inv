@@ -15,7 +15,7 @@ start(Processes, Messages) ->
     startTime = erlang:timestamp(), dbRef = DB, productId = ProductId,
     warehouseId = WarehouseId, counterRef = CounterTable,
     messages = Processes * Messages},
-  
+
   io:format("data: ~p~n",[TestData]),
   init(Processes, Messages, TestData).
 

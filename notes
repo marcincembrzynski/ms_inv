@@ -1,0 +1,46 @@
+
+lock(From, LoopData) ->
+  Result = ets:insert(lock_table(LoopData), {lock, From}),
+  io:format("### Result ~p~n", [Result]),
+  Result.
+
+
+unlock(From, LoopData) ->
+
++
+
+(n1@Marcins-MBP)274> requester:start(1,100000).
+ok
+#{ok,{9999,pl,9985}}
+time: 897.246101
+
+
+200000 reads
+200000 writes
+
+
+445 operations / second
+
+(n1@Marcins-MBP)280> requester:start(1,100000).
+ok
+#{ok,{9999,pl,9999}}
+time: 1345.066136
+
+
+(n1@inventory1)25> requester:start(1,100000).
+ok
+#{ok,{9999,pl,9999}}
+time: 842.131704
+
+
+(n1@Marcins-MBP)20> requester:start(1,10000).
+ok
+#{ok,{9999,pl,9996}}
+time: 93.146209
+
+
+(n1@Marcins-MBP)64> requester:start(1,10000).
+ok
+#{ok,{9999,pl,9994}}
+time: 58.629085
+(n1@Marcins-MBP)65>

@@ -1,6 +1,6 @@
 -module(ms_inv).
--export([start_link/0,init/1,stop/0]).
--export([get/3,add/4,remove/4]).
+-export([start_link/0,init/1,stop/0,stop/1]).
+-export([get/3,add/4,remove/4,status/1]).
 -export([handle_call/3,handle_cast/2,terminate/2]).
 -behaviour(gen_server).
 
@@ -17,7 +17,11 @@ init(Args) ->
   pg2:join(?MODULE, self()),
   {ok, []}.
 
-stop() -> gen_server:cast(?MODULE, stop).
+stop() ->
+  gen_server:cast(?MODULE, stop).
+
+stop(Node) ->
+  gen_server:cast({?MODULE,Node}, stop_sup).
 
 terminate(_Reason, _) ->
   pg2:leave(?MODULE, self()),
@@ -48,6 +52,9 @@ remove(Node, ProductId, WarehouseId, Quantity) ->
 add(Node, ProductId, WarehouseId, Quantity) ->
   call(Node, {add,{ProductId, WarehouseId, Quantity}}).
 
+status(Node) ->
+  call(Node, {status}).
+
 handle_call({get, {ProductId, WarehouseId}}, _From, LoopData) ->
   {reply, get_inventory(ProductId, WarehouseId), LoopData};
 
@@ -55,11 +62,19 @@ handle_call({remove, {ProductId, WarehouseId, RemoveQuantity}}, From, LoopData) 
   {reply, remove_inventory(ProductId, WarehouseId, RemoveQuantity, From, LoopData), LoopData};
 
 handle_call({add, {ProductId, WarehouseId, AddQuantity}}, From, LoopData) ->
-  {reply, add_inventory(ProductId, WarehouseId, AddQuantity, From, LoopData), LoopData}.
+  {reply, add_inventory(ProductId, WarehouseId, AddQuantity, From, LoopData), LoopData};
+
+handle_call({status}, _From, LoopData) ->
+  {reply, ok, LoopData}.
+
 
 handle_cast(stop, LoopData) ->
   pg2:leave(?MODULE, self()),
-  {stop, normal, LoopData}.
+  {stop, normal, LoopData};
+
+handle_cast(stop_sup, _LoopData) ->
+  ms_inv_sup:stop(),
+  {noreply, _LoopData}.
 
 get_inventory(ProductId, WarehouseId) ->
 

@@ -1,6 +1,6 @@
 -module(ms_inv_proxy).
 -export([start_link/0,init/1]).
--export([get/2, add/3, remove/3,stop/0,stop_node/0,get_active/0,get_active_nodes/0]).
+-export([get/2, add/3, remove/3,stop/0, status/0,stop_node/0,get_active/0,get_active_nodes/0]).
 -export([handle_call/3,handle_cast/2]).
 -behaviour(gen_server).
 
@@ -25,12 +25,18 @@ get(ProductId, WarehouseId) ->
 remove(ProductId, WarehouseId, Quantity) ->
   call({remove,{ProductId, WarehouseId, Quantity}}).
 
+status() ->
+  call({status}).
+
 add(ProductId, WarehouseId, Quantity) ->
   call({add,{ProductId, WarehouseId, Quantity}}).
 
 stop() -> gen_server:cast(?MODULE, stop).
 
 stop_node() -> gen_server:cast(?MODULE, stop_node).
+
+handle_call({status}, _From, LoopData) ->
+  {reply, get_status(3), LoopData};
 
 handle_call({get, {ProductId, WarehouseId}}, _From, LoopData) ->
   {reply, get_inventory(ProductId, WarehouseId), LoopData};
@@ -53,6 +59,19 @@ handle_cast(stop, LoopData) ->
 get_inventory(ProductId, WarehouseId) ->
   ms_inv:get(get_active(), ProductId, WarehouseId).
 
+get_status(0) ->
+  io:format("please try later ~n"),
+  error;
+
+get_status(N) ->
+  try ms_inv:status(get_active()) of
+    Response -> Response
+  catch
+    _:_ ->
+      io:format("retrying ~p~n", [N]),
+      get_status(N - 1)
+  end.
+
 
 remove_inventory(Node, ProductId, WarehouseId, RemoveQuantity) ->
 
@@ -60,7 +79,7 @@ remove_inventory(Node, ProductId, WarehouseId, RemoveQuantity) ->
     Response -> Response
   catch
     _:_ ->
-      io:format("#active nodes ~p~n", [get_active_nodes()]),
+      io:format("#error - active nodes ~p~n", [get_active_nodes()]),
       LastNode = lists:last(get_active_nodes()),
       remove_inventory(LastNode, ProductId, WarehouseId, RemoveQuantity)
   end.

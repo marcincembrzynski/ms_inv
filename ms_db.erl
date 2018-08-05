@@ -2,8 +2,9 @@
 -behaviour(gen_server).
 -export([write/2,read/1]).
 -export([start_link/1,init/1,handle_call/3,handle_cast/2,stop/0,terminate/2]).
--export([read_from_remote/2,write_cast/4]).
+-export([read_from_remote/2,write_cast/5]).
 -record(loopData, {nodes, dbname, groupname, dbref}).
+-record(entry, {key, value, version, requestId} ).
 
 start_link(GroupName) ->
   [DBName|_] = string:split(atom_to_list(node()),"@"),
@@ -17,7 +18,7 @@ stop() ->
 init(LoopData) ->
   PingNode = fun(N) -> net_adm:ping(N) end,
   lists:foreach(PingNode, LoopData#loopData.nodes),
-  {ok, DB} = dets:open_file(LoopData#loopData.dbname, [{type, set}, {file, LoopData#loopData.dbname}]),
+  {ok, DB} = dets:open_file(LoopData#loopData.dbname, [{type, duplicate_bag}, {file, LoopData#loopData.dbname}]),
   NewLoopData = LoopData#loopData{dbref = DB},
   process_flag(trap_exit, true),
   pg2:create(NewLoopData#loopData.groupname),
@@ -46,129 +47,95 @@ read(Key) -> call({read, Key}).
 read_from_remote(Node, Key) ->
   call(Node, {read_from_remote, Key}).
 
-write_cast(Node, Key, Value, Version) ->
-  cast(Node, {write_to_local, {Key, Value, Version}}).
+write_cast(Node, Key, Value, Version, RequestId) ->
+  cast(Node, {write_to_local, {Key, Value, Version, RequestId}}).
 
 handle_call({write, {Key, Value}}, _From, LoopData) ->
   {reply, write_to_all(Key, Value, LoopData), LoopData};
 
-handle_call({write_to_local, {Key, Value, Version}}, _From, LoopData) ->
-  {reply, write_to_local(Key, Value, Version, LoopData), LoopData};
+handle_call({write_to_local, {Key, Value, Version, RequestId}}, _From, LoopData) ->
+  {reply, write_to_local(Key, Value, Version, RequestId, LoopData), LoopData};
 
 handle_call({read, Key}, _From, LoopData) ->
-  {reply, read_from_all(Key,LoopData), LoopData};
+  {reply, read(Key,LoopData), LoopData};
 
 handle_call({read_from_local, Key}, _From, LoopData) ->
-  {reply, read_from_local(Key, LoopData), LoopData};
+  {reply, read(Key, LoopData), LoopData}.
 
-handle_call({read_from_remote, Key}, _From, LoopData) ->
-  {reply, read_from_local(Key, LoopData), LoopData}.
 
 handle_cast(stop, LoopData) -> {stop, normal, LoopData};
 
-handle_cast({write_to_local, {Key, Value, Version}}, LoopData) ->
-  ok = dets:insert(db_ref(LoopData), {Key, Value, Version}),
+handle_cast({write_to_local, {Key, Value, Version, RequestId}}, LoopData) ->
+  io:format("#### handle cast ~n"),
+  %%% check if very is higher version...
+  %%% what to do if the higher version exist?????
+  LocalVersion = read(Key, LoopData),
+  {ok, {Key, ValueLocal, VersionLocal, RequestIdLocal}} = LocalVersion,
+  io:format("local version: ~p~n", [LocalVersion]),
+  case (Version > VersionLocal) of
+    true ->
+      ok = dets:insert(db_ref(LoopData), {Key, Value, Version, RequestId});
+
+    false ->
+      %% updating other nodes
+      OtherNodes = other_nodes(LoopData),
+      io:format("Other nodes, ~p~n", [OtherNodes]),
+      lists:foreach(fun(Node) ->
+        write_cast(Node, Key, ValueLocal, VersionLocal, RequestIdLocal)
+                    end, OtherNodes)
+
+  end,
   {noreply,LoopData}.
 
-read_from_all(Key,LoopData) ->
 
-  Responses = lists:foldl(get_from_node_fun(Key, LoopData),[], db_nodes(LoopData)),
-
-  case exclude_error_responses(Responses) of
-
-    [] 	  -> {error,not_found};
-
-    ResponsesWithoutErrors ->
-
-      Sorted = sort_responses(ResponsesWithoutErrors),
-      {_Node,Latest} = lists:nth(1,Sorted),
-
-      update_nodes_with_latest(Responses, Latest, LoopData),
-      Latest
+read(Key, LoopData) ->
+  Result = dets:lookup(db_ref(LoopData), Key),
+  io:format("### read, ~p~n", [Result]),
+  case Result of
+    [] -> {error, not_found};
+    Found ->
+      %%% sort
+      FunSort = fun({_, _, V1, _}, {_, _, V2, _}) -> V2 =< V1 end,
+      [Latest|_] = lists:sort(FunSort, Found),
+      {ok, Latest}
   end.
 
-get_from_node_fun(Key, LoopData) ->
-  fun(Node, List) ->
-    case Node == node() of
-      true ->
-        [{node(), read_from_local(Key, LoopData)}] ++ List;
-      false ->
-        try ms_db:read_from_remote(Node, Key) of
-          Response -> lists:append([{Node, Response}], List)
-        catch
-          _:_ -> List
-        end
-    end
-  end.
 
-update_nodes_with_latest(Responses, Latest, LoopData) ->
 
-  {ok,{Key, Value, Version}} = Latest,
-
-  % 1. Create the lists of responses not equal to Latest
-  Filter = fun({_,Other}) -> Latest /= Other end,
-  NotCorrectResponses = lists:filter(Filter, Responses),
-
-  % 2. Create the list of nodes to update
-  NodesToUpdate = lists:map(fun({Node,_}) -> Node end, NotCorrectResponses),
-
-  % 3. Update all the nodes from the list with the latest
-  UpdateNode = update_node_fun_node(Key, Value, Version, LoopData),
-  lists:foreach(UpdateNode, NodesToUpdate),
-  ok.
-
-update_node_fun_node(Key, Value, Version, LoopData) ->
+update_node_fun_node(Key, Value, Version, RequestId, LoopData) ->
   fun(Node) ->
     case (node() == Node) of
       true ->
-        write_to_local(Key,Value,Version,LoopData);
+        write_to_local(Key, Value, Version, RequestId, LoopData);
       false ->
-        ms_db:write_cast(Node, Key,Value,Version)
+        write_cast(Node, Key, Value, Version, RequestId)
     end
   end.
 
 write_to_all(Key, Value, LoopData) ->
 
-  Response = read_from_all(Key, LoopData),
+  Response = read(Key, LoopData),
 
   case Response of
-    {error, Error} -> {error, Error};
+    {error, _Error} ->
+      write_to_local(Key,Value,1, make_ref(), LoopData);
 
     {ok, Latest} ->
-      {Key, _, Version} = Latest,
+      {Key, _, Version, _RequestId} = Latest,
       NewVersion = Version + 1,
-      UpdateNode = update_node_fun_node(Key, Value, NewVersion, LoopData),
+      UpdateNode = update_node_fun_node(Key, Value, NewVersion, make_ref(), LoopData),
       lists:foreach(UpdateNode,db_nodes(LoopData)),
-      read_from_local(Key, LoopData)
+      read(Key, LoopData)
   end.
 
-read_from_local(Key, LoopData) ->
-  Result = dets:lookup(db_ref(LoopData), Key),
-  case Result of
-    [] -> {error, not_found};
-    [Found] -> {ok, Found}
-  end.
-
-write_to_local(Key, Value, Version, LoopData) ->
-  ok = dets:insert(db_ref(LoopData), {Key, Value, Version}),
-  {ok, {Key, Value, Version}}.
+write_to_local(Key, Value, Version, RequestId, LoopData) ->
+  ok = dets:insert(db_ref(LoopData), {Key, Value, Version, RequestId}),
+  {ok, {Key, Value, Version, RequestId}}.
 
 db_nodes(LoopData) ->
   lists:map(fun(E) -> node(E) end, pg2:get_members(LoopData#loopData.groupname)).
 
+other_nodes(LoopData) ->
+  lists:filter(fun(Node) -> Node /= node() end, db_nodes(LoopData)).
+
 db_ref(LoopData) -> LoopData#loopData.dbref.
-
-exclude_error_responses(Responses) ->
-  Filter = fun(Response) -> not_error_response(Response) end,
-  lists:filter(Filter, Responses).
-
-sort_responses(Responses) ->
-  ReverseSort = fun(A,B) ->
-    {_,{ok,{_, _, T1}}} = A,
-    {_,{ok,{_, _, T2}}} = B,
-    T1 >= T2
-  end,
-  lists:sort(ReverseSort, Responses).
-
-not_error_response({_,{error, _}}) -> false;
-not_error_response({_,{ok,_}}) -> true.

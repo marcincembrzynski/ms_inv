@@ -3,6 +3,7 @@
 -export([write/2,read/1]).
 -export([start_link/1,init/1,handle_call/3,handle_cast/2,stop/0,terminate/2]).
 -export([read_from_remote/2,write_cast/5]).
+-export([test_write/0,test_read/0]).
 -record(loopData, {nodes, dbname, groupname, dbref}).
 -record(entry, {key, value, version, requestId} ).
 
@@ -44,6 +45,10 @@ write(Key, Value) ->
 
 read(Key) -> call({read, Key}).
 
+
+test_read() -> call({test_read}).
+test_write() -> call({test_write}).
+
 read_from_remote(Node, Key) ->
   call(Node, {read_from_remote, Key}).
 
@@ -60,7 +65,13 @@ handle_call({read, Key}, _From, LoopData) ->
   {reply, read(Key,LoopData), LoopData};
 
 handle_call({read_from_local, Key}, _From, LoopData) ->
-  {reply, read(Key, LoopData), LoopData}.
+  {reply, read(Key, LoopData), LoopData};
+
+handle_call({test_read}, _From, LoopData) ->
+  {reply, test_read(LoopData), LoopData};
+
+handle_call({test_write}, _From, LoopData) ->
+  {reply, test_write(LoopData), LoopData}.
 
 
 handle_cast(stop, LoopData) -> {stop, normal, LoopData};
@@ -127,6 +138,18 @@ write_to_all(Key, Value, LoopData) ->
       lists:foreach(UpdateNode,db_nodes(LoopData)),
       read(Key, LoopData)
   end.
+
+
+test_write(LoopData) ->
+  Entry = #entry{key = 1, value = 2, version = 3, requestId = make_ref()},
+  ok = dets:insert(db_ref(LoopData), Entry),
+  {{ok, Entry}, dets:info(db_ref(LoopData))}.
+
+test_read(LoopData) ->
+  %%dets:lookup(db_ref(LoopData), #entry.key = 1).
+  TabRef = ets:new(abc, []),
+  dets:to_ets(db_ref(LoopData), TabRef).
+
 
 write_to_local(Key, Value, Version, RequestId, LoopData) ->
   ok = dets:insert(db_ref(LoopData), {Key, Value, Version, RequestId}),

@@ -1,9 +1,10 @@
 -module(test_status).
--export([start/2,loop/0, result/0]).
+-export([start/2,loop/0, stop_node/0, result/0]).
 
 start(Proc, Req) ->
 
-    %% create or open ets named table
+    ok = ms_inv_proxy:status(),
+
     case ets:info(?MODULE) of
       undefined ->
         ets:new(?MODULE, [named_table, public]);
@@ -11,29 +12,52 @@ start(Proc, Req) ->
         ets:delete_all_objects(?MODULE)
     end,
 
+    Pid = spawn(?MODULE, stop_node, []),
+    Pid ! {stop_node, 1},
 
-    init(Proc,Req).
 
-init(0, _) -> ok;
+    init(Proc,Req, Pid).
 
-init(Proc, Req) ->
+init(0, _, _) -> ok;
+
+init(Proc, Req, StopNodePid) ->
   Pid = spawn(?MODULE, loop, []),
-  Pid ! {requests, Req},
+  Pid ! {requests, Req, StopNodePid},
   io:format("started process: ~p~n", [Pid]),
-  init(Proc - 1, Req).
+  init(Proc - 1, Req, StopNodePid).
 
 
 loop() ->
   receive
-    {requests, 0} ->
+    {requests, 0, StopNodePid} ->
+      StopNodePid ! {stop},
       io:format("process finished: ~p~n", [self()]),
       ok;
 
-    {requests, Req} ->
+    {requests, Req, StopNodePid} ->
       ok = ms_inv_proxy:status(),
       ets:insert(?MODULE, {erlang:timestamp(), {self(), Req}}),
-      self() ! {requests, Req - 1},
+      self() ! {requests, Req - 1, StopNodePid},
       loop()
+
+  end.
+
+
+stop_node() ->
+  receive
+
+    {stop} ->
+      io:format("stoping stop node: ~n"),
+      ok;
+
+    {stop_node, N} ->
+      io:format("Stop Node process sleeps.... ~n"),
+      timer:sleep(5000),
+      io:format("stoping node event number: ~p~n", [N]),
+      ms_inv_proxy:stop_node(),
+      self() ! {stop_node, N + 1},
+      stop_node()
+
 
   end.
 

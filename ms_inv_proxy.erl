@@ -49,8 +49,9 @@ handle_call({add, {ProductId, WarehouseId, AddQuantity}}, _From, LoopData) ->
   {reply, add_inventory(get_active(), ProductId, WarehouseId, AddQuantity), LoopData}.
 
 handle_cast(stop_node, LoopData) ->
-  io:format("get_active(), ~p~n", [get_active()]),
-  ms_inv:stop(get_active()),
+  ActiveNode = get_active(),
+  io:format("stoping active node, ~p~n", [ActiveNode]),
+  ms_inv:stop(ActiveNode),
   {noreply,LoopData};
 
 handle_cast(stop, LoopData) ->
@@ -68,7 +69,10 @@ get_status(N) ->
     Response -> Response
   catch
     _:_ ->
-      io:format("retrying ~p~n", [N]),
+      ActiveNodes = get_active_nodes(),
+      io:format("ms_inv_proxy active nodes count: ~p~n", [length(ActiveNodes)]),
+      io:format("ms_inv_proxy active nodes: ~p~n", [ActiveNodes]),
+      io:format("ms_inv_proxy retry attemp number: ~p~n", [4 - N]),
       get_status(N - 1)
   end.
 

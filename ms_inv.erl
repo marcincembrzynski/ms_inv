@@ -1,5 +1,5 @@
 -module(ms_inv).
--export([start_link/0,init/1,stop/0,stop/1]).
+-export([start_link/0,start_link/1,init/1,stop/0,stop/1]).
 -export([get/3,add/4,remove/4,status/1]).
 -export([handle_call/3,handle_cast/2,terminate/2]).
 -behaviour(gen_server).
@@ -7,6 +7,10 @@
 start_link() ->
   {ok,[Nodes]} = file:consult(nodes),
   gen_server:start_link({local, ?MODULE}, ?MODULE, [{nodes, Nodes}], []).
+
+start_link(Node) ->
+  {ok,[Nodes]} = file:consult(nodes),
+  gen_server:start_link(Node, ?MODULE, [{nodes, Nodes}]).
 
 init(Args) ->
   [{nodes, Nodes}] = Args,
@@ -73,13 +77,14 @@ handle_cast(stop, LoopData) ->
   {stop, normal, LoopData};
 
 handle_cast(stop_sup, _LoopData) ->
-  ms_inv_sup:stop(),
-  {noreply, _LoopData}.
+  io:fromat("stopping node ~n"),
+  pg2:leave(?MODULE, self()),
+  {stop, normal, _LoopData}.
 
 get_inventory(ProductId, WarehouseId) ->
 
   case ms_db:read({ProductId, WarehouseId}) of
-     {ok, {{ProductId, WarehouseId}, Quantity, _Version}} ->
+     {ok, {{ProductId, WarehouseId}, Quantity, _Version, RequestId}} ->
         {ok, {ProductId, WarehouseId, Quantity}};
 
      {error, Error} ->

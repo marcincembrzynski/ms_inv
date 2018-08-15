@@ -56,12 +56,16 @@ stop_node(Interval) ->
       ok;
 
     {stop_node, N} ->
+
+      io:format("--------------------------------- ~n"),
       io:format("stop_node process sleeps.... ~n"),
       %% sleep time as argument
       timer:sleep(Interval),
+      io:format("--------------------------------- ~n"),
       io:format("stoping node event number: ~p~n", [N]),
       io:format("stoping node at: ~p~n", [calendar:local_time()]),
       io:format("--------------------------------- ~n"),
+
       ms_inv_proxy:stop_node(),
       self() ! {stop_node, N + 1},
       stop_node(Interval)

@@ -12,14 +12,15 @@ start(Proc, Req, Interval) ->
         ets:delete_all_objects(?MODULE)
     end,
 
-    init_stop_node(Interval),
+    StopNodePid = init_stop_node(Interval),
 
-    init(Proc,Req, Pid).
+    init(Proc,Req, StopNodePid).
 
 init_stop_node(Interval) ->
   MilisecondsInterval = Interval * 1000,
   Pid = spawn(?MODULE, stop_node, [MilisecondsInterval]),
-  Pid ! {stop_node, 1}.
+  Pid ! {stop_node, 1},
+  Pid.
 
 
 init(0, _, _) -> ok;

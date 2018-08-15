@@ -12,7 +12,11 @@ start_link() ->
 init(Args) ->
   {nodes, Nodes} = Args,
   process_flag(trap_exit, true),
-  PingNode = fun(N) -> net_adm:ping(N) end,
+  PingNode = fun(N) ->
+    io:format("ping node: ~p~n", [N]),
+    Ping = net_adm:ping(N),
+    io:format("ping result: ~p~n", [Ping])
+  end,
   lists:foreach(PingNode, Nodes),
   {ok, Args}.
 
@@ -50,7 +54,7 @@ handle_call({add, {ProductId, WarehouseId, AddQuantity}}, _From, LoopData) ->
 
 handle_cast(stop_node, LoopData) ->
   ActiveNode = get_active(),
-  io:format("stoping active node, ~p~n", [ActiveNode]),
+  io:format("stoping active node: ~p~n", [ActiveNode]),
   ms_inv:stop(ActiveNode),
   {noreply,LoopData};
 
@@ -72,7 +76,7 @@ get_status(N) ->
       ActiveNodes = get_active_nodes(),
       io:format("ms_inv_proxy active nodes count: ~p~n", [length(ActiveNodes)]),
       io:format("ms_inv_proxy active nodes: ~p~n", [ActiveNodes]),
-      io:format("ms_inv_proxy retry attemp number: ~p~n", [4 - N]),
+      io:format("ms_inv_proxy retry attempt number: ~p~n", [4 - N]),
       get_status(N - 1)
   end.
 

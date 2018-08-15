@@ -14,7 +14,7 @@ start(Proc, Req, Interval) ->
 
     StopNodePid = init_stop_node(Interval),
 
-    init(Proc,Req, StopNodePid).
+    init(Proc, Req, StopNodePid).
 
 init_stop_node(Interval) ->
   MilisecondsInterval = Interval * 1000,
@@ -24,8 +24,6 @@ init_stop_node(Interval) ->
 
 
 init(0, _, _) -> ok;
-
-
 
 init(Proc, Req, StopNodePid) ->
   Pid = spawn(?MODULE, loop, []),
@@ -62,6 +60,7 @@ stop_node(Interval) ->
       %% sleep time as argument
       timer:sleep(Interval),
       io:format("stoping node event number: ~p~n", [N]),
+      io:format("stoping node at: ~p~n", [calendar:local_time()]),
       io:format("--------------------------------- ~n"),
       ms_inv_proxy:stop_node(),
       self() ! {stop_node, N + 1},

@@ -77,7 +77,7 @@ handle_cast(stop, LoopData) ->
   {stop, normal, LoopData};
 
 handle_cast(stop_sup, _LoopData) ->
-  io:fromat("stopping node ~n"),
+  io:format("stopping node ~n"),
   pg2:leave(?MODULE, self()),
   {stop, normal, _LoopData}.
 

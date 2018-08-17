@@ -18,6 +18,7 @@ init(Args) ->
     io:format("ping result: ~p~n", [Ping])
   end,
   lists:foreach(PingNode, Nodes),
+  pg2:create(ms_inv),
   {ok, Args}.
 
 call(Msg) ->
@@ -87,7 +88,7 @@ remove_inventory(Node, ProductId, WarehouseId, RemoveQuantity) ->
     Response -> Response
   catch
     _:_ ->
-      io:format("#error - active nodes ~p~n", [get_active_nodes()]),
+      io:format("error ms_inv_proxy remove retry attempt - active nodes ~p~n", [get_active_nodes()]),
       LastNode = lists:last(get_active_nodes()),
       remove_inventory(LastNode, ProductId, WarehouseId, RemoveQuantity)
   end.
@@ -98,7 +99,7 @@ add_inventory(Node, ProductId, WarehouseId, AddQuantity) ->
       Response -> Response
   catch
     _:_ ->
-      io:format("#active nodes ~p~n", [get_active_nodes()]),
+      io:format("error ms_inv_proxy add attempt #active nodes ~p~n", [get_active_nodes()]),
       LastNode = lists:last(get_active_nodes()),
       add_inventory(LastNode, ProductId, WarehouseId, AddQuantity)
   end.

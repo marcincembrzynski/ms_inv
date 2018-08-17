@@ -84,7 +84,7 @@ handle_cast(stop_sup, _LoopData) ->
 get_inventory(ProductId, WarehouseId) ->
 
   case ms_db:read({ProductId, WarehouseId}) of
-     {ok, {{ProductId, WarehouseId}, Quantity, _Version, RequestId}} ->
+     {ok, {{ProductId, WarehouseId}, Quantity, _Version}} ->
         {ok, {ProductId, WarehouseId, Quantity}};
 
      {error, Error} ->
@@ -94,11 +94,11 @@ get_inventory(ProductId, WarehouseId) ->
 remove_inventory(ProductId, WarehouseId, RemoveQuantity, _From, _LoopData) ->
 
   case ms_db:read({ProductId, WarehouseId}) of
-    {ok, {_Key,0, _Version}} ->
+    {ok, {_Key,0, _Version, _RequestId}} ->
       {error, not_available_quantity};
 
-    {ok, {Key,Quantity, _}} ->
-      {ok, {{ProductId, WarehouseId}, NewQuantity, _}} = ms_db:write(Key, Quantity - RemoveQuantity),
+    {ok, {Key, Quantity, _Version}} ->
+      {ok, {{ProductId, WarehouseId}, NewQuantity, _NewVersion}} = ms_db:write(Key, Quantity - RemoveQuantity),
       {ok, {ProductId, WarehouseId, NewQuantity}};
 
     {error, Error} ->
@@ -108,8 +108,8 @@ remove_inventory(ProductId, WarehouseId, RemoveQuantity, _From, _LoopData) ->
 add_inventory(ProductId, WarehouseId, AddQuantity, _From, _LoopData) ->
 
   case ms_db:read({ProductId, WarehouseId}) of
-    {ok, {Key,Quantity,_}} ->
-      {ok, {{ProductId, WarehouseId}, NewQuantity, _}} = ms_db:write(Key, Quantity + AddQuantity),
+    {ok, {Key, Quantity, _Version}} ->
+      {ok, {{ProductId, WarehouseId}, NewQuantity, _NewVersion}} = ms_db:write(Key, Quantity + AddQuantity),
       {ok, {ProductId, WarehouseId, NewQuantity}};
 
     {error, Error} ->

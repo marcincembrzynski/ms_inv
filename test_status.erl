@@ -1,5 +1,5 @@
 -module(test_status).
--export([start/3,loop/0, stop_node/1, result/0]).
+-export([start/3,loop/0, result/0]).
 
 start(Proc, Req, Interval) ->
 
@@ -12,64 +12,31 @@ start(Proc, Req, Interval) ->
         ets:delete_all_objects(?MODULE)
     end,
 
-    StopNodePid = init_stop_node(Interval),
-
-    init(Proc, Req, StopNodePid).
-
-init_stop_node(Interval) ->
-  MilisecondsInterval = Interval * 1000,
-  Pid = spawn(?MODULE, stop_node, [MilisecondsInterval]),
-  Pid ! {stop_node, 1},
-  Pid.
+    stop_node:start(Interval),
+    init(Proc, Req).
 
 
-init(0, _, _) -> ok;
+init(0, _) -> ok;
 
-init(Proc, Req, StopNodePid) ->
+init(Proc, Req) ->
   Pid = spawn(?MODULE, loop, []),
-  Pid ! {requests, Req, StopNodePid},
+  Pid ! {requests, Req},
   io:format("started process: ~p~n", [Pid]),
-  init(Proc - 1, Req, StopNodePid).
+  init(Proc - 1, Req).
 
 
 loop() ->
   receive
-    {requests, 0, StopNodePid} ->
-      StopNodePid ! {stop},
+    {requests, 0} ->
+      stop_node:stop(),
       io:format("process finished: ~p~n", [self()]),
       ok;
 
-    {requests, Req, StopNodePid} ->
+    {requests, Req} ->
       ok = ms_inv_proxy:status(),
       ets:insert(?MODULE, {erlang:timestamp(), {self(), Req}}),
-      self() ! {requests, Req - 1, StopNodePid},
+      self() ! {requests, Req - 1},
       loop()
-
-  end.
-
-
-stop_node(Interval) ->
-  receive
-
-    {stop} ->
-      io:format("stoping stop_node process ~n"),
-      ok;
-
-    {stop_node, N} ->
-
-      io:format("--------------------------------- ~n"),
-      io:format("stop_node process sleeps.... ~n"),
-      %% sleep time as argument
-      timer:sleep(Interval),
-      io:format("--------------------------------- ~n"),
-      io:format("stoping node event number: ~p~n", [N]),
-      io:format("stoping node at: ~p~n", [calendar:local_time()]),
-      io:format("--------------------------------- ~n"),
-
-      ms_inv_proxy:stop_node(),
-      self() ! {stop_node, N + 1},
-      stop_node(Interval)
-
 
   end.
 

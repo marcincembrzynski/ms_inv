@@ -2,12 +2,23 @@
 -export([start/3, loop/0,result/0]).
 
 start(Processes, Requests, Interval) ->
+
+  ms_inv_proxy:start_link(),
+
   case ets:info(?MODULE) of
     undefined ->
       ets:new(?MODULE, [named_table, public]);
     _ ->
       ets:delete_all_objects(?MODULE)
   end,
+
+  Units = Processes * Requests,
+  io:format("Units Needed init, ~p~n", [Units]),
+  {ok, {9999, uk, Available}} = ms_inv_proxy:get(9999, uk),
+  RemoveResponse = ms_inv_proxy:remove(9999, uk, Available),
+  io:format("RemoveResponse init, ~p~n", [RemoveResponse]),
+  AddResponse = ms_inv_proxy:add(9999, uk, Units - 1),
+  io:format("AddResponse init, ~p~n", [AddResponse]),
 
   stop_node:start(Interval),
 
@@ -36,10 +47,10 @@ loop() ->
 
     {requests, Requests} ->
 
-      AddResponse = ms_inv_proxy:add(9999,uk,1),
+      RemoveResponse = ms_inv_proxy:remove(9999,uk,1),
       %%io:format("process ~p: remaining requests: ~p, AddResponse: ~p~n",[self(), Requests, AddResponse]),
 
-      ets:insert(?MODULE, {erlang:timestamp(), add, AddResponse}),
+      ets:insert(?MODULE, {erlang:timestamp(), remove, RemoveResponse}),
       %%RemoveResponse = ms_inv_proxy:add(9999,pl,1),
       %%ets:insert(?MODULE, {erlang:timestamp(), remove, RemoveResponse}),
 

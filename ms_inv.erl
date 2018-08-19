@@ -97,7 +97,7 @@ remove_inventory(ProductId, WarehouseId, RemoveQuantity, _From, _LoopData) ->
       {ok, {Key, Available , _Version}} ->
           case (Available - RemoveQuantity) >= 0 of
             false ->
-              {error, not_available_quantity};
+              {error, not_available_quantity, {available, Available}, {requested, RemoveQuantity}};
 
             true ->
               {ok, {{ProductId, WarehouseId}, NewQuantity, _NewVersion}} = ms_db:write(Key, Available - RemoveQuantity),

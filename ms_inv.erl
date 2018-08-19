@@ -94,16 +94,21 @@ get_inventory(ProductId, WarehouseId) ->
 remove_inventory(ProductId, WarehouseId, RemoveQuantity, _From, _LoopData) ->
 
   case ms_db:read({ProductId, WarehouseId}) of
-    {ok, {_Key,0, _Version, _RequestId}} ->
-      {error, not_available_quantity};
+      {ok, {Key, Available , _Version}} ->
+          case (Available - RemoveQuantity) >= 0 of
+            false ->
+              {error, not_available_quantity};
 
-    {ok, {Key, Quantity, _Version}} ->
-      {ok, {{ProductId, WarehouseId}, NewQuantity, _NewVersion}} = ms_db:write(Key, Quantity - RemoveQuantity),
-      {ok, {ProductId, WarehouseId, NewQuantity}};
+            true ->
+              {ok, {{ProductId, WarehouseId}, NewQuantity, _NewVersion}} = ms_db:write(Key, Available - RemoveQuantity),
+              {ok, {ProductId, WarehouseId, NewQuantity}}
+          end;
 
-    {error, Error} ->
-      {error, Error}
+      {error, Error} ->
+          {error, Error}
   end.
+
+
 
 add_inventory(ProductId, WarehouseId, AddQuantity, _From, _LoopData) ->
 

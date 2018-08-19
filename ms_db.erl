@@ -76,8 +76,6 @@ handle_cast({write_to_local, {Key, Value, Version}}, LoopData) ->
       ok = dets:insert(db_ref(LoopData), {Key, Value, Version});
     {ok, _} ->
       {ok, {Key, _ValueLocal, VersionLocal}} = LocalVersion,
-      %%io:format("local version: ~p~n", [LocalVersion]),
-
       case (Version > VersionLocal) of
         true ->
           ok = dets:insert(db_ref(LoopData), {Key, Value, Version});

@@ -41,7 +41,10 @@ stop() -> gen_server:cast(?MODULE, stop).
 stop_node() -> gen_server:cast(?MODULE, stop_node).
 
 handle_call({status}, _From, LoopData) ->
-  {reply, get_status(3), LoopData};
+  io:format("loopData ~p~n", [LoopData]),
+  {nodes, Nodes} = LoopData,
+  NodesCount = length(Nodes),
+  {reply, get_status(NodesCount, NodesCount), LoopData};
 
 handle_call({get, {ProductId, WarehouseId}}, _From, LoopData) ->
   {reply, get_inventory(ProductId, WarehouseId), LoopData};
@@ -65,11 +68,11 @@ handle_cast(stop, LoopData) ->
 get_inventory(ProductId, WarehouseId) ->
   ms_inv:get(get_active(), ProductId, WarehouseId).
 
-get_status(0) ->
+get_status(0, _NodesCount) ->
   io:format("please try later ~n"),
   error;
 
-get_status(N) ->
+get_status(N, NodesCount) ->
   try ms_inv:status(get_active()) of
     Response -> Response
   catch
@@ -77,8 +80,8 @@ get_status(N) ->
       ActiveNodes = get_active_nodes(),
       io:format("ms_inv_proxy active nodes count: ~p~n", [length(ActiveNodes)]),
       io:format("ms_inv_proxy active nodes: ~p~n", [ActiveNodes]),
-      io:format("ms_inv_proxy retry attempt number: ~p~n", [4 - N]),
-      get_status(N - 1)
+      io:format("ms_inv_proxy retry attempt number: ~p~n", [NodesCount - N + 1]),
+      get_status(N - 1, NodesCount)
   end.
 
 

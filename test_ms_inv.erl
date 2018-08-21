@@ -1,5 +1,6 @@
 -module(test_ms_inv).
 -export([start/3, loop/0,result/0]).
+-record(testData, {productId, warehouseId}).
 
 start(Processes, Requests, Interval) ->
 
@@ -12,50 +13,49 @@ start(Processes, Requests, Interval) ->
       ets:delete_all_objects(?MODULE)
   end,
 
+  {ok, [{inventory,{ProductId,WarehouseId}}]} = file:consult("requester.txt"),
+  TestData = #testData{productId = ProductId, warehouseId = WarehouseId},
+
   Units = Processes * Requests,
   io:format("Units Needed init, ~p~n", [Units]),
-  {ok, {9999, uk, Available}} = ms_inv_proxy:get(9999, uk),
-  RemoveResponse = ms_inv_proxy:remove(9999, uk, Available),
+  {ok, {9999, uk, Available}} = ms_inv_proxy:get(ProductId, WarehouseId),
+  RemoveResponse = ms_inv_proxy:remove(ProductId, WarehouseId, Available),
   io:format("RemoveResponse init, ~p~n", [RemoveResponse]),
-  AddResponse = ms_inv_proxy:add(9999, uk, Units - 1),
+  AddResponse = ms_inv_proxy:add(ProductId, WarehouseId, Units - 1),
   io:format("AddResponse init, ~p~n", [AddResponse]),
 
   stop_node:start(Interval),
 
-  init(Processes, Requests),
+  init(Processes, Requests, TestData),
 
 
   ok.
 
 
-init(0, _) -> ok;
+init(0, _, _) -> ok;
 
-init(Processes, Requests) ->
+init(Processes, Requests, TestData) ->
   Pid = spawn(?MODULE, loop, []),
-  Pid ! {requests, Requests},
+  Pid ! {requests, Requests, TestData},
   io:format("started process: ~p~n", [Pid]),
-  init(Processes - 1, Requests).
+  init(Processes - 1, Requests, TestData).
 
 
 loop() ->
 
   receive
-    {requests, 0} ->
+    {requests, 0, _TestData} ->
       stop_node:stop(),
       io:format("# stop process, ~p~n", [self()]),
       ok;
 
-    {requests, Requests} ->
+    {requests, Requests, TestData} ->
 
-      RemoveResponse = ms_inv_proxy:remove(9999,uk,1),
-      %%io:format("process ~p: remaining requests: ~p, AddResponse: ~p~n",[self(), Requests, AddResponse]),
-
+      ProductId = TestData#testData.productId,
+      WarehouseId = TestData#testData.warehouseId,
+      RemoveResponse = ms_inv_proxy:remove(ProductId, WarehouseId, 1),
       ets:insert(?MODULE, {erlang:timestamp(), remove, RemoveResponse}),
-      %%RemoveResponse = ms_inv_proxy:add(9999,pl,1),
-      %%ets:insert(?MODULE, {erlang:timestamp(), remove, RemoveResponse}),
-
-      self() ! {requests, Requests - 1},
-
+      self() ! {requests, Requests - 1, TestData},
       loop()
 
   end.

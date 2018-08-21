@@ -13,7 +13,7 @@ start(Processes, Requests, Interval) ->
       ets:delete_all_objects(?MODULE)
   end,
 
-  {ok, [{inventory,{ProductId,WarehouseId}}]} = file:consult("requester.txt"),
+  {ok, [{inventory,{ProductId,WarehouseId}}]} = file:consult(?MODULE),
   TestData = #testData{productId = ProductId, warehouseId = WarehouseId},
 
   Units = Processes * Requests,

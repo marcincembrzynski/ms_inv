@@ -11,9 +11,6 @@ start_link(GroupName) ->
   LoopData = #loopData{ nodes = Nodes, dbname = DBName, groupname = GroupName},
   gen_server:start_link({local, ?MODULE}, ?MODULE, LoopData, []).
 
-stop() ->
-  gen_server:cast(?MODULE, stop).
-
 init(LoopData) ->
   PingNode = fun(N) -> net_adm:ping(N) end,
   lists:foreach(PingNode, LoopData#loopData.nodes),
@@ -24,6 +21,9 @@ init(LoopData) ->
   io:format("# joining: ~p~n", [NewLoopData#loopData.groupname]),
   pg2:join(NewLoopData#loopData.groupname, self()),
   {ok, NewLoopData}.
+
+stop() ->
+  gen_server:cast(?MODULE, stop).
 
 terminate(_Reason, LoopData) ->
   pg2:leave(LoopData#loopData.groupname, self()),
@@ -65,29 +65,7 @@ handle_call({read_from_local, Key}, _From, LoopData) ->
 handle_cast(stop, LoopData) -> {stop, normal, LoopData};
 
 handle_cast({write_to_local, {Key, Value, Version}}, LoopData) ->
-  io:format("#### handle cast ~n"),
-  %%% check if very is higher version...
-  %%% what to do if the higher version exist?????
-  %%% handle case if not found??!!!!!!!!!!!!!
-  LocalVersion = read(Key, LoopData),
-
-  case LocalVersion of
-    {error, _ }  ->
-      ok = dets:insert(db_ref(LoopData), {Key, Value, Version});
-    {ok, _} ->
-      {ok, {Key, _ValueLocal, VersionLocal}} = LocalVersion,
-      case (Version > VersionLocal) of
-        true ->
-          ok = dets:insert(db_ref(LoopData), {Key, Value, Version});
-
-        false ->
-          %% updating other nodes
-          OtherNodes = other_nodes(LoopData),
-          io:format("Other nodes, ~p~n", [OtherNodes])
-          %%lists:foreach(fun(Node) ->
-           %% write_cast(Node, Key, ValueLocal, VersionLocal, RequestIdLocal) end, OtherNodes)
-      end
-  end,
+  ok = dets:insert(db_ref(LoopData), {Key, Value, Version}),
   {noreply,LoopData}.
 
 

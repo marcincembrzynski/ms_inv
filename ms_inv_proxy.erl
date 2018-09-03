@@ -13,9 +13,9 @@ init(Args) ->
   {nodes, Nodes} = Args,
   process_flag(trap_exit, true),
   PingNode = fun(N) ->
-    io:format("ping node: ~p~n", [N]),
-    Ping = net_adm:ping(N),
-    io:format("ping result: ~p~n", [Ping])
+     io:format("ping node: ~p~n", [N]),
+      Ping = net_adm:ping(N),
+      io:format("ping result: ~p~n", [Ping])
   end,
   lists:foreach(PingNode, Nodes),
   pg2:create(ms_inv),
@@ -41,7 +41,6 @@ stop() -> gen_server:cast(?MODULE, stop).
 stop_node() -> gen_server:cast(?MODULE, stop_node).
 
 handle_call({status}, _From, LoopData) ->
-  io:format("loopData ~p~n", [LoopData]),
   {nodes, Nodes} = LoopData,
   NodesCount = length(Nodes),
   {reply, get_status(NodesCount, NodesCount), LoopData};

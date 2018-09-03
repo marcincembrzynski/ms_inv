@@ -73,4 +73,7 @@ result() ->
   Seconds = Time / 1000000,
   NumberOfOperations = length(SortedList),
   OperationsPerSecond = length(SortedList) / Seconds,
-  {{seconds, Seconds}, {number_of_operations, NumberOfOperations}, {operations_per_second, OperationsPerSecond}}.
+  {{seconds, Seconds},
+    {number_of_operations, NumberOfOperations},
+    {operations_per_second, OperationsPerSecond},
+    {last_element, lists:last(SortedList)}}.

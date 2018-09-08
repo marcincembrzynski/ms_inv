@@ -1,6 +1,6 @@
 -module(ms_inv_proxy).
 -export([start_link/0,init/1]).
--export([get/2, add/3, remove/3,stop/0, status/0,stop_node/0,get_active/0,get_active_nodes/0]).
+-export([get/2, add/3, remove/3,stop/0, status/0,stop_node/0,get_active/0,get_active_nodes/0,validate_operations/2]).
 -export([handle_call/3,handle_cast/2]).
 -behaviour(gen_server).
 
@@ -27,6 +27,9 @@ call(Msg) ->
 get(ProductId, WarehouseId) ->
   call({get, {ProductId, WarehouseId}}).
 
+validate_operations(ProductId, WarehouseId) ->
+  call({validate_operations, {ProductId, WarehouseId}}).
+
 remove(ProductId, WarehouseId, Quantity) ->
   call({remove,{ProductId, WarehouseId, Quantity}}).
 
@@ -47,6 +50,9 @@ handle_call({status}, _From, LoopData) ->
 
 handle_call({get, {ProductId, WarehouseId}}, _From, LoopData) ->
   {reply, get_inventory(ProductId, WarehouseId), LoopData};
+
+handle_call({validate_operations, {ProductId, WarehouseId}}, _From, LoopData) ->
+  {reply, validate_operations(ProductId, WarehouseId, LoopData), LoopData};
 
 handle_call({remove, {ProductId, WarehouseId, RemoveQuantity}}, _From, LoopData) ->
   {reply, remove_inventory(get_active(), ProductId, WarehouseId, RemoveQuantity), LoopData};
@@ -84,6 +90,9 @@ get_status(N, NodesCount) ->
   end.
 
 
+
+
+
 remove_inventory(Node, ProductId, WarehouseId, RemoveQuantity) ->
 
   try ms_inv:remove(Node, ProductId, WarehouseId, RemoveQuantity) of
@@ -114,3 +123,82 @@ get_active_nodes() ->
   lists:map(fun(Pid) -> node(Pid) end, members()).
 
 members() -> pg2:get_members(ms_inv).
+
+validate_operations(ProductId, WarehouseId, _LoopData) ->
+
+  ActiveNodes = get_active_nodes(),
+  GetOperationsOnNode = fun(Node, Acc) ->
+    Acc ++ ms_inv:get_operations(Node, ProductId, WarehouseId)
+  end,
+
+  List = lists:foldl(GetOperationsOnNode, [], ActiveNodes),
+
+
+  CalculateFun = fun(Elem, Acc) ->
+    {_,{version, _}, {ref, _ }, _, Quantity, _} = Elem,
+    Acc + Quantity
+  end,
+
+  %%% sort list
+
+  SortedList = lists:sort(operations_sort_fun(), List),
+
+  {_, DuplicatesList} = lists:foldl(find_duplicates_fun(), {0,[]}, SortedList),
+
+  DuplicatesQuantity = lists:foldl(CalculateFun, 0, DuplicatesList),
+
+
+  {_,{version, _}, {ref, _ }, Start, _, _} = lists:nth(1, SortedList),
+  {_,{version, _}, {ref, _ }, _, _, CurrentAvailable} = lists:last(SortedList),
+
+  RealAvailable = lists:foldl(CalculateFun, Start, SortedList),
+  Consistent = RealAvailable == CurrentAvailable,
+  Balance = RealAvailable - CurrentAvailable,
+
+  %% Acc is
+  %% Acc is {Balance, Duplicates}
+  RebalanceFun = fun(Elem, Acc) ->
+    io:format("Acc: ~p~n", [Acc]),
+    {Balance, Duplicates } = Acc,
+    {_,{version, _}, {ref, _}, _, Quantity, _} = Elem,
+    case Balance - Quantity =< 0 of
+      true -> {Balance - Quantity, Duplicates ++ [Elem]};
+      false -> {Balance, Duplicates}
+    end
+
+  end,
+
+  RebalanceDuplicates = lists:foldl(RebalanceFun, {Balance, []}, DuplicatesList),
+
+
+  {{start, Start}, SortedList,
+    {consistent, Consistent},
+    {real_available, RealAvailable}, {current_available, CurrentAvailable},
+    {balance, Balance},
+    {duplicates, DuplicatesList},
+    {rebalance_duplicates, RebalanceDuplicates},
+    {duplicates_quantity, DuplicatesQuantity}
+  }.
+
+operations_sort_fun() ->
+  fun(Elem1, Elem2) ->
+    {Key,{version, Version1}, {ref, _}, _, _, _} = Elem1,
+    {Key,{version, Version2}, {ref, _}, _, _, _} = Elem2,
+    Version1 =< Version2
+  end.
+
+
+find_duplicates_fun() ->
+  fun(Elem, Acc) ->
+
+    {PreviousVersion, Duplicates} = Acc,
+    {_, {version, CurrentVersion}, {ref, _}, _, _, _} = Elem,
+
+    case PreviousVersion == CurrentVersion of
+      true ->
+        {CurrentVersion, Duplicates ++ [Elem]};
+      false ->
+        {CurrentVersion, Duplicates}
+    end
+
+  end.

@@ -74,12 +74,9 @@ read(Key, LoopData) ->
   %%io:format("### read, ~p~n", [Result]),
   case Result of
     [] ->
-      % maybe try read from the other nodes??
-      %
       {error, not_found};
     Found ->
       [Latest|[]] = Found,
-      %% maybe cast the latest to the other nodes??
       {ok, Latest}
   end.
 
@@ -117,8 +114,5 @@ write_to_local(Key, Value, Version, LoopData) ->
 
 db_nodes(LoopData) ->
   lists:map(fun(E) -> node(E) end, pg2:get_members(LoopData#loopData.groupname)).
-
-other_nodes(LoopData) ->
-  lists:filter(fun(Node) -> Node /= node() end, db_nodes(LoopData)).
 
 db_ref(LoopData) -> LoopData#loopData.dbref.

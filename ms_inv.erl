@@ -2,6 +2,7 @@
 -export([start_link/0,start_link/1,init/1,stop/0,stop/1]).
 -export([get/3,add/4,remove/4,status/1,get_operations/3]).
 -export([handle_call/3,handle_cast/2,terminate/2]).
+-record(loopData, {logref}).
 -behaviour(gen_server).
 
 start_link() ->
@@ -15,11 +16,14 @@ start_link(Node) ->
 init(Args) ->
   [{nodes, Nodes}] = Args,
   lists:foreach(fun(N) -> net_adm:ping(N) end, Nodes),
-  {ok, Log_Ref} = dets:open_file(ms_inv_log, [{type, bag}, {file, ms_inv_log}]),
+  LogTableName = string:concat(lists:nth(1, string:tokens(atom_to_list(node()), "@")), "_ms_inv_log"),
+  {ok, Log_Ref} = dets:open_file(LogTableName, [{type, bag}, {file, LogTableName}]),
   process_flag(trap_exit, true),
   pg2:create(?MODULE),
   pg2:join(?MODULE, self()),
-  {ok, [{log_ref, Log_Ref}]}.
+  LoopData = #loopData{ logref = Log_Ref},
+  {ok, LoopData}.
+
 
 stop() ->
   gen_server:cast(?MODULE, stop).
@@ -27,8 +31,9 @@ stop() ->
 stop(Node) ->
   gen_server:cast({?MODULE,Node}, stop_sup).
 
-terminate(_Reason, _) ->
+terminate(_Reason, LoopData) ->
   pg2:leave(?MODULE, self()),
+  dets:close(LoopData#loopData.logref),
   ok.
 
 call(Node, Msg) ->
@@ -117,9 +122,10 @@ add_inventory(ProductId, WarehouseId, AddQuantity, LoopData) ->
 
   case ms_db:read({ProductId, WarehouseId}) of
     {ok, {Key, Available, _Version}} ->
-      {ok, {{ProductId, WarehouseId}, NewQuantity, _NewVersion}} = ms_db:write(Key, Available + AddQuantity),
-      log_operation({Key, erlang:timestamp(), Available, AddQuantity, NewQuantity}, LoopData),
-      {ok, {ProductId, WarehouseId, NewQuantity}};
+      OperationRef = erlang:make_ref(),
+      {ok, {{ProductId, WarehouseId}, NewQuantity, NewVersion}} = ms_db:write(Key, Available + AddQuantity),
+      log_operation({Key, {version, NewVersion}, {ref, OperationRef}, Available, AddQuantity, NewQuantity}, LoopData),
+      {ok, {ProductId, WarehouseId, NewQuantity}, {ref, OperationRef}};
 
     {error, Error} ->
       {error, Error}
@@ -127,10 +133,8 @@ add_inventory(ProductId, WarehouseId, AddQuantity, LoopData) ->
 
 
 log_operation(Log, LoopData) ->
-  [{log_ref, Log_Ref}] = LoopData,
-  dets:insert(Log_Ref, Log).
+  dets:insert(LoopData#loopData.logref, Log).
 
 get_operations(Key, LoopData) ->
-  [{log_ref, Log_Ref}] = LoopData,
-  Response = dets:lookup(Log_Ref, Key),
-  Response.
+  dets:lookup(LoopData#loopData.logref, Key).
+

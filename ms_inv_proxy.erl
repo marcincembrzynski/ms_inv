@@ -138,9 +138,6 @@ validate_operations(ProductId, WarehouseId, _LoopData) ->
     {_,{version, _}, {ref, _ }, _, Quantity, _} = Elem,
     Acc + Quantity
   end,
-
-  %%% sort list
-
   SortedList = lists:sort(operations_sort_fun(), List),
 
   {_, DuplicatesList} = lists:foldl(find_duplicates_fun(), {0,[]}, SortedList),
@@ -155,13 +152,9 @@ validate_operations(ProductId, WarehouseId, _LoopData) ->
   Consistent = RealAvailable == CurrentAvailable,
   Balance = RealAvailable - CurrentAvailable,
 
-
-
   RebalanceDuplicates = lists:foldl(rebalance_fun(), {Balance, []}, DuplicatesList),
 
-
-
-  {{start, Start}, SortedList,
+  {{start, Start},
     {consistent, Consistent},
     {real_available, RealAvailable}, {current_available, CurrentAvailable},
     {balance, Balance},
@@ -174,17 +167,13 @@ validate_operations(ProductId, WarehouseId, _LoopData) ->
 rebalance_fun() ->
 
   fun(Elem, {Balance, DuplicatesList}) ->
-    io:format("Balance: ~p~n", [Balance]),
-    io:format("DuplicatesList: ~p~n", [DuplicatesList]),
 
     {_,{version, _}, {ref, _}, _, Quantity, _} = Elem,
 
     case Balance - Quantity =< 0 of
       true ->
-        io:format("true ####### ~n"),
         {Balance - Quantity, DuplicatesList ++ [Elem]};
       false ->
-        io:format("false ####### ~n"),
         {Balance, DuplicatesList}
     end
   end.

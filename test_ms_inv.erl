@@ -13,12 +13,12 @@ start(Processes, Requests, Interval) ->
       ets:delete_all_objects(?MODULE)
   end,
 
-  {ok, [{inventory,{ProductId,WarehouseId}}]} = file:consult(?MODULE),
+  {ok, [{inventory,{ProductId, WarehouseId}}]} = file:consult(?MODULE),
   TestData = #testData{productId = ProductId, warehouseId = WarehouseId},
 
   Units = Processes * Requests,
   io:format("Units Needed init, ~p~n", [Units]),
-  {ok, {9999, uk, Available}} = ms_inv_proxy:get(ProductId, WarehouseId),
+  {ok, {ProductId, WarehouseId, Available}} = ms_inv_proxy:get(ProductId, WarehouseId),
   RemoveResponse = ms_inv_proxy:remove(ProductId, WarehouseId, Available),
   io:format("RemoveResponse init, ~p~n", [RemoveResponse]),
   AddResponse = ms_inv_proxy:add(ProductId, WarehouseId, Units - 1),

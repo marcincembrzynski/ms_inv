@@ -154,7 +154,7 @@ validate_operations(ProductId, WarehouseId, _LoopData) ->
 
   RebalanceDuplicates = lists:foldl(rebalance_fun(), {Balance, []}, DuplicatesList),
 
-  {{start, Start},
+  {
     {consistent, Consistent},
     {real_available, RealAvailable}, {current_available, CurrentAvailable},
     {balance, Balance},

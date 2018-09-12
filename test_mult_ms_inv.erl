@@ -69,6 +69,15 @@ result() ->
 
   List = ets:tab2list(?MODULE),
 
+  TimeStampSortList = fun({T1 ,_ ,_,_},{T2 ,_ ,_,_}) -> T1 =< T2 end,
+  SortedList = lists:sort(TimeStampSortList, List),
+  [{First,_,_,_}|_] = SortedList,
+  {Last,_,_,_} = lists:last(SortedList),
+  Time = timer:now_diff(Last, First),
+  Seconds = Time / 1000000,
+  NumberOfOperations = length(SortedList),
+  OperationsPerSecond = length(SortedList) / Seconds,
+
 
   CollectKeyFun = fun(Elem, Acc) ->
     {Timestamp,Key,_,Response} = Elem,
@@ -101,12 +110,11 @@ result() ->
 
   TimeStampSort = fun({T1 ,_,_},{T2,_ ,_}) -> T1 =< T2 end,
 
-
   CollectLastResponsesFun = fun(Key, Acc) ->
     L = maps:get(Key, Keys),
-    SortedList = lists:sort(TimeStampSort, L),
-    Last = lists:last(SortedList),
-    lists:append(Acc, [Last])
+    SL = lists:sort(TimeStampSort, L),
+    LastElem = lists:last(SL),
+    lists:append(Acc, [LastElem])
   end,
 
   LastResponsesList = lists:foldl(CollectLastResponsesFun, [], SortedKeyList),
@@ -121,5 +129,8 @@ result() ->
 
   NotErrorLastResponses = lists:filter(NotErrorFilterFun, LastResponsesList),
 
-  {{not_consistent_products, NotConsistentProducts}, {not_error_last_responses, NotErrorLastResponses}}.
+  {{seconds, Seconds},
+    {number_of_operations, NumberOfOperations},
+    {operations_per_second, OperationsPerSecond},
+    {not_consistent_products, NotConsistentProducts}, {not_error_last_responses, NotErrorLastResponses}}.
 

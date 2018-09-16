@@ -159,35 +159,41 @@ validate_operations(ProductId, WarehouseId, LoopData) ->
 
   List = lists:foldl(GetOperationsOnNode, [], ActiveNodes),
 
+  case List of
+    [] -> no_operations;
+    _  ->
+      CalculateFun = fun(Elem, Acc) ->
+        {_,{version, _}, {ref, _ }, _, Quantity, _} = Elem,
+        Acc + Quantity
+                     end,
+      SortedList = lists:sort(operations_sort_fun(), List),
 
-  CalculateFun = fun(Elem, Acc) ->
-    {_,{version, _}, {ref, _ }, _, Quantity, _} = Elem,
-    Acc + Quantity
-  end,
-  SortedList = lists:sort(operations_sort_fun(), List),
+      {_, DuplicatesList} = lists:foldl(find_duplicates_fun(), {0,[]}, SortedList),
 
-  {_, DuplicatesList} = lists:foldl(find_duplicates_fun(), {0,[]}, SortedList),
-
-  DuplicatesQuantity = lists:foldl(CalculateFun, 0, DuplicatesList),
+      DuplicatesQuantity = lists:foldl(CalculateFun, 0, DuplicatesList),
 
 
-  {_,{version, _}, {ref, _ }, Start, _, _} = lists:nth(1, SortedList),
-  {_,{version, _}, {ref, _ }, _, _, CurrentAvailable} = lists:last(SortedList),
+      {_,{version, _}, {ref, _ }, Start, _, _} = lists:nth(1, SortedList),
+      {_,{version, _}, {ref, _ }, _, _, CurrentAvailable} = lists:last(SortedList),
 
-  RealAvailable = lists:foldl(CalculateFun, Start, SortedList),
-  Consistent = RealAvailable == CurrentAvailable,
-  Balance = RealAvailable - CurrentAvailable,
+      RealAvailable = lists:foldl(CalculateFun, Start, SortedList),
+      Consistent = RealAvailable == CurrentAvailable,
+      Balance = RealAvailable - CurrentAvailable,
 
-  RebalanceDuplicates = lists:foldl(rebalance_fun(), {Balance, []}, DuplicatesList),
+      RebalanceDuplicates = lists:foldl(rebalance_fun(), {Balance, []}, DuplicatesList),
 
-  {
-    {consistent, Consistent},
-    {real_available, RealAvailable}, {current_available, CurrentAvailable},
-    {balance, Balance},
-    {duplicates, DuplicatesList},
-    {rebalance_duplicates, RebalanceDuplicates},
-    {duplicates_quantity, DuplicatesQuantity}
-  }.
+      {
+        {consistent, Consistent},
+        {real_available, RealAvailable}, {current_available, CurrentAvailable},
+        {balance, Balance},
+        {duplicates, DuplicatesList},
+        {rebalance_duplicates, RebalanceDuplicates},
+        {duplicates_quantity, DuplicatesQuantity}
+      }
+
+  end.
+
+
 
 
 rebalance_fun() ->

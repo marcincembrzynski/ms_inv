@@ -1,0 +1,916 @@
+(client@client)2> test_status:start(100,1000,10).
+started process: <0.86.0>
+started process: <0.87.0>
+started process: <0.88.0>
+started process: <0.89.0>
+started process: <0.90.0>
+started process: <0.91.0>
+started process: <0.92.0>
+started process: <0.93.0>
+started process: <0.94.0>
+started process: <0.95.0>
+started process: <0.96.0>
+started process: <0.97.0>
+started process: <0.98.0>
+started process: <0.99.0>
+started process: <0.100.0>
+started process: <0.101.0>
+started process: <0.102.0>
+started process: <0.103.0>
+started process: <0.104.0>
+started process: <0.105.0>
+started process: <0.106.0>
+started process: <0.107.0>
+started process: <0.108.0>
+started process: <0.109.0>
+started process: <0.110.0>
+started process: <0.111.0>
+started process: <0.112.0>
+started process: <0.113.0>
+started process: <0.114.0>
+started process: <0.115.0>
+started process: <0.116.0>
+started process: <0.117.0>
+started process: <0.118.0>
+started process: <0.119.0>
+started process: <0.120.0>
+started process: <0.121.0>
+started process: <0.122.0>
+started process: <0.123.0>
+started process: <0.124.0>
+started process: <0.125.0>
+started process: <0.126.0>
+started process: <0.127.0>
+started process: <0.128.0>
+started process: <0.129.0>
+started process: <0.130.0>
+started process: <0.131.0>
+started process: <0.132.0>
+started process: <0.133.0>
+started process: <0.134.0>
+started process: <0.135.0>
+started process: <0.136.0>
+started process: <0.137.0>
+started process: <0.138.0>
+started process: <0.139.0>
+started process: <0.140.0>
+started process: <0.141.0>
+started process: <0.142.0>
+started process: <0.143.0>
+started process: <0.144.0>
+started process: <0.145.0>
+started process: <0.146.0>
+started process: <0.147.0>
+started process: <0.148.0>
+started process: <0.149.0>
+started process: <0.150.0>
+started process: <0.151.0>
+started process: <0.152.0>
+started process: <0.153.0>
+started process: <0.154.0>
+started process: <0.155.0>
+started process: <0.156.0>
+started process: <0.157.0>
+started process: <0.158.0>
+started process: <0.159.0>
+started process: <0.160.0>
+started process: <0.161.0>
+started process: <0.162.0>
+started process: <0.163.0>
+started process: <0.164.0>
+started process: <0.165.0>
+started process: <0.166.0>
+started process: <0.167.0>
+started process: <0.168.0>
+started process: <0.169.0>
+started process: <0.170.0>
+started process: <0.171.0>
+started process: <0.172.0>
+started process: <0.173.0>
+started process: <0.174.0>
+started process: <0.175.0>
+started process: <0.176.0>
+started process: <0.177.0>
+started process: <0.178.0>
+started process: <0.179.0>
+started process: <0.180.0>
+started process: <0.181.0>
+started process: <0.182.0>
+started process: <0.183.0>
+started process: <0.184.0>
+started process: <0.185.0>
+ok
+---------------------------------
+stopping node event number: 1
+stopping node at: {{2018,9,16},{19,17,43}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 2
+stopping node at: {{2018,9,16},{19,17,53}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 3
+stopping node at: {{2018,9,16},{19,18,3}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 4
+stopping node at: {{2018,9,16},{19,18,13}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 5
+stopping node at: {{2018,9,16},{19,18,23}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 6
+stopping node at: {{2018,9,16},{19,18,33}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 7
+stopping node at: {{2018,9,16},{19,18,43}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 8
+stopping node at: {{2018,9,16},{19,18,53}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 9
+stopping node at: {{2018,9,16},{19,19,3}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 10
+stopping node at: {{2018,9,16},{19,19,13}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 11
+stopping node at: {{2018,9,16},{19,19,23}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 12
+stopping node at: {{2018,9,16},{19,19,33}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 13
+stopping node at: {{2018,9,16},{19,19,43}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 14
+stopping node at: {{2018,9,16},{19,19,53}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 15
+stopping node at: {{2018,9,16},{19,20,3}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 16
+stopping node at: {{2018,9,16},{19,20,13}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 17
+stopping node at: {{2018,9,16},{19,20,23}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 18
+stopping node at: {{2018,9,16},{19,20,33}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 19
+stopping node at: {{2018,9,16},{19,20,43}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 20
+stopping node at: {{2018,9,16},{19,20,53}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 21
+stopping node at: {{2018,9,16},{19,21,3}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 22
+stopping node at: {{2018,9,16},{19,21,13}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 23
+stopping node at: {{2018,9,16},{19,21,23}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 24
+stopping node at: {{2018,9,16},{19,21,33}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 25
+stopping node at: {{2018,9,16},{19,21,43}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 26
+stopping node at: {{2018,9,16},{19,21,53}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 27
+stopping node at: {{2018,9,16},{19,22,3}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 28
+stopping node at: {{2018,9,16},{19,22,13}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 29
+stopping node at: {{2018,9,16},{19,22,23}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 30
+stopping node at: {{2018,9,16},{19,22,33}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 31
+stopping node at: {{2018,9,16},{19,22,43}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 32
+stopping node at: {{2018,9,16},{19,22,53}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 33
+stopping node at: {{2018,9,16},{19,23,3}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 34
+stopping node at: {{2018,9,16},{19,23,13}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 35
+stopping node at: {{2018,9,16},{19,23,23}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 36
+stopping node at: {{2018,9,16},{19,23,33}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 37
+stopping node at: {{2018,9,16},{19,23,43}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 38
+stopping node at: {{2018,9,16},{19,23,53}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 39
+stopping node at: {{2018,9,16},{19,24,3}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 40
+stopping node at: {{2018,9,16},{19,24,13}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 41
+stopping node at: {{2018,9,16},{19,24,23}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 42
+stopping node at: {{2018,9,16},{19,24,33}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 43
+stopping node at: {{2018,9,16},{19,24,43}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 44
+stopping node at: {{2018,9,16},{19,24,53}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 45
+stopping node at: {{2018,9,16},{19,25,3}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 46
+stopping node at: {{2018,9,16},{19,25,13}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 47
+stopping node at: {{2018,9,16},{19,25,23}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 48
+stopping node at: {{2018,9,16},{19,25,33}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 49
+stopping node at: {{2018,9,16},{19,25,43}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 50
+stopping node at: {{2018,9,16},{19,25,53}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 51
+stopping node at: {{2018,9,16},{19,26,3}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 52
+stopping node at: {{2018,9,16},{19,26,13}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 53
+stopping node at: {{2018,9,16},{19,26,23}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 54
+stopping node at: {{2018,9,16},{19,26,33}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 55
+stopping node at: {{2018,9,16},{19,26,43}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 56
+stopping node at: {{2018,9,16},{19,26,53}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 57
+stopping node at: {{2018,9,16},{19,27,3}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 58
+stopping node at: {{2018,9,16},{19,27,13}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 59
+stopping node at: {{2018,9,16},{19,27,23}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 60
+stopping node at: {{2018,9,16},{19,27,33}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 61
+stopping node at: {{2018,9,16},{19,27,43}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 62
+stopping node at: {{2018,9,16},{19,27,53}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 63
+stopping node at: {{2018,9,16},{19,28,3}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 64
+stopping node at: {{2018,9,16},{19,28,13}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 65
+stopping node at: {{2018,9,16},{19,28,23}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 66
+stopping node at: {{2018,9,16},{19,28,33}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 67
+stopping node at: {{2018,9,16},{19,28,43}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 68
+stopping node at: {{2018,9,16},{19,28,53}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 69
+stopping node at: {{2018,9,16},{19,29,3}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 70
+stopping node at: {{2018,9,16},{19,29,13}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 71
+stopping node at: {{2018,9,16},{19,29,23}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 72
+stopping node at: {{2018,9,16},{19,29,33}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 73
+stopping node at: {{2018,9,16},{19,29,43}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 74
+stopping node at: {{2018,9,16},{19,29,53}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 75
+stopping node at: {{2018,9,16},{19,30,3}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 76
+stopping node at: {{2018,9,16},{19,30,13}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 77
+stopping node at: {{2018,9,16},{19,30,23}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 78
+stopping node at: {{2018,9,16},{19,30,33}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 79
+stopping node at: {{2018,9,16},{19,30,43}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 80
+stopping node at: {{2018,9,16},{19,30,53}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 81
+stopping node at: {{2018,9,16},{19,31,3}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 82
+stopping node at: {{2018,9,16},{19,31,13}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 83
+stopping node at: {{2018,9,16},{19,31,23}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 84
+stopping node at: {{2018,9,16},{19,31,33}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 85
+stopping node at: {{2018,9,16},{19,31,43}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 86
+stopping node at: {{2018,9,16},{19,31,53}}
+---------------------------------
+stoping active node: n3@inventory3
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n1@inventory1,n2@inventory2]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 87
+stopping node at: {{2018,9,16},{19,32,3}}
+---------------------------------
+stoping active node: n1@inventory1
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n2@inventory2,n3@inventory3]
+ms_inv_proxy retry attempt number: 1
+---------------------------------
+stopping node event number: 88
+stopping node at: {{2018,9,16},{19,32,13}}
+---------------------------------
+stoping active node: n2@inventory2
+ms_inv_proxy active nodes count: 2
+ms_inv_proxy active nodes: [n3@inventory3,n1@inventory1]
+ms_inv_proxy retry attempt number: 1
+process finished: <0.86.0>
+process finished: <0.87.0>
+process finished: <0.88.0>
+process finished: <0.89.0>
+process finished: <0.90.0>
+process finished: <0.91.0>
+process finished: <0.92.0>
+process finished: <0.93.0>
+process finished: <0.94.0>
+process finished: <0.95.0>
+process finished: <0.96.0>
+process finished: <0.97.0>
+process finished: <0.98.0>
+process finished: <0.99.0>
+process finished: <0.100.0>
+process finished: <0.101.0>
+process finished: <0.102.0>
+process finished: <0.103.0>
+process finished: <0.104.0>
+process finished: <0.105.0>
+process finished: <0.106.0>
+process finished: <0.107.0>
+process finished: <0.108.0>
+process finished: <0.109.0>
+process finished: <0.110.0>
+process finished: <0.111.0>
+process finished: <0.112.0>
+process finished: <0.113.0>
+process finished: <0.114.0>
+process finished: <0.115.0>
+process finished: <0.116.0>
+process finished: <0.117.0>
+process finished: <0.118.0>
+process finished: <0.119.0>
+process finished: <0.120.0>
+process finished: <0.121.0>
+process finished: <0.122.0>
+process finished: <0.123.0>
+process finished: <0.124.0>
+process finished: <0.125.0>
+process finished: <0.126.0>
+process finished: <0.127.0>
+process finished: <0.128.0>
+process finished: <0.129.0>
+process finished: <0.130.0>
+process finished: <0.131.0>
+process finished: <0.132.0>
+process finished: <0.133.0>
+process finished: <0.134.0>
+process finished: <0.135.0>
+process finished: <0.136.0>
+process finished: <0.137.0>
+process finished: <0.138.0>
+process finished: <0.139.0>
+process finished: <0.140.0>
+process finished: <0.141.0>
+process finished: <0.142.0>
+process finished: <0.143.0>
+process finished: <0.144.0>
+process finished: <0.145.0>
+process finished: <0.146.0>
+process finished: <0.147.0>
+process finished: <0.148.0>
+process finished: <0.149.0>
+process finished: <0.150.0>
+process finished: <0.151.0>
+process finished: <0.152.0>
+process finished: <0.153.0>
+process finished: <0.154.0>
+process finished: <0.155.0>
+process finished: <0.156.0>
+process finished: <0.157.0>
+process finished: <0.158.0>
+process finished: <0.159.0>
+process finished: <0.160.0>
+process finished: <0.161.0>
+process finished: <0.162.0>
+process finished: <0.163.0>
+process finished: <0.164.0>
+process finished: <0.165.0>
+process finished: <0.166.0>
+process finished: <0.167.0>
+process finished: <0.168.0>
+process finished: <0.169.0>
+process finished: <0.170.0>
+process finished: <0.171.0>
+process finished: <0.172.0>
+process finished: <0.173.0>
+process finished: <0.174.0>
+process finished: <0.175.0>
+process finished: <0.176.0>
+process finished: <0.177.0>
+process finished: <0.178.0>
+process finished: <0.179.0>
+process finished: <0.180.0>
+process finished: <0.181.0>
+process finished: <0.182.0>
+process finished: <0.183.0>
+process finished: <0.184.0>
+process finished: <0.185.0>
+---------------------------------
+stopping node event number: 89
+stopping node at: {{2018,9,16},{19,32,23}}
+---------------------------------
+stopping stop_node process
+stoping active node: n3@inventory3
+(client@client)3> test_status:result().
+{{seconds,887.341845},
+ {number_of_operations,100000},
+ {operations_per_second,112.69613910747103}}

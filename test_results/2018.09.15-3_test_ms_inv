@@ -1,0 +1,661 @@
+(client@client)8> ms_inv_proxy:validate_operations(9990,uk).
+{{consistent,true},
+ {real_available,0},
+ {current_available,0},
+ {balance,0},
+ {duplicates,[]},
+ {rebalance_duplicates,{0,[]}},
+ {duplicates_quantity,0}}
+(client@client)9> test_ms_inv:start(100,500,10).
+Units Needed init, 50000
+RemoveResponse init, {ok,{9990,uk,0},
+                         {ref,#Ref<8010.2390926033.1583874049.106123>}}
+AddResponse init, {ok,{9990,uk,49999},
+                      {ref,#Ref<8010.2390926033.1583874049.106133>}}
+started process: <0.317.0>
+started process: <0.318.0>
+started process: <0.319.0>
+started process: <0.320.0>
+started process: <0.321.0>
+started process: <0.322.0>
+started process: <0.323.0>
+started process: <0.324.0>
+started process: <0.325.0>
+started process: <0.326.0>
+started process: <0.327.0>
+started process: <0.328.0>
+started process: <0.329.0>
+started process: <0.330.0>
+started process: <0.331.0>
+started process: <0.332.0>
+started process: <0.333.0>
+started process: <0.334.0>
+started process: <0.335.0>
+started process: <0.336.0>
+started process: <0.337.0>
+started process: <0.338.0>
+started process: <0.339.0>
+started process: <0.340.0>
+started process: <0.341.0>
+started process: <0.342.0>
+started process: <0.343.0>
+started process: <0.344.0>
+started process: <0.345.0>
+started process: <0.346.0>
+started process: <0.347.0>
+started process: <0.348.0>
+started process: <0.349.0>
+started process: <0.350.0>
+started process: <0.351.0>
+started process: <0.352.0>
+started process: <0.353.0>
+started process: <0.354.0>
+started process: <0.355.0>
+started process: <0.356.0>
+started process: <0.357.0>
+started process: <0.358.0>
+started process: <0.359.0>
+started process: <0.360.0>
+started process: <0.361.0>
+started process: <0.362.0>
+started process: <0.363.0>
+started process: <0.364.0>
+started process: <0.365.0>
+started process: <0.366.0>
+started process: <0.367.0>
+started process: <0.368.0>
+started process: <0.369.0>
+started process: <0.370.0>
+started process: <0.371.0>
+started process: <0.372.0>
+started process: <0.373.0>
+started process: <0.374.0>
+started process: <0.375.0>
+started process: <0.376.0>
+started process: <0.377.0>
+started process: <0.378.0>
+started process: <0.379.0>
+started process: <0.380.0>
+started process: <0.381.0>
+started process: <0.382.0>
+started process: <0.383.0>
+started process: <0.384.0>
+started process: <0.385.0>
+started process: <0.386.0>
+started process: <0.387.0>
+started process: <0.388.0>
+started process: <0.389.0>
+started process: <0.390.0>
+started process: <0.391.0>
+started process: <0.392.0>
+started process: <0.393.0>
+started process: <0.394.0>
+started process: <0.395.0>
+started process: <0.396.0>
+started process: <0.397.0>
+started process: <0.398.0>
+started process: <0.399.0>
+started process: <0.400.0>
+started process: <0.401.0>
+started process: <0.402.0>
+started process: <0.403.0>
+started process: <0.404.0>
+started process: <0.405.0>
+started process: <0.406.0>
+started process: <0.407.0>
+started process: <0.408.0>
+started process: <0.409.0>
+started process: <0.410.0>
+started process: <0.411.0>
+started process: <0.412.0>
+started process: <0.413.0>
+started process: <0.414.0>
+started process: <0.415.0>
+started process: <0.416.0>
+ok
+---------------------------------
+stopping node event number: 1
+stopping node at: {{2018,9,16},{20,5,24}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 2
+stopping node at: {{2018,9,16},{20,5,34}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+---------------------------------
+stopping node event number: 3
+stopping node at: {{2018,9,16},{20,5,44}}
+---------------------------------
+stoping active node: n2@inventory2
+operation: remove
+#### error calling node: n2@inventory2
+error ms_inv_proxy #active nodes [n1@inventory1,n3@inventory3]
+calling node: n1@inventory1
+---------------------------------
+stopping node event number: 4
+stopping node at: {{2018,9,16},{20,5,54}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 5
+stopping node at: {{2018,9,16},{20,6,4}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+---------------------------------
+stopping node event number: 6
+stopping node at: {{2018,9,16},{20,6,14}}
+---------------------------------
+stoping active node: n2@inventory2
+operation: remove
+#### error calling node: n2@inventory2
+error ms_inv_proxy #active nodes [n1@inventory1,n3@inventory3]
+calling node: n1@inventory1
+---------------------------------
+stopping node event number: 7
+stopping node at: {{2018,9,16},{20,6,24}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 8
+stopping node at: {{2018,9,16},{20,6,34}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+---------------------------------
+stopping node event number: 9
+stopping node at: {{2018,9,16},{20,6,44}}
+---------------------------------
+stoping active node: n2@inventory2
+operation: remove
+#### error calling node: n2@inventory2
+error ms_inv_proxy #active nodes [n1@inventory1,n3@inventory3]
+calling node: n1@inventory1
+---------------------------------
+stopping node event number: 10
+stopping node at: {{2018,9,16},{20,6,54}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 11
+stopping node at: {{2018,9,16},{20,7,4}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+---------------------------------
+stopping node event number: 12
+stopping node at: {{2018,9,16},{20,7,14}}
+---------------------------------
+stoping active node: n2@inventory2
+operation: remove
+#### error calling node: n2@inventory2
+error ms_inv_proxy #active nodes [n1@inventory1,n3@inventory3]
+calling node: n1@inventory1
+---------------------------------
+stopping node event number: 13
+stopping node at: {{2018,9,16},{20,7,24}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 14
+stopping node at: {{2018,9,16},{20,7,34}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+---------------------------------
+stopping node event number: 15
+stopping node at: {{2018,9,16},{20,7,44}}
+---------------------------------
+stoping active node: n2@inventory2
+operation: remove
+#### error calling node: n2@inventory2
+error ms_inv_proxy #active nodes [n1@inventory1,n3@inventory3]
+calling node: n1@inventory1
+---------------------------------
+stopping node event number: 16
+stopping node at: {{2018,9,16},{20,7,54}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 17
+stopping node at: {{2018,9,16},{20,8,4}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+---------------------------------
+stopping node event number: 18
+stopping node at: {{2018,9,16},{20,8,14}}
+---------------------------------
+stoping active node: n2@inventory2
+operation: remove
+#### error calling node: n2@inventory2
+error ms_inv_proxy #active nodes [n1@inventory1,n3@inventory3]
+calling node: n1@inventory1
+---------------------------------
+stopping node event number: 19
+stopping node at: {{2018,9,16},{20,8,24}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 20
+stopping node at: {{2018,9,16},{20,8,34}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+---------------------------------
+stopping node event number: 21
+stopping node at: {{2018,9,16},{20,8,44}}
+---------------------------------
+stoping active node: n2@inventory2
+operation: remove
+#### error calling node: n2@inventory2
+error ms_inv_proxy #active nodes [n1@inventory1,n3@inventory3]
+calling node: n1@inventory1
+---------------------------------
+stopping node event number: 22
+stopping node at: {{2018,9,16},{20,8,54}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 23
+stopping node at: {{2018,9,16},{20,9,4}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+---------------------------------
+stopping node event number: 24
+stopping node at: {{2018,9,16},{20,9,14}}
+---------------------------------
+stoping active node: n2@inventory2
+operation: remove
+#### error calling node: n2@inventory2
+error ms_inv_proxy #active nodes [n1@inventory1,n3@inventory3]
+calling node: n1@inventory1
+---------------------------------
+stopping node event number: 25
+stopping node at: {{2018,9,16},{20,9,24}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 26
+stopping node at: {{2018,9,16},{20,9,34}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+---------------------------------
+stopping node event number: 27
+stopping node at: {{2018,9,16},{20,9,44}}
+---------------------------------
+stoping active node: n2@inventory2
+operation: remove
+#### error calling node: n2@inventory2
+error ms_inv_proxy #active nodes [n1@inventory1,n3@inventory3]
+calling node: n1@inventory1
+---------------------------------
+stopping node event number: 28
+stopping node at: {{2018,9,16},{20,9,54}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 29
+stopping node at: {{2018,9,16},{20,10,4}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+---------------------------------
+stopping node event number: 30
+stopping node at: {{2018,9,16},{20,10,14}}
+---------------------------------
+stoping active node: n2@inventory2
+operation: remove
+#### error calling node: n2@inventory2
+error ms_inv_proxy #active nodes [n1@inventory1,n3@inventory3]
+calling node: n1@inventory1
+---------------------------------
+stopping node event number: 31
+stopping node at: {{2018,9,16},{20,10,24}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 32
+stopping node at: {{2018,9,16},{20,10,34}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+---------------------------------
+stopping node event number: 33
+stopping node at: {{2018,9,16},{20,10,44}}
+---------------------------------
+stoping active node: n2@inventory2
+operation: remove
+#### error calling node: n2@inventory2
+error ms_inv_proxy #active nodes [n1@inventory1,n3@inventory3]
+calling node: n1@inventory1
+---------------------------------
+stopping node event number: 34
+stopping node at: {{2018,9,16},{20,10,54}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 35
+stopping node at: {{2018,9,16},{20,11,4}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+---------------------------------
+stopping node event number: 36
+stopping node at: {{2018,9,16},{20,11,14}}
+---------------------------------
+stoping active node: n2@inventory2
+operation: remove
+#### error calling node: n2@inventory2
+error ms_inv_proxy #active nodes [n1@inventory1,n3@inventory3]
+calling node: n1@inventory1
+---------------------------------
+stopping node event number: 37
+stopping node at: {{2018,9,16},{20,11,24}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 38
+stopping node at: {{2018,9,16},{20,11,34}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+---------------------------------
+stopping node event number: 39
+stopping node at: {{2018,9,16},{20,11,44}}
+---------------------------------
+stoping active node: n2@inventory2
+operation: remove
+#### error calling node: n2@inventory2
+error ms_inv_proxy #active nodes [n1@inventory1,n3@inventory3]
+calling node: n1@inventory1
+---------------------------------
+stopping node event number: 40
+stopping node at: {{2018,9,16},{20,11,54}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 41
+stopping node at: {{2018,9,16},{20,12,4}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+---------------------------------
+stopping node event number: 42
+stopping node at: {{2018,9,16},{20,12,14}}
+---------------------------------
+stoping active node: n2@inventory2
+operation: remove
+#### error calling node: n2@inventory2
+error ms_inv_proxy #active nodes [n1@inventory1,n3@inventory3]
+calling node: n1@inventory1
+---------------------------------
+stopping node event number: 43
+stopping node at: {{2018,9,16},{20,12,24}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 44
+stopping node at: {{2018,9,16},{20,12,34}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+---------------------------------
+stopping node event number: 45
+stopping node at: {{2018,9,16},{20,12,44}}
+---------------------------------
+stoping active node: n2@inventory2
+operation: remove
+#### error calling node: n2@inventory2
+error ms_inv_proxy #active nodes [n1@inventory1,n3@inventory3]
+calling node: n1@inventory1
+---------------------------------
+stopping node event number: 46
+stopping node at: {{2018,9,16},{20,12,54}}
+---------------------------------
+stoping active node: n1@inventory1
+operation: remove
+#### error calling node: n1@inventory1
+error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+calling node: n3@inventory3
+---------------------------------
+stopping node event number: 47
+stopping node at: {{2018,9,16},{20,13,4}}
+---------------------------------
+stoping active node: n3@inventory3
+operation: remove
+#### error calling node: n3@inventory3
+error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+calling node: n2@inventory2
+# stop process, <0.317.0>
+# stop process, <0.318.0>
+# stop process, <0.319.0>
+# stop process, <0.320.0>
+# stop process, <0.321.0>
+# stop process, <0.322.0>
+# stop process, <0.323.0>
+# stop process, <0.324.0>
+# stop process, <0.325.0>
+# stop process, <0.326.0>
+# stop process, <0.327.0>
+# stop process, <0.328.0>
+# stop process, <0.329.0>
+# stop process, <0.330.0>
+# stop process, <0.331.0>
+# stop process, <0.332.0>
+# stop process, <0.333.0>
+# stop process, <0.334.0>
+# stop process, <0.335.0>
+# stop process, <0.336.0>
+# stop process, <0.337.0>
+# stop process, <0.338.0>
+# stop process, <0.339.0>
+# stop process, <0.340.0>
+# stop process, <0.341.0>
+# stop process, <0.342.0>
+# stop process, <0.343.0>
+# stop process, <0.344.0>
+# stop process, <0.345.0>
+# stop process, <0.346.0>
+# stop process, <0.347.0>
+# stop process, <0.348.0>
+# stop process, <0.349.0>
+# stop process, <0.350.0>
+# stop process, <0.351.0>
+# stop process, <0.352.0>
+# stop process, <0.353.0>
+# stop process, <0.354.0>
+# stop process, <0.355.0>
+# stop process, <0.356.0>
+# stop process, <0.357.0>
+# stop process, <0.358.0>
+# stop process, <0.359.0>
+# stop process, <0.360.0>
+# stop process, <0.361.0>
+# stop process, <0.362.0>
+# stop process, <0.363.0>
+# stop process, <0.364.0>
+# stop process, <0.365.0>
+# stop process, <0.366.0>
+# stop process, <0.367.0>
+# stop process, <0.368.0>
+# stop process, <0.369.0>
+# stop process, <0.370.0>
+# stop process, <0.371.0>
+# stop process, <0.372.0>
+# stop process, <0.373.0>
+# stop process, <0.374.0>
+# stop process, <0.375.0>
+# stop process, <0.376.0>
+# stop process, <0.377.0>
+# stop process, <0.378.0>
+# stop process, <0.379.0>
+# stop process, <0.380.0>
+# stop process, <0.381.0>
+# stop process, <0.382.0>
+# stop process, <0.383.0>
+# stop process, <0.384.0>
+# stop process, <0.385.0>
+# stop process, <0.386.0>
+# stop process, <0.387.0>
+# stop process, <0.388.0>
+# stop process, <0.389.0>
+# stop process, <0.390.0>
+# stop process, <0.391.0>
+# stop process, <0.392.0>
+# stop process, <0.393.0>
+# stop process, <0.394.0>
+# stop process, <0.395.0>
+# stop process, <0.396.0>
+# stop process, <0.397.0>
+# stop process, <0.398.0>
+# stop process, <0.399.0>
+# stop process, <0.400.0>
+# stop process, <0.401.0>
+# stop process, <0.402.0>
+# stop process, <0.403.0>
+# stop process, <0.404.0>
+# stop process, <0.405.0>
+# stop process, <0.406.0>
+# stop process, <0.407.0>
+# stop process, <0.408.0>
+# stop process, <0.409.0>
+# stop process, <0.410.0>
+# stop process, <0.411.0>
+# stop process, <0.412.0>
+# stop process, <0.413.0>
+# stop process, <0.414.0>
+# stop process, <0.415.0>
+# stop process, <0.416.0>
+---------------------------------
+stopping node event number: 48
+stopping node at: {{2018,9,16},{20,13,14}}
+---------------------------------
+stopping stop_node process
+stoping active node: n2@inventory2
+(client@client)10> test_ms_inv:result().
+{{seconds,475.230069},
+ {number_of_operations,50000},
+ {operations_per_second,105.21219775762968},
+ {last_element,{{1537,128789,287215},
+                remove,
+                {error,not_available_quantity,
+                       {available,0},
+                       {requested,1}}}}}
+(client@client)11> ms_inv_proxy:validate_operations(9990,uk).
+{{consistent,true},
+ {real_available,0},
+ {current_available,0},
+ {balance,0},
+ {duplicates,[]},
+ {rebalance_duplicates,{0,[]}},
+ {duplicates_quantity,0}}

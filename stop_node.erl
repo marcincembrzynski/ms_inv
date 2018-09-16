@@ -32,8 +32,6 @@ loop(Interval) ->
 
     {stop_node, N} ->
 
-      io:format("--------------------------------- ~n"),
-      io:format("stop_node process sleeps.... ~n"),
       timer:sleep(Interval),
       io:format("--------------------------------- ~n"),
       io:format("stopping node event number: ~p~n", [N]),

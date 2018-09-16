@@ -57,11 +57,13 @@ handle_call({validate_operations, {ProductId, WarehouseId}}, _From, LoopData) ->
   {reply, validate_operations(ProductId, WarehouseId, LoopData), LoopData};
 
 handle_call({remove, {ProductId, WarehouseId, RemoveQuantity}}, _From, LoopData) ->
-  {reply, remove_inventory(get_active(LoopData), ProductId, WarehouseId, RemoveQuantity, LoopData), LoopData};
+  {Response, NewLoopData} =  remove_inventory(get_active(LoopData), ProductId, WarehouseId, RemoveQuantity, LoopData),
+  {reply, Response, NewLoopData};
 
 
 handle_call({add, {ProductId, WarehouseId, AddQuantity}}, _From, LoopData) ->
-  {reply, add_inventory(get_active(LoopData), ProductId, WarehouseId, AddQuantity, LoopData), LoopData}.
+  {Response, NewLoopData} = add_inventory(get_active(LoopData), ProductId, WarehouseId, AddQuantity, LoopData),
+  {reply, Response, NewLoopData}.
 
 handle_cast(stop_node, LoopData) ->
   ActiveNode = get_active(LoopData),
@@ -97,48 +99,50 @@ get_status(N, NodesCount, LoopData) ->
 
 remove_inventory(Node, ProductId, WarehouseId, RemoveQuantity, LoopData) ->
 
+
   try ms_inv:remove(Node, ProductId, WarehouseId, RemoveQuantity) of
-    Response -> Response
+    Response -> {Response, LoopData}
   catch
     _:_ ->
-      NewLoopdata = LoopData#loopData{nodes = LoopData#loopData.nodes, error_node = Node},
-
-      io:format("error ms_inv_proxy remove retry attempt - active nodes ~p~n", [get_active_nodes(NewLoopdata)]),
-      ActiveNode = get_active(NewLoopdata),
-      io:format("calling node: ~p~n", [ActiveNode]),
-      remove_inventory(ActiveNode, ProductId, WarehouseId, RemoveQuantity, NewLoopdata)
+      {NewLoopData, ActiveNode} = handle_error(LoopData, Node, remove),
+      {remove_inventory(ActiveNode, ProductId, WarehouseId, RemoveQuantity, NewLoopData), NewLoopData}
   end.
 
 
 add_inventory(Node, ProductId, WarehouseId, AddQuantity, LoopData) ->
   try ms_inv:add(Node, ProductId, WarehouseId, AddQuantity) of
-      Response -> Response
+      Response -> {Response, LoopData}
   catch
     _:_ ->
-      {NewLoopData, ActiveNode} = handle_error(LoopData, Node),
-      add_inventory(ActiveNode, ProductId, WarehouseId, AddQuantity, NewLoopData)
+      {NewLoopData, ActiveNode} = handle_error(LoopData, Node, add),
+      {add_inventory(ActiveNode, ProductId, WarehouseId, AddQuantity, NewLoopData), NewLoopData}
   end.
 
-handle_error(LoopData, Node) ->
+handle_error(LoopData, Node, Operation) ->
   NewLoopData = LoopData#loopData{nodes = LoopData#loopData.nodes, error_node = Node},
-  io:format("error calling node: ~p~n", [Node]),
-  io:format("error ms_inv_proxy add attempt #active nodes ~p~n", [get_active_nodes(NewLoopData)]),
+  io:format("operation: ~p~n", [Operation]),
+  io:format("#### error calling node: ~p~n", [Node]),
+  io:format("error ms_inv_proxy #active nodes ~p~n", [get_active_nodes(NewLoopData)]),
   ActiveNode = get_active(NewLoopData),
   io:format("calling node: ~p~n", [ActiveNode]),
   {NewLoopData, ActiveNode}.
 
 get_active(LoopData) ->
-  lists:nth(1, get_active_nodes(LoopData)).
+
+  [Node|_] = get_active_nodes(LoopData),
+  Node.
 
 
 get_active_nodes(LoopData) ->
 
   ActiveNodes = lists:map(fun(Pid) -> node(Pid) end, members()),
   ErrorNode = LoopData#loopData.error_node,
+
   case lists:member(ErrorNode, ActiveNodes) of
     true ->
       NewList = lists:delete(ErrorNode, ActiveNodes),
-      lists:append(NewList, [ErrorNode]);
+      %%io:format("NewList: ~p~n", [NewList]),
+      NewList ++ [ErrorNode];
     false ->
       ActiveNodes
   end.

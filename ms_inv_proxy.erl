@@ -142,7 +142,7 @@ get_active_nodes(LoopData) ->
     true ->
       NewList = lists:delete(ErrorNode, ActiveNodes),
       %%io:format("NewList: ~p~n", [NewList]),
-      NewList ++ [ErrorNode];
+      lists:append(NewList,[ErrorNode]);
     false ->
       ActiveNodes
   end.

@@ -86,7 +86,7 @@ get_status(N, NodesCount, LoopData) ->
     Response -> Response
   catch
     _:_ ->
-      ActiveNodes = get_active_nodes(LoopData),
+      ActiveNodes = get_active_nodes(),
       io:format("ms_inv_proxy active nodes count: ~p~n", [length(ActiveNodes)]),
       io:format("ms_inv_proxy active nodes: ~p~n", [ActiveNodes]),
       io:format("ms_inv_proxy retry attempt number: ~p~n", [NodesCount - N + 1]),
@@ -122,37 +122,33 @@ handle_error(LoopData, Node, Operation) ->
   NewLoopData = LoopData#loopData{nodes = LoopData#loopData.nodes, error_node = Node},
   io:format("operation: ~p~n", [Operation]),
   io:format("#### error calling node: ~p~n", [Node]),
-  io:format("error ms_inv_proxy #active nodes ~p~n", [get_active_nodes(NewLoopData)]),
+  io:format("error ms_inv_proxy #active nodes ~p~n", [get_active_nodes()]),
   ActiveNode = get_active(NewLoopData),
   io:format("calling node: ~p~n", [ActiveNode]),
   {NewLoopData, ActiveNode}.
 
 get_active(LoopData) ->
-
-  [Node|_] = get_active_nodes(LoopData),
-  Node.
-
-
-get_active_nodes(LoopData) ->
-
-  ActiveNodes = lists:map(fun(Pid) -> node(Pid) end, members()),
   ErrorNode = LoopData#loopData.error_node,
+  ActiveNodes = get_active_nodes(),
 
-  case lists:member(ErrorNode, ActiveNodes) of
+  case (ErrorNode /= undefined) of
     true ->
-      NewList = lists:delete(ErrorNode, ActiveNodes),
-      %%io:format("NewList: ~p~n", [NewList]),
-      lists:append(NewList,[ErrorNode]);
+      Filtered = lists:filter(fun(Elem) -> (Elem /= ErrorNode) end, ActiveNodes),
+      lists:nth(1, Filtered);
     false ->
-      ActiveNodes
+      lists:nth(1, ActiveNodes)
   end.
 
 
+
+get_active_nodes() ->
+  lists:map(fun(Pid) -> node(Pid) end, members()).
+
 members() -> pg2:get_members(ms_inv).
 
-validate_operations(ProductId, WarehouseId, LoopData) ->
+validate_operations(ProductId, WarehouseId, _LoopData) ->
 
-  ActiveNodes = get_active_nodes(LoopData),
+  ActiveNodes = get_active_nodes(),
   GetOperationsOnNode = fun(Node, Acc) ->
     Acc ++ ms_inv:get_operations(Node, ProductId, WarehouseId)
   end,

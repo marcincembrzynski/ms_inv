@@ -1,5 +1,5 @@
 -module(ms_log).
--export([start_link/1,stop/0,init/1,log/1,terminate/2,handle_cast/2,handle_call/3,get/2]).
+-export([start_link/1,stop/0,init/1,log/1,terminate/2,handle_cast/2,handle_call/3,get/1]).
 -record(loopData, {logref}).
 -behaviour(gen_server).
 
@@ -26,8 +26,8 @@ log(Log) ->
   gen_server:cast(?MODULE, {insert, Log}).
 
 
-get(Node, Key) ->
-  gen_server:call({?MODULE, Node}, {get, Key}).
+get(Key) ->
+  gen_server:call(?MODULE, {get, Key}).
 
 handle_call({get, Key}, _From, LoopData) ->
   Result = dets:lookup(LoopData#loopData.logref, Key),

@@ -1,8 +1,9 @@
 -module(ms_inv_proxy).
 -export([start_link/0,init/1]).
--export([get/2, add/3, remove/3,stop/0, status/0,stop_node/0,get_active/0,get_active_nodes/0,validate_operations/2]).
+-export([get/2, add/3, remove/3,stop/0, status/0,stop_node/0,validate_operations/2]).
 -export([handle_call/3,handle_cast/2]).
 -behaviour(gen_server).
+-record(loopData, {nodes, error_node}).
 
 start_link() ->
   {ok,[Nodes]} = file:consult(nodes),
@@ -19,7 +20,8 @@ init(Args) ->
   end,
   lists:foreach(PingNode, Nodes),
   pg2:create(ms_inv),
-  {ok, Args}.
+  LoopData = #loopData{nodes = Nodes},
+  {ok, LoopData}.
 
 call(Msg) ->
   gen_server:call(?MODULE, Msg).
@@ -44,25 +46,25 @@ stop() -> gen_server:cast(?MODULE, stop).
 stop_node() -> gen_server:cast(?MODULE, stop_node).
 
 handle_call({status}, _From, LoopData) ->
-  {nodes, Nodes} = LoopData,
+  Nodes = LoopData#loopData.nodes,
   NodesCount = length(Nodes),
-  {reply, get_status(NodesCount, NodesCount), LoopData};
+  {reply, get_status(NodesCount, NodesCount, LoopData), LoopData};
 
 handle_call({get, {ProductId, WarehouseId}}, _From, LoopData) ->
-  {reply, get_inventory(ProductId, WarehouseId), LoopData};
+  {reply, get_inventory(ProductId, WarehouseId, LoopData), LoopData};
 
 handle_call({validate_operations, {ProductId, WarehouseId}}, _From, LoopData) ->
   {reply, validate_operations(ProductId, WarehouseId, LoopData), LoopData};
 
 handle_call({remove, {ProductId, WarehouseId, RemoveQuantity}}, _From, LoopData) ->
-  {reply, remove_inventory(get_active(), ProductId, WarehouseId, RemoveQuantity), LoopData};
+  {reply, remove_inventory(get_active(LoopData), ProductId, WarehouseId, RemoveQuantity, LoopData), LoopData};
 
 
 handle_call({add, {ProductId, WarehouseId, AddQuantity}}, _From, LoopData) ->
-  {reply, add_inventory(get_active(), ProductId, WarehouseId, AddQuantity), LoopData}.
+  {reply, add_inventory(get_active(LoopData), ProductId, WarehouseId, AddQuantity, LoopData), LoopData}.
 
 handle_cast(stop_node, LoopData) ->
-  ActiveNode = get_active(),
+  ActiveNode = get_active(LoopData),
   io:format("stoping active node: ~p~n", [ActiveNode]),
   ms_inv:stop(ActiveNode),
   {noreply,LoopData};
@@ -70,63 +72,83 @@ handle_cast(stop_node, LoopData) ->
 handle_cast(stop, LoopData) ->
   {stop, normal, LoopData}.
 
-get_inventory(ProductId, WarehouseId) ->
-  ms_inv:get(get_active(), ProductId, WarehouseId).
+get_inventory(ProductId, WarehouseId, LoopData) ->
+  ms_inv:get(get_active(LoopData), ProductId, WarehouseId).
 
-get_status(0, _NodesCount) ->
+get_status(0, _NodesCount, _LoopData) ->
   io:format("please try later ~n"),
   error;
 
-get_status(N, NodesCount) ->
-  try ms_inv:status(get_active()) of
+get_status(N, NodesCount, LoopData) ->
+  try ms_inv:status(get_active(LoopData)) of
     Response -> Response
   catch
     _:_ ->
-      ActiveNodes = get_active_nodes(),
+      ActiveNodes = get_active_nodes(LoopData),
       io:format("ms_inv_proxy active nodes count: ~p~n", [length(ActiveNodes)]),
       io:format("ms_inv_proxy active nodes: ~p~n", [ActiveNodes]),
       io:format("ms_inv_proxy retry attempt number: ~p~n", [NodesCount - N + 1]),
-      get_status(N - 1, NodesCount)
+      get_status(N - 1, NodesCount, LoopData)
   end.
 
 
 
 
 
-remove_inventory(Node, ProductId, WarehouseId, RemoveQuantity) ->
+remove_inventory(Node, ProductId, WarehouseId, RemoveQuantity, LoopData) ->
 
   try ms_inv:remove(Node, ProductId, WarehouseId, RemoveQuantity) of
     Response -> Response
   catch
     _:_ ->
-      io:format("error ms_inv_proxy remove retry attempt - active nodes ~p~n", [get_active_nodes()]),
-      LastNode = lists:last(get_active_nodes()),
-      remove_inventory(LastNode, ProductId, WarehouseId, RemoveQuantity)
+      NewLoopdata = LoopData#loopData{nodes = LoopData#loopData.nodes, error_node = Node},
+
+      io:format("error ms_inv_proxy remove retry attempt - active nodes ~p~n", [get_active_nodes(NewLoopdata)]),
+      ActiveNode = get_active(NewLoopdata),
+      io:format("calling node: ~p~n", [ActiveNode]),
+      remove_inventory(ActiveNode, ProductId, WarehouseId, RemoveQuantity, NewLoopdata)
   end.
 
 
-add_inventory(Node, ProductId, WarehouseId, AddQuantity) ->
+add_inventory(Node, ProductId, WarehouseId, AddQuantity, LoopData) ->
   try ms_inv:add(Node, ProductId, WarehouseId, AddQuantity) of
       Response -> Response
   catch
     _:_ ->
-      io:format("error ms_inv_proxy add attempt #active nodes ~p~n", [get_active_nodes()]),
-      LastNode = lists:last(get_active_nodes()),
-      add_inventory(LastNode, ProductId, WarehouseId, AddQuantity)
+      {NewLoopData, ActiveNode} = handle_error(LoopData, Node),
+      add_inventory(ActiveNode, ProductId, WarehouseId, AddQuantity, NewLoopData)
   end.
 
-get_active() ->
-  [Pid|_] = members(),
-  node(Pid).
+handle_error(LoopData, Node) ->
+  NewLoopData = LoopData#loopData{nodes = LoopData#loopData.nodes, error_node = Node},
+  io:format("error calling node: ~p~n", [Node]),
+  io:format("error ms_inv_proxy add attempt #active nodes ~p~n", [get_active_nodes(NewLoopData)]),
+  ActiveNode = get_active(NewLoopData),
+  io:format("calling node: ~p~n", [ActiveNode]),
+  {NewLoopData, ActiveNode}.
 
-get_active_nodes() ->
-  lists:map(fun(Pid) -> node(Pid) end, members()).
+get_active(LoopData) ->
+  lists:nth(1, get_active_nodes(LoopData)).
+
+
+get_active_nodes(LoopData) ->
+
+  ActiveNodes = lists:map(fun(Pid) -> node(Pid) end, members()),
+  ErrorNode = LoopData#loopData.error_node,
+  case lists:member(ErrorNode, ActiveNodes) of
+    true ->
+      NewList = lists:delete(ErrorNode, ActiveNodes),
+      lists:append(NewList, [ErrorNode]);
+    false ->
+      ActiveNodes
+  end.
+
 
 members() -> pg2:get_members(ms_inv).
 
-validate_operations(ProductId, WarehouseId, _LoopData) ->
+validate_operations(ProductId, WarehouseId, LoopData) ->
 
-  ActiveNodes = get_active_nodes(),
+  ActiveNodes = get_active_nodes(LoopData),
   GetOperationsOnNode = fun(Node, Acc) ->
     Acc ++ ms_inv:get_operations(Node, ProductId, WarehouseId)
   end,

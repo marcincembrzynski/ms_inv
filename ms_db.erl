@@ -47,7 +47,7 @@ read_from_remote(Node, Key) ->
   call(Node, {read_from_remote, Key}).
 
 write_cast(Node, Key, Value, Version) ->
-  cast(Node, {write_to_local, {Key, Value, Version}}).
+  cast(Node, {write_cast, {Key, Value, Version}}).
 
 handle_call({write, {Key, Value}}, _From, LoopData) ->
   {reply, write_to_all(Key, Value, LoopData), LoopData};
@@ -64,14 +64,13 @@ handle_call({read_from_local, Key}, _From, LoopData) ->
 
 handle_cast(stop, LoopData) -> {stop, normal, LoopData};
 
-handle_cast({write_to_local, {Key, Value, Version}}, LoopData) ->
+handle_cast({write_cast, {Key, Value, Version}}, LoopData) ->
   ok = dets:insert(db_ref(LoopData), {Key, Value, Version}),
   {noreply,LoopData}.
 
 
 read(Key, LoopData) ->
   Result = dets:lookup(db_ref(LoopData), Key),
-  %%io:format("### read, ~p~n", [Result]),
   case Result of
     [] ->
       {error, not_found};

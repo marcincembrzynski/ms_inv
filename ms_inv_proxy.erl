@@ -131,7 +131,7 @@ get_active(LoopData) ->
   ErrorNode = LoopData#loopData.error_node,
   ActiveNodes = get_active_nodes(),
 
-  case (ErrorNode /= undefined) of
+  case (ErrorNode /= undefined) and length(ActiveNodes) > 1 of
     true ->
       Filtered = lists:filter(fun(Elem) -> (Elem /= ErrorNode) end, ActiveNodes),
       lists:nth(1, Filtered);

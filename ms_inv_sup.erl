@@ -12,7 +12,7 @@ stop() ->
 
 
 init(_) ->
-  ChildSpecList = [child(ms_db, [ms_inv_db]), child(ms_inv, []), child(ms_log, ["_ms_inv_log"])], {ok,{{one_for_one, 1, 5}, ChildSpecList}}.
+  ChildSpecList = [child(ms_db, [ms_inv_db]), child(ms_inv, [])], {ok,{{one_for_one, 1, 5}, ChildSpecList}}.
 
 child(Module, Args) ->
   {Module, {Module, start_link, Args},

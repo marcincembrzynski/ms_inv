@@ -1,0 +1,601 @@
+(client@client)2> test_ms_inv:start(100,500,10).
+Units Needed init, 50000
+RemoveResponse init, {ok,{9990,uk,0},
+                         {ref,#Ref<8006.924656441.3230662657.56389>}}
+AddResponse init, {ok,{9990,uk,49999},
+                      {ref,#Ref<8006.924656441.3230662657.56399>}}
+started process: <0.88.0>
+---------------------------------
+started process: <0.89.0>
+stop_node process sleeps....
+started process: <0.90.0>
+started process: <0.91.0>
+started process: <0.92.0>
+started process: <0.93.0>
+started process: <0.94.0>
+started process: <0.95.0>
+started process: <0.96.0>
+started process: <0.97.0>
+started process: <0.98.0>
+started process: <0.99.0>
+started process: <0.100.0>
+started process: <0.101.0>
+started process: <0.102.0>
+started process: <0.103.0>
+started process: <0.104.0>
+started process: <0.105.0>
+started process: <0.106.0>
+started process: <0.107.0>
+started process: <0.108.0>
+started process: <0.109.0>
+started process: <0.110.0>
+started process: <0.111.0>
+started process: <0.112.0>
+started process: <0.113.0>
+started process: <0.114.0>
+started process: <0.115.0>
+started process: <0.116.0>
+started process: <0.117.0>
+started process: <0.118.0>
+started process: <0.119.0>
+started process: <0.120.0>
+started process: <0.121.0>
+started process: <0.122.0>
+started process: <0.123.0>
+started process: <0.124.0>
+started process: <0.125.0>
+started process: <0.126.0>
+started process: <0.127.0>
+started process: <0.128.0>
+started process: <0.129.0>
+started process: <0.130.0>
+started process: <0.131.0>
+started process: <0.132.0>
+started process: <0.133.0>
+started process: <0.134.0>
+started process: <0.135.0>
+started process: <0.136.0>
+started process: <0.137.0>
+started process: <0.138.0>
+started process: <0.139.0>
+started process: <0.140.0>
+started process: <0.141.0>
+started process: <0.142.0>
+started process: <0.143.0>
+started process: <0.144.0>
+started process: <0.145.0>
+started process: <0.146.0>
+started process: <0.147.0>
+started process: <0.148.0>
+started process: <0.149.0>
+started process: <0.150.0>
+started process: <0.151.0>
+started process: <0.152.0>
+started process: <0.153.0>
+started process: <0.154.0>
+started process: <0.155.0>
+started process: <0.156.0>
+started process: <0.157.0>
+started process: <0.158.0>
+started process: <0.159.0>
+started process: <0.160.0>
+started process: <0.161.0>
+started process: <0.162.0>
+started process: <0.163.0>
+started process: <0.164.0>
+started process: <0.165.0>
+started process: <0.166.0>
+started process: <0.167.0>
+started process: <0.168.0>
+started process: <0.169.0>
+started process: <0.170.0>
+started process: <0.171.0>
+started process: <0.172.0>
+started process: <0.173.0>
+started process: <0.174.0>
+started process: <0.175.0>
+started process: <0.176.0>
+started process: <0.177.0>
+started process: <0.178.0>
+started process: <0.179.0>
+started process: <0.180.0>
+started process: <0.181.0>
+started process: <0.182.0>
+started process: <0.183.0>
+started process: <0.184.0>
+started process: <0.185.0>
+started process: <0.186.0>
+started process: <0.187.0>
+ok
+---------------------------------
+stoping node event number: 1
+stoping node at: {{2018,9,9},{18,53,51}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3,n2@inventory2]
+---------------------------------
+stoping node event number: 2
+stoping node at: {{2018,9,9},{18,54,1}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n3@inventory3
+error ms_inv_proxy remove retry attempt - active nodes [n2@inventory2,n1@inventory1]
+---------------------------------
+stoping node event number: 3
+stoping node at: {{2018,9,9},{18,54,11}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n2@inventory2
+error ms_inv_proxy remove retry attempt - active nodes [n1@inventory1,n3@inventory3]
+---------------------------------
+stoping node event number: 4
+stoping node at: {{2018,9,9},{18,54,21}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3,n2@inventory2]
+---------------------------------
+stoping node event number: 5
+stoping node at: {{2018,9,9},{18,54,31}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n3@inventory3
+error ms_inv_proxy remove retry attempt - active nodes [n1@inventory1,n2@inventory2]
+---------------------------------
+stoping node event number: 6
+stoping node at: {{2018,9,9},{18,54,41}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n2@inventory2,n3@inventory3]
+---------------------------------
+stoping node event number: 7
+stoping node at: {{2018,9,9},{18,54,51}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n2@inventory2
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3,n1@inventory1]
+---------------------------------
+stoping node event number: 8
+stoping node at: {{2018,9,9},{18,55,1}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n3@inventory3
+error ms_inv_proxy remove retry attempt - active nodes [n1@inventory1,n2@inventory2]
+---------------------------------
+stoping node event number: 9
+stoping node at: {{2018,9,9},{18,55,11}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n2@inventory2, n3@inventory3]
+---------------------------------
+stoping node event number: 10
+stoping node at: {{2018,9,9},{18,55,21}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n2@inventory2
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3,n1@inventory1]
+---------------------------------
+stoping node event number: 11
+stoping node at: {{2018,9,9},{18,55,31}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n3@inventory3
+error ms_inv_proxy remove retry attempt - active nodes [n1@inventory1,n2@inventory2]
+---------------------------------
+stoping node event number: 12
+stoping node at: {{2018,9,9},{18,55,41}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n2@inventory2,n3@inventory3]
+---------------------------------
+stoping node event number: 13
+stoping node at: {{2018,9,9},{18,55,51}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n2@inventory2
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3,n1@inventory1]
+---------------------------------
+stoping node event number: 14
+stoping node at: {{2018,9,9},{18,56,1}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n3@inventory3
+error ms_inv_proxy remove retry attempt - active nodes [n1@inventory1,n2@inventory2]
+---------------------------------
+stoping node event number: 15
+stoping node at: {{2018,9,9},{18,56,11}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n2@inventory2,n3@inventory3]
+---------------------------------
+stoping node event number: 16
+stoping node at: {{2018,9,9},{18,56,21}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n2@inventory2
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3,n1@inventory1]
+---------------------------------
+stoping node event number: 17
+stoping node at: {{2018,9,9},{18,56,31}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n3@inventory3
+error ms_inv_proxy remove retry attempt - active nodes [n1@inventory1,n2@inventory2]
+---------------------------------
+stoping node event number: 18
+stoping node at: {{2018,9,9},{18,56,41}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n2@inventory2,n3@inventory3]
+---------------------------------
+stoping node event number: 19
+stoping node at: {{2018,9,9},{18,56,51}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n2@inventory2
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3,n1@inventory1]
+---------------------------------
+stoping node event number: 20
+stoping node at: {{2018,9,9},{18,57,1}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n3@inventory3
+error ms_inv_proxy remove retry attempt - active nodes [n1@inventory1,n2@inventory2]
+---------------------------------
+stoping node event number: 21
+stoping node at: {{2018,9,9},{18,57,11}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n2@inventory2,n3@inventory3]
+---------------------------------
+stoping node event number: 22
+stoping node at: {{2018,9,9},{18,57,21}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n2@inventory2
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3, n1@inventory1]
+---------------------------------
+stoping node event number: 23
+stoping node at: {{2018,9,9},{18,57,31}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n3@inventory3
+error ms_inv_proxy remove retry attempt - active nodes [n1@inventory1, n2@inventory2]
+---------------------------------
+stoping node event number: 24
+stoping node at: {{2018,9,9},{18,57,41}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n2@inventory2, n3@inventory3]
+---------------------------------
+stoping node event number: 25
+stoping node at: {{2018,9,9},{18,57,51}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n2@inventory2
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3,n1@inventory1]
+---------------------------------
+stoping node event number: 26
+stoping node at: {{2018,9,9},{18,58,1}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n3@inventory3
+error ms_inv_proxy remove retry attempt - active nodes [n1@inventory1,n2@inventory2]
+---------------------------------
+stoping node event number: 27
+stoping node at: {{2018,9,9},{18,58,11}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n2@inventory2,n3@inventory3]
+---------------------------------
+stoping node event number: 28
+stoping node at: {{2018,9,9},{18,58,21}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n2@inventory2
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3,n1@inventory1]
+---------------------------------
+stoping node event number: 29
+stoping node at: {{2018,9,9},{18,58,31}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n3@inventory3
+error ms_inv_proxy remove retry attempt - active nodes [n1@inventory1, n2@inventory2]
+---------------------------------
+stoping node event number: 30
+stoping node at: {{2018,9,9},{18,58,41}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n2@inventory2,n3@inventory3]
+---------------------------------
+stoping node event number: 31
+stoping node at: {{2018,9,9},{18,58,51}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n2@inventory2
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3, n1@inventory1]
+---------------------------------
+stoping node event number: 32
+stoping node at: {{2018,9,9},{18,59,1}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n3@inventory3
+error ms_inv_proxy remove retry attempt - active nodes [n1@inventory1,n2@inventory2]
+---------------------------------
+stoping node event number: 33
+stoping node at: {{2018,9,9},{18,59,11}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n2@inventory2,n3@inventory3]
+---------------------------------
+stoping node event number: 34
+stoping node at: {{2018,9,9},{18,59,21}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n2@inventory2
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3,n1@inventory1]
+---------------------------------
+stoping node event number: 35
+stoping node at: {{2018,9,9},{18,59,31}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n3@inventory3
+error ms_inv_proxy remove retry attempt - active nodes [n1@inventory1, n2@inventory2]
+---------------------------------
+stoping node event number: 36
+stoping node at: {{2018,9,9},{18,59,41}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n2@inventory2, n3@inventory3]
+---------------------------------
+stoping node event number: 37
+stoping node at: {{2018,9,9},{18,59,51}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n2@inventory2
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3,n1@inventory1]
+---------------------------------
+stoping node event number: 38
+stoping node at: {{2018,9,9},{19,0,1}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n3@inventory3
+error ms_inv_proxy remove retry attempt - active nodes [n1@inventory1, n2@inventory2]
+---------------------------------
+stoping node event number: 39
+stoping node at: {{2018,9,9},{19,0,11}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n2@inventory2,n3@inventory3]
+---------------------------------
+stoping node event number: 40
+stoping node at: {{2018,9,9},{19,0,21}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n2@inventory2
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3,n1@inventory1]
+---------------------------------
+stoping node event number: 41
+stoping node at: {{2018,9,9},{19,0,31}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n3@inventory3
+error ms_inv_proxy remove retry attempt - active nodes [n1@inventory1,n2@inventory2]
+---------------------------------
+stoping node event number: 42
+stoping node at: {{2018,9,9},{19,0,41}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n2@inventory2,n3@inventory3]
+---------------------------------
+stoping node event number: 43
+stoping node at: {{2018,9,9},{19,0,51}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n2@inventory2
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3,n1@inventory1]
+---------------------------------
+stoping node event number: 44
+stoping node at: {{2018,9,9},{19,1,1}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n3@inventory3
+error ms_inv_proxy remove retry attempt - active nodes [n1@inventory1,n2@inventory2]
+---------------------------------
+stoping node event number: 45
+stoping node at: {{2018,9,9},{19,1,11}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n1@inventory1
+error ms_inv_proxy remove retry attempt - active nodes [n2@inventory2,n3@inventory3]
+---------------------------------
+stoping node event number: 46
+stoping node at: {{2018,9,9},{19,1,21}}
+---------------------------------
+---------------------------------
+stop_node process sleeps....
+stoping active node: n2@inventory2
+error ms_inv_proxy remove retry attempt - active nodes [n3@inventory3,n1@inventory1]
+# stop process, <0.88.0>
+# stop process, <0.89.0>
+# stop process, <0.90.0>
+# stop process, <0.91.0>
+# stop process, <0.92.0>
+# stop process, <0.93.0>
+# stop process, <0.94.0>
+# stop process, <0.95.0>
+# stop process, <0.96.0>
+# stop process, <0.97.0>
+# stop process, <0.98.0>
+# stop process, <0.99.0>
+# stop process, <0.100.0>
+# stop process, <0.101.0>
+# stop process, <0.102.0>
+# stop process, <0.103.0>
+# stop process, <0.104.0>
+# stop process, <0.105.0>
+# stop process, <0.106.0>
+# stop process, <0.107.0>
+# stop process, <0.108.0>
+# stop process, <0.109.0>
+# stop process, <0.110.0>
+# stop process, <0.111.0>
+# stop process, <0.112.0>
+# stop process, <0.113.0>
+# stop process, <0.114.0>
+# stop process, <0.115.0>
+# stop process, <0.116.0>
+# stop process, <0.117.0>
+# stop process, <0.118.0>
+# stop process, <0.119.0>
+# stop process, <0.120.0>
+# stop process, <0.121.0>
+# stop process, <0.122.0>
+# stop process, <0.123.0>
+# stop process, <0.124.0>
+# stop process, <0.125.0>
+# stop process, <0.126.0>
+# stop process, <0.127.0>
+# stop process, <0.128.0>
+# stop process, <0.129.0>
+# stop process, <0.130.0>
+# stop process, <0.131.0>
+# stop process, <0.132.0>
+# stop process, <0.133.0>
+# stop process, <0.134.0>
+# stop process, <0.135.0>
+# stop process, <0.136.0>
+# stop process, <0.137.0>
+# stop process, <0.138.0>
+# stop process, <0.139.0>
+# stop process, <0.140.0>
+# stop process, <0.141.0>
+# stop process, <0.142.0>
+# stop process, <0.143.0>
+# stop process, <0.144.0>
+# stop process, <0.145.0>
+# stop process, <0.146.0>
+# stop process, <0.147.0>
+# stop process, <0.148.0>
+# stop process, <0.149.0>
+# stop process, <0.150.0>
+# stop process, <0.151.0>
+# stop process, <0.152.0>
+# stop process, <0.153.0>
+# stop process, <0.154.0>
+# stop process, <0.155.0>
+# stop process, <0.156.0>
+# stop process, <0.157.0>
+# stop process, <0.158.0>
+# stop process, <0.159.0>
+# stop process, <0.160.0>
+# stop process, <0.161.0>
+---------------------------------
+stoping node event number: 47
+stoping node at: {{2018,9,9},{19,1,31}}
+---------------------------------
+stoping stop_node process
+# stop process, <0.162.0>
+# stop process, <0.163.0>
+# stop process, <0.164.0>
+# stop process, <0.165.0>
+# stop process, <0.166.0>
+# stop process, <0.167.0>
+# stop process, <0.168.0>
+# stop process, <0.169.0>
+# stop process, <0.170.0>
+# stop process, <0.171.0>
+# stop process, <0.172.0>
+# stop process, <0.173.0>
+# stop process, <0.174.0>
+# stop process, <0.175.0>
+# stop process, <0.176.0>
+# stop process, <0.177.0>
+# stop process, <0.178.0>
+# stop process, <0.179.0>
+# stop process, <0.180.0>
+# stop process, <0.181.0>
+# stop process, <0.182.0>
+# stop process, <0.183.0>
+# stop process, <0.184.0>
+# stop process, <0.185.0>
+# stop process, <0.186.0>
+stoping active node: n3@inventory3
+# stop process, <0.187.0>
+(client@client)3> test_ms_inv:result().
+{{seconds,470.268852},
+ {number_of_operations,50000},
+ {operations_per_second,106.3221597334284},
+ {last_element,{{1536,519691,735384},
+                remove,
+                {error,not_available_quantity,
+                       {available,0},
+                       {requested,1}}}}}
+(client@client)4> ms_inv_proxy:validate_operations(9990,uk).
+{{start,9990},
+ {consistent,true},
+ {real_available,0},
+ {current_available,0},
+ {balance,0},
+ {duplicates,[]},
+ {rebalance_duplicates,{0,[]}},
+ {duplicates_quantity,0}}

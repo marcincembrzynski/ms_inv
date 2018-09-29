@@ -1,0 +1,1454 @@
+
+
+ Eshell V9.3  (abort with ^G)
+ (client@client)1> ms_inv_proxy:start_link().
+ ping node: n1@inventory1
+ ping result: pong
+ ping node: n2@inventory2
+ ping result: pong
+ ping node: n3@inventory3
+ ping result: pong
+ {ok,<0.69.0>}
+ (client@client)2> ms_inv_proxy:get(9999,uk).
+ {ok,{9999,uk,9999}}
+ (client@client)3> test_mult_ms_inv:start(100,1000,10).
+ productId 1000
+ ProductId 1000
+ RemoveResponse init, {ok,{1000,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.25565>}}
+ AddResponse init, {ok,{1000,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.25577>}}
+ productId 1001
+ ProductId 1001
+ RemoveResponse init, {ok,{1001,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.25609>}}
+ AddResponse init, {ok,{1001,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.25627>}}
+ productId 1002
+ ProductId 1002
+ RemoveResponse init, {ok,{1002,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.25679>}}
+ AddResponse init, {ok,{1002,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.25707>}}
+ productId 1003
+ ProductId 1003
+ RemoveResponse init, {ok,{1003,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.25779>}}
+ AddResponse init, {ok,{1003,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.25817>}}
+ productId 1004
+ ProductId 1004
+ RemoveResponse init, {ok,{1004,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.25909>}}
+ AddResponse init, {ok,{1004,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.25957>}}
+ productId 1005
+ ProductId 1005
+ RemoveResponse init, {ok,{1005,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.26069>}}
+ AddResponse init, {ok,{1005,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.26127>}}
+ productId 1006
+ ProductId 1006
+ RemoveResponse init, {ok,{1006,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.26259>}}
+ AddResponse init, {ok,{1006,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.26327>}}
+ productId 1007
+ ProductId 1007
+ RemoveResponse init, {ok,{1007,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.26479>}}
+ AddResponse init, {ok,{1007,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.26557>}}
+ productId 1008
+ ProductId 1008
+ RemoveResponse init, {ok,{1008,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.26729>}}
+ AddResponse init, {ok,{1008,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.26817>}}
+ productId 1009
+ ProductId 1009
+ RemoveResponse init, {ok,{1009,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.27009>}}
+ AddResponse init, {ok,{1009,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.27107>}}
+ productId 1010
+ ProductId 1010
+ RemoveResponse init, {ok,{1010,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.27319>}}
+ AddResponse init, {ok,{1010,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.27427>}}
+ productId 1011
+ ProductId 1011
+ RemoveResponse init, {ok,{1011,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.27660>}}
+ AddResponse init, {ok,{1011,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.27779>}}
+ productId 1012
+ ProductId 1012
+ RemoveResponse init, {ok,{1012,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.28031>}}
+ AddResponse init, {ok,{1012,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.28159>}}
+ productId 1013
+ ProductId 1013
+ RemoveResponse init, {ok,{1013,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.28431>}}
+ AddResponse init, {ok,{1013,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.28569>}}
+ productId 1014
+ ProductId 1014
+ RemoveResponse init, {ok,{1014,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.28861>}}
+ AddResponse init, {ok,{1014,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.29009>}}
+ productId 1015
+ ProductId 1015
+ RemoveResponse init, {ok,{1015,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.29322>}}
+ AddResponse init, {ok,{1015,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.29480>}}
+ productId 1016
+ ProductId 1016
+ RemoveResponse init, {ok,{1016,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.29812>}}
+ AddResponse init, {ok,{1016,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.29981>}}
+ productId 1017
+ ProductId 1017
+ RemoveResponse init, {ok,{1017,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.30333>}}
+ AddResponse init, {ok,{1017,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.30512>}}
+ productId 1018
+ ProductId 1018
+ RemoveResponse init, {ok,{1018,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.30891>}}
+ AddResponse init, {ok,{1018,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.31079>}}
+ productId 1019
+ ProductId 1019
+ RemoveResponse init, {ok,{1019,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.31471>}}
+ AddResponse init, {ok,{1019,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.31670>}}
+ productId 1020
+ ProductId 1020
+ RemoveResponse init, {ok,{1020,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.32082>}}
+ AddResponse init, {ok,{1020,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.32291>}}
+ productId 1021
+ ProductId 1021
+ RemoveResponse init, {ok,{1021,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.32723>}}
+ ---------------------------------
+ stopping node event number: 1
+ stopping node at: {{2018,9,22},{7,5,4}}
+ ---------------------------------
+ AddResponse init, {ok,{1021,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.32941>}}
+ productId 1022
+ ProductId 1022
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ RemoveResponse init, {ok,{1022,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.92401>}}
+ AddResponse init, {ok,{1022,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.92629>}}
+ productId 1023
+ ProductId 1023
+ RemoveResponse init, {ok,{1023,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.93101>}}
+ AddResponse init, {ok,{1023,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.93339>}}
+ productId 1024
+ ProductId 1024
+ RemoveResponse init, {ok,{1024,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.93831>}}
+ AddResponse init, {ok,{1024,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.94079>}}
+ productId 1025
+ ProductId 1025
+ RemoveResponse init, {ok,{1025,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.94592>}}
+ AddResponse init, {ok,{1025,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.94850>}}
+ productId 1026
+ ProductId 1026
+ RemoveResponse init, {ok,{1026,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.95382>}}
+ AddResponse init, {ok,{1026,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.95651>}}
+ productId 1027
+ ProductId 1027
+ RemoveResponse init, {ok,{1027,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.96203>}}
+ AddResponse init, {ok,{1027,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.96481>}}
+ productId 1028
+ ProductId 1028
+ RemoveResponse init, {ok,{1028,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.97053>}}
+ AddResponse init, {ok,{1028,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.97341>}}
+ productId 1029
+ ProductId 1029
+ RemoveResponse init, {ok,{1029,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.97933>}}
+ AddResponse init, {ok,{1029,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.98233>}}
+ productId 1030
+ ProductId 1030
+ RemoveResponse init, {ok,{1030,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.98850>}}
+ AddResponse init, {ok,{1030,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.99158>}}
+ productId 1031
+ ProductId 1031
+ RemoveResponse init, {ok,{1031,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.99790>}}
+ AddResponse init, {ok,{1031,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.100108>}}
+ productId 1032
+ ProductId 1032
+ RemoveResponse init, {ok,{1032,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.100761>}}
+ AddResponse init, {ok,{1032,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.101097>}}
+ productId 1033
+ ProductId 1033
+ RemoveResponse init, {ok,{1033,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.101770>}}
+ AddResponse init, {ok,{1033,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.102108>}}
+ productId 1034
+ ProductId 1034
+ RemoveResponse init, {ok,{1034,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.102800>}}
+ AddResponse init, {ok,{1034,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.103148>}}
+ productId 1035
+ ProductId 1035
+ ---------------------------------
+ stopping node event number: 2
+ stopping node at: {{2018,9,22},{7,5,14}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ RemoveResponse init, {ok,{1035,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.102891>}}
+ AddResponse init, {ok,{1035,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.103249>}}
+ productId 1036
+ ProductId 1036
+ RemoveResponse init, {ok,{1036,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.103981>}}
+ AddResponse init, {ok,{1036,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.104349>}}
+ productId 1037
+ ProductId 1037
+ RemoveResponse init, {ok,{1037,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.105101>}}
+ AddResponse init, {ok,{1037,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.105479>}}
+ productId 1038
+ ProductId 1038
+ RemoveResponse init, {ok,{1038,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.106252>}}
+ AddResponse init, {ok,{1038,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.106641>}}
+ productId 1039
+ ProductId 1039
+ RemoveResponse init, {ok,{1039,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.107434>}}
+ AddResponse init, {ok,{1039,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.107832>}}
+ productId 1040
+ ProductId 1040
+ RemoveResponse init, {ok,{1040,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.108645>}}
+ AddResponse init, {ok,{1040,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.109053>}}
+ productId 1041
+ ProductId 1041
+ RemoveResponse init, {ok,{1041,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.109887>}}
+ AddResponse init, {ok,{1041,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.110305>}}
+ productId 1042
+ ProductId 1042
+ RemoveResponse init, {ok,{1042,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.111158>}}
+ AddResponse init, {ok,{1042,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.111586>}}
+ productId 1043
+ ProductId 1043
+ RemoveResponse init, {ok,{1043,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.112459>}}
+ AddResponse init, {ok,{1043,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.112897>}}
+ productId 1044
+ ProductId 1044
+ RemoveResponse init, {ok,{1044,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.113790>}}
+ AddResponse init, {ok,{1044,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.114238>}}
+ productId 1045
+ ProductId 1045
+ ---------------------------------
+ stopping node event number: 3
+ stopping node at: {{2018,9,22},{7,5,24}}
+ ---------------------------------
+ RemoveResponse init, {ok,{1045,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.115151>}}
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+ calling node: n2@inventory2
+ AddResponse init, {ok,{1045,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.105438>}}
+ productId 1046
+ ProductId 1046
+ RemoveResponse init, {ok,{1046,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.106370>}}
+ AddResponse init, {ok,{1046,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.106850>}}
+ productId 1047
+ ProductId 1047
+ RemoveResponse init, {ok,{1047,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.107802>}}
+ AddResponse init, {ok,{1047,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.108281>}}
+ productId 1048
+ ProductId 1048
+ RemoveResponse init, {ok,{1048,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.109254>}}
+ AddResponse init, {ok,{1048,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.109742>}}
+ productId 1049
+ ProductId 1049
+ RemoveResponse init, {ok,{1049,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.110737>}}
+ AddResponse init, {ok,{1049,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.111235>}}
+ productId 1050
+ ProductId 1050
+ RemoveResponse init, {ok,{1050,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.112266>}}
+ AddResponse init, {ok,{1050,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.112774>}}
+ productId 1051
+ ProductId 1051
+ RemoveResponse init, {ok,{1051,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.113818>}}
+ AddResponse init, {ok,{1051,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.114339>}}
+ productId 1052
+ ProductId 1052
+ RemoveResponse init, {ok,{1052,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.115392>}}
+ AddResponse init, {ok,{1052,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.115935>}}
+ productId 1053
+ ProductId 1053
+ ---------------------------------
+ stopping node event number: 4
+ stopping node at: {{2018,9,22},{7,5,34}}
+ ---------------------------------
+ RemoveResponse init, {ok,{1053,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.117014>}}
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ AddResponse init, {ok,{1053,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.117001>}}
+ productId 1054
+ ProductId 1054
+ RemoveResponse init, {ok,{1054,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.118093>}}
+ AddResponse init, {ok,{1054,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.118641>}}
+ productId 1055
+ ProductId 1055
+ RemoveResponse init, {ok,{1055,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.119760>}}
+ AddResponse init, {ok,{1055,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.120318>}}
+ productId 1056
+ ProductId 1056
+ RemoveResponse init, {ok,{1056,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.121452>}}
+ AddResponse init, {ok,{1056,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.122020>}}
+ productId 1057
+ ProductId 1057
+ RemoveResponse init, {ok,{1057,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.123174>}}
+ AddResponse init, {ok,{1057,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.123752>}}
+ productId 1058
+ ProductId 1058
+ RemoveResponse init, {ok,{1058,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.124925>}}
+ AddResponse init, {ok,{1058,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.125514>}}
+ productId 1059
+ ProductId 1059
+ RemoveResponse init, {ok,{1059,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.126711>}}
+ AddResponse init, {ok,{1059,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.127323>}}
+ productId 1060
+ ProductId 1060
+ ---------------------------------
+ stopping node event number: 5
+ stopping node at: {{2018,9,22},{7,5,44}}
+ ---------------------------------
+ RemoveResponse init, {ok,{1060,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.128578>}}
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+ calling node: n2@inventory2
+ AddResponse init, {ok,{1060,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.118712>}}
+ productId 1061
+ ProductId 1061
+ RemoveResponse init, {ok,{1061,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.119957>}}
+ AddResponse init, {ok,{1061,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.120575>}}
+ productId 1062
+ ProductId 1062
+ RemoveResponse init, {ok,{1062,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.121856>}}
+ AddResponse init, {ok,{1062,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.122512>}}
+ productId 1063
+ ProductId 1063
+ RemoveResponse init, {ok,{1063,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.123784>}}
+ AddResponse init, {ok,{1063,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.124422>}}
+ productId 1064
+ ProductId 1064
+ RemoveResponse init, {ok,{1064,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.125717>}}
+ AddResponse init, {ok,{1064,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.126403>}}
+ productId 1065
+ ProductId 1065
+ RemoveResponse init, {ok,{1065,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.127734>}}
+ AddResponse init, {ok,{1065,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.128392>}}
+ productId 1066
+ ProductId 1066
+ RemoveResponse init, {ok,{1066,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.129772>}}
+ ---------------------------------
+ stopping node event number: 6
+ stopping node at: {{2018,9,22},{7,5,54}}
+ ---------------------------------
+ AddResponse init, {ok,{1066,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.130492>}}
+ productId 1067
+ ProductId 1067
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ RemoveResponse init, {ok,{1067,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.131340>}}
+ AddResponse init, {ok,{1067,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.132036>}}
+ productId 1068
+ ProductId 1068
+ RemoveResponse init, {ok,{1068,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.133408>}}
+ AddResponse init, {ok,{1068,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.134096>}}
+ productId 1069
+ ProductId 1069
+ RemoveResponse init, {ok,{1069,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.135504>}}
+ AddResponse init, {ok,{1069,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.136202>}}
+ productId 1070
+ ProductId 1070
+ RemoveResponse init, {ok,{1070,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.137632>}}
+ AddResponse init, {ok,{1070,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.138342>}}
+ productId 1071
+ ProductId 1071
+ RemoveResponse init, {ok,{1071,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.139774>}}
+ AddResponse init, {ok,{1071,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.140492>}}
+ productId 1072
+ ProductId 1072
+ RemoveResponse init, {ok,{1072,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.141971>}}
+ ---------------------------------
+ stopping node event number: 7
+ stopping node at: {{2018,9,22},{7,6,4}}
+ ---------------------------------
+ AddResponse init, {ok,{1072,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.142700>}}
+ productId 1073
+ ProductId 1073
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ RemoveResponse init, {ok,{1073,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.41646>}}
+ AddResponse init, {ok,{1073,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.42384>}}
+ productId 1074
+ ProductId 1074
+ RemoveResponse init, {ok,{1074,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.43897>}}
+ AddResponse init, {ok,{1074,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.44646>}}
+ productId 1075
+ ProductId 1075
+ RemoveResponse init, {ok,{1075,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.46174>}}
+ AddResponse init, {ok,{1075,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.46933>}}
+ productId 1076
+ ProductId 1076
+ ---------------------------------
+ stopping node event number: 8
+ stopping node at: {{2018,9,22},{7,6,14}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+ calling node: n3@inventory3
+ RemoveResponse init, {ok,{1076,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.144002>}}
+ AddResponse init, {ok,{1076,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.144770>}}
+ productId 1077
+ ProductId 1077
+ RemoveResponse init, {ok,{1077,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.146357>}}
+ AddResponse init, {ok,{1077,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.147160>}}
+ productId 1078
+ ProductId 1078
+ RemoveResponse init, {ok,{1078,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.148757>}}
+ AddResponse init, {ok,{1078,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.149556>}}
+ productId 1079
+ ProductId 1079
+ RemoveResponse init, {ok,{1079,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.151167>}}
+ AddResponse init, {ok,{1079,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.151988>}}
+ productId 1080
+ ProductId 1080
+ RemoveResponse init, {ok,{1080,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.153643>}}
+ AddResponse init, {ok,{1080,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.154481>}}
+ productId 1081
+ ProductId 1081
+ ---------------------------------
+ stopping node event number: 9
+ stopping node at: {{2018,9,22},{7,6,24}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+ calling node: n2@inventory2
+ RemoveResponse init, {{ok,{1081,uk,0},
+                           {ref,#Ref<8011.1836089064.385875969.134234>}},
+                       {loopData,[n1@inventory1,n2@inventory2,n3@inventory3],
+                                 n3@inventory3}}
+ AddResponse init, {ok,{1081,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.135055>}}
+ productId 1082
+ ProductId 1082
+ RemoveResponse init, {ok,{1082,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.136719>}}
+ AddResponse init, {ok,{1082,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.137549>}}
+ productId 1083
+ ProductId 1083
+ RemoveResponse init, {ok,{1083,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.139260>}}
+ AddResponse init, {ok,{1083,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.140138>}}
+ productId 1084
+ ProductId 1084
+ RemoveResponse init, {ok,{1084,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.141866>}}
+ AddResponse init, {ok,{1084,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.142835>}}
+ productId 1085
+ ProductId 1085
+ RemoveResponse init, {ok,{1085,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.144549>}}
+ AddResponse init, {ok,{1085,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.145419>}}
+ productId 1086
+ ProductId 1086
+ ---------------------------------
+ stopping node event number: 10
+ stopping node at: {{2018,9,22},{7,6,34}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ RemoveResponse init, {ok,{1086,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.158002>}}
+ AddResponse init, {ok,{1086,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.158916>}}
+ productId 1087
+ ProductId 1087
+ RemoveResponse init, {ok,{1087,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.160691>}}
+ AddResponse init, {ok,{1087,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.161595>}}
+ productId 1088
+ ProductId 1088
+ RemoveResponse init, {ok,{1088,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.163411>}}
+ AddResponse init, {ok,{1088,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.164300>}}
+ productId 1089
+ ProductId 1089
+ RemoveResponse init, {ok,{1089,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.166094>}}
+ AddResponse init, {ok,{1089,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.166993>}}
+ productId 1090
+ ProductId 1090
+ RemoveResponse init, {ok,{1090,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.168833>}}
+ ---------------------------------
+ stopping node event number: 11
+ stopping node at: {{2018,9,22},{7,6,44}}
+ ---------------------------------
+ AddResponse init, {ok,{1090,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.169808>}}
+ productId 1091
+ ProductId 1091
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ RemoveResponse init, {ok,{1091,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.53656>}}
+ AddResponse init, {ok,{1091,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.54575>}}
+ productId 1092
+ ProductId 1092
+ RemoveResponse init, {ok,{1092,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.56432>}}
+ AddResponse init, {ok,{1092,uk,999},
+                       {ref,#Ref<8010.3725306052.385613825.57374>}}
+ productId 1093
+ ProductId 1093
+ ---------------------------------
+ stopping node event number: 12
+ stopping node at: {{2018,9,22},{7,6,54}}
+ ---------------------------------
+ RemoveResponse init, {ok,{1093,uk,0},
+                          {ref,#Ref<8010.3725306052.385613825.59248>}}
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+ calling node: n3@inventory3
+ AddResponse init, {ok,{1093,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.171132>}}
+ productId 1094
+ ProductId 1094
+ RemoveResponse init, {ok,{1094,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.173045>}}
+ AddResponse init, {ok,{1094,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.174059>}}
+ productId 1095
+ ProductId 1095
+ RemoveResponse init, {ok,{1095,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.175990>}}
+ AddResponse init, {ok,{1095,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.176955>}}
+ productId 1096
+ ProductId 1096
+ RemoveResponse init, {ok,{1096,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.179001>}}
+ AddResponse init, {ok,{1096,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.179969>}}
+ productId 1097
+ ProductId 1097
+ RemoveResponse init, {ok,{1097,uk,0},
+                          {ref,#Ref<8012.1233898781.4143972353.182024>}}
+ ---------------------------------
+ stopping node event number: 13
+ stopping node at: {{2018,9,22},{7,7,4}}
+ ---------------------------------
+ AddResponse init, {ok,{1097,uk,999},
+                       {ref,#Ref<8012.1233898781.4143972353.183078>}}
+ productId 1098
+ ProductId 1098
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+ calling node: n2@inventory2
+ RemoveResponse init, {ok,{1098,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.151591>}}
+ AddResponse init, {ok,{1098,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.152605>}}
+ productId 1099
+ ProductId 1099
+ RemoveResponse init, {ok,{1099,uk,0},
+                          {ref,#Ref<8011.1836089064.385875969.154625>}}
+ AddResponse init, {ok,{1099,uk,999},
+                       {ref,#Ref<8011.1836089064.385875969.155672>}}
+ ok
+ ---------------------------------
+ stopping node event number: 14
+ stopping node at: {{2018,9,22},{7,7,14}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 15
+ stopping node at: {{2018,9,22},{7,7,24}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 16
+ stopping node at: {{2018,9,22},{7,7,35}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n3@inventory3,n2@inventory2]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 17
+ stopping node at: {{2018,9,22},{7,7,45}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n2@inventory2,n1@inventory1]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 18
+ stopping node at: {{2018,9,22},{7,7,54}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 19
+ stopping node at: {{2018,9,22},{7,8,5}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 20
+ stopping node at: {{2018,9,22},{7,8,15}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 21
+ stopping node at: {{2018,9,22},{7,8,25}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 22
+ stopping node at: {{2018,9,22},{7,8,35}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 23
+ stopping node at: {{2018,9,22},{7,8,45}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 24
+ stopping node at: {{2018,9,22},{7,8,55}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 25
+ stopping node at: {{2018,9,22},{7,9,5}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 26
+ stopping node at: {{2018,9,22},{7,9,15}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 27
+ stopping node at: {{2018,9,22},{7,9,25}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 28
+ stopping node at: {{2018,9,22},{7,9,35}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 29
+ stopping node at: {{2018,9,22},{7,9,45}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 30
+ stopping node at: {{2018,9,22},{7,9,55}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 31
+ stopping node at: {{2018,9,22},{7,10,5}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 32
+ stopping node at: {{2018,9,22},{7,10,15}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 33
+ stopping node at: {{2018,9,22},{7,10,25}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 34
+ stopping node at: {{2018,9,22},{7,10,35}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 35
+ stopping node at: {{2018,9,22},{7,10,45}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 36
+ stopping node at: {{2018,9,22},{7,10,55}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 37
+ stopping node at: {{2018,9,22},{7,11,5}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 38
+ stopping node at: {{2018,9,22},{7,11,15}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 39
+ stopping node at: {{2018,9,22},{7,11,25}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 40
+ stopping node at: {{2018,9,22},{7,11,35}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 41
+ stopping node at: {{2018,9,22},{7,11,45}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 42
+ stopping node at: {{2018,9,22},{7,11,55}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 43
+ stopping node at: {{2018,9,22},{7,12,5}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 44
+ stopping node at: {{2018,9,22},{7,12,15}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 45
+ stopping node at: {{2018,9,22},{7,12,25}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 46
+ stopping node at: {{2018,9,22},{7,12,35}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 47
+ stopping node at: {{2018,9,22},{7,12,45}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 48
+ stopping node at: {{2018,9,22},{7,12,55}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 49
+ stopping node at: {{2018,9,22},{7,13,5}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 50
+ stopping node at: {{2018,9,22},{7,13,15}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 51
+ stopping node at: {{2018,9,22},{7,13,25}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 52
+ stopping node at: {{2018,9,22},{7,13,35}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 53
+ stopping node at: {{2018,9,22},{7,13,45}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 54
+ stopping node at: {{2018,9,22},{7,13,55}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 55
+ stopping node at: {{2018,9,22},{7,14,5}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 56
+ stopping node at: {{2018,9,22},{7,14,15}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 57
+ stopping node at: {{2018,9,22},{7,14,25}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 58
+ stopping node at: {{2018,9,22},{7,14,35}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 59
+ stopping node at: {{2018,9,22},{7,14,45}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 60
+ stopping node at: {{2018,9,22},{7,14,55}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 61
+ stopping node at: {{2018,9,22},{7,15,5}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 62
+ stopping node at: {{2018,9,22},{7,15,15}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 63
+ stopping node at: {{2018,9,22},{7,15,25}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 64
+ stopping node at: {{2018,9,22},{7,15,35}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 65
+ stopping node at: {{2018,9,22},{7,15,45}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 66
+ stopping node at: {{2018,9,22},{7,15,55}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 67
+ stopping node at: {{2018,9,22},{7,16,5}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 68
+ stopping node at: {{2018,9,22},{7,16,15}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 69
+ stopping node at: {{2018,9,22},{7,16,25}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 70
+ stopping node at: {{2018,9,22},{7,16,35}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 71
+ stopping node at: {{2018,9,22},{7,16,45}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 72
+ stopping node at: {{2018,9,22},{7,16,55}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 73
+ stopping node at: {{2018,9,22},{7,17,5}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 74
+ stopping node at: {{2018,9,22},{7,17,15}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 75
+ stopping node at: {{2018,9,22},{7,17,25}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 76
+ stopping node at: {{2018,9,22},{7,17,35}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 77
+ stopping node at: {{2018,9,22},{7,17,45}}
+ ---------------------------------
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ ---------------------------------
+ stopping node event number: 78
+ stopping node at: {{2018,9,22},{7,17,55}}
+ ---------------------------------
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ ---------------------------------
+ stopping node event number: 79
+ stopping node at: {{2018,9,22},{7,18,5}}
+ ---------------------------------
+ stoping active node: n3@inventory3
+ operation: remove
+ #### error calling node: n3@inventory3
+ error ms_inv_proxy #active nodes [n1@inventory1,n2@inventory2]
+ calling node: n1@inventory1
+ ---------------------------------
+ stopping node event number: 80
+ stopping node at: {{2018,9,22},{7,18,15}}
+ ---------------------------------
+ # stop process, <0.89.0>
+ stoping active node: n1@inventory1
+ operation: remove
+ #### error calling node: n1@inventory1
+ error ms_inv_proxy #active nodes [n2@inventory2,n3@inventory3]
+ calling node: n2@inventory2
+ # stop process, <0.90.0>
+ # stop process, <0.91.0>
+ # stop process, <0.92.0>
+ ---------------------------------
+ stopping node event number: 81
+ stopping node at: {{2018,9,22},{7,18,25}}
+ ---------------------------------
+ stopping stop_node process
+ stoping active node: n2@inventory2
+ operation: remove
+ #### error calling node: n2@inventory2
+ error ms_inv_proxy #active nodes [n3@inventory3,n1@inventory1]
+ calling node: n3@inventory3
+ # stop process, <0.93.0>
+ # stop process, <0.94.0>
+ # stop process, <0.95.0>
+ # stop process, <0.96.0>
+ # stop process, <0.97.0>
+ # stop process, <0.98.0>
+ # stop process, <0.99.0>
+ # stop process, <0.100.0>
+ # stop process, <0.101.0>
+ # stop process, <0.102.0>
+ # stop process, <0.103.0>
+ # stop process, <0.104.0>
+ # stop process, <0.105.0>
+ # stop process, <0.106.0>
+ # stop process, <0.107.0>
+ # stop process, <0.108.0>
+ # stop process, <0.109.0>
+ # stop process, <0.110.0>
+ # stop process, <0.111.0>
+ # stop process, <0.112.0>
+ # stop process, <0.113.0>
+ # stop process, <0.114.0>
+ # stop process, <0.115.0>
+ # stop process, <0.116.0>
+ # stop process, <0.117.0>
+ # stop process, <0.118.0>
+ # stop process, <0.119.0>
+ # stop process, <0.120.0>
+ # stop process, <0.121.0>
+ # stop process, <0.122.0>
+ # stop process, <0.123.0>
+ # stop process, <0.124.0>
+ # stop process, <0.125.0>
+ # stop process, <0.126.0>
+ # stop process, <0.127.0>
+ # stop process, <0.128.0>
+ # stop process, <0.129.0>
+ # stop process, <0.130.0>
+ # stop process, <0.131.0>
+ # stop process, <0.132.0>
+ # stop process, <0.133.0>
+ # stop process, <0.134.0>
+ # stop process, <0.135.0>
+ # stop process, <0.136.0>
+ # stop process, <0.137.0>
+ # stop process, <0.138.0>
+ # stop process, <0.139.0>
+ # stop process, <0.140.0>
+ # stop process, <0.141.0>
+ # stop process, <0.142.0>
+ # stop process, <0.143.0>
+ # stop process, <0.144.0>
+ # stop process, <0.145.0>
+ # stop process, <0.146.0>
+ # stop process, <0.147.0>
+ # stop process, <0.148.0>
+ # stop process, <0.149.0>
+ # stop process, <0.150.0>
+ # stop process, <0.151.0>
+ # stop process, <0.152.0>
+ # stop process, <0.153.0>
+ # stop process, <0.154.0>
+ # stop process, <0.155.0>
+ # stop process, <0.156.0>
+ # stop process, <0.157.0>
+ # stop process, <0.158.0>
+ # stop process, <0.159.0>
+ # stop process, <0.160.0>
+ # stop process, <0.161.0>
+ # stop process, <0.162.0>
+ # stop process, <0.163.0>
+ # stop process, <0.164.0>
+ # stop process, <0.165.0>
+ # stop process, <0.166.0>
+ # stop process, <0.167.0>
+ # stop process, <0.168.0>
+ # stop process, <0.169.0>
+ # stop process, <0.170.0>
+ # stop process, <0.171.0>
+ # stop process, <0.172.0>
+ # stop process, <0.173.0>
+ # stop process, <0.174.0>
+ # stop process, <0.175.0>
+ # stop process, <0.176.0>
+ # stop process, <0.177.0>
+ # stop process, <0.178.0>
+ # stop process, <0.179.0>
+ # stop process, <0.180.0>
+ # stop process, <0.181.0>
+ # stop process, <0.182.0>
+ # stop process, <0.183.0>
+ # stop process, <0.184.0>
+ # stop process, <0.185.0>
+ # stop process, <0.186.0>
+ # stop process, <0.187.0>
+ # stop process, <0.188.0>
+ (client@client)4> test_mult_ms_inv:result().
+ {{seconds,921.840174},
+  {number_of_operations,100000},
+  {operations_per_second,108.47867430867684},
+  {not_consistent_products,[]},
+  {not_error_last_responses,[]}}
+ (client@client)5>

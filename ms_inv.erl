@@ -17,6 +17,7 @@ init(LoopData) ->
   LogTableName = string:concat(lists:nth(1, string:tokens(atom_to_list(node()), "@")), "_ms_inv_log"),
   {ok, Log_Ref} = dets:open_file(LogTableName, [{type, bag}, {file, LogTableName}]),
   lists:foreach(fun(N) -> net_adm:ping(N) end, LoopData#loopData.msInvNodes),
+  lists:foreach(fun(N) -> net_adm:ping(N) end, LoopData#loopData.msProdNodes),
   process_flag(trap_exit, true),
   pg2:create(?MODULE),
   pg2:join(?MODULE, self()),

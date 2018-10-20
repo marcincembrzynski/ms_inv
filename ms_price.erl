@@ -22,14 +22,13 @@ get(Node, ProductId, CountryId) ->
   call(Node, {get, {ProductId, CountryId}}).
 
 update(Node, ProductId, CountryId, Value, Tax) ->
-  call(Node, {update, ProductId, CountryId, Value, Tax}).
+  call(Node, {update, {ProductId, CountryId, Value, Tax}}).
 
 stop() ->
   gen_server:cast(?MODULE, stop).
 
 call(Node, Msg) ->
   gen_server:call({?MODULE, Node}, Msg).
-
 
 handle_call({get, {ProductId, CountryId}}, _From, LoopData) ->
   {reply, get_price(ProductId, CountryId) , LoopData};
@@ -41,9 +40,8 @@ get_price(ProductId, CountryId) ->
   Response = ms_db:read({ProductId, CountryId}),
   io:format("#### repsonse: ~p~n", [Response]),
   case Response of
-    {ok, {{ProductId, CountryId}, Value, Tax}} ->
-      {ok, {ProductId, CountryId, Value, Tax}};
-
+    {ok, {{ProductId, CountryId}, Price, _Version}} ->
+      {ok, {ProductId, CountryId, Price, _Version}};
     {error, Error} ->
       {error, Error}
   end.

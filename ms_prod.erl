@@ -64,7 +64,6 @@ inv_update({ProductId, CountryId, Quantity}, LoopData) ->
       ok = dets:insert(LoopData#loopData.dbref, {Key, {inv, Quantity}, Price})
   end.
 
-
 price_update({ProductId, CountryId, Price}, LoopData) ->
   io:format("### price update ~n"),
   Result = get_product(ProductId, CountryId, LoopData),
@@ -99,7 +98,10 @@ get_product(ProductId, CountryId, LoopData) ->
   end.
 
 get_content(ProductId, LanguageId, LoopData) ->
-  dets:lookup(LoopData#loopData.dbContentRef, {ProductId, LanguageId}).
+  case dets:lookup(LoopData#loopData.dbContentRef, {ProductId, LanguageId}) of
+    [] -> {error, not_found};
+    [{_Key, Content}] -> Content
+  end.
 
 
 

@@ -1,6 +1,6 @@
 -module(ms_sup).
 -behavior(supervisor).
--export([ms_price_start/0,ms_content_start/0,start_link/1, init/1]).
+-export([ms_price_start/0,ms_content_start/0,ms_prod_start/0,start_link/1, init/1]).
 -export([stop/0]).
 
 ms_content_start() ->
@@ -9,6 +9,9 @@ ms_content_start() ->
 ms_price_start() ->
   start_link(ms_price_sup_conf).
 
+ms_prod_start() ->
+  start_link(ms_prod_sup_conf).
+
 start_link(ConfFile) ->
   {ok,[Config]} = file:consult(ConfFile),
   io:format("config: ~p~n", [Config]),
@@ -16,7 +19,6 @@ start_link(ConfFile) ->
 
 stop() ->
   exit(whereis(?MODULE), shutdown).
-
 
 init(Config) ->
 

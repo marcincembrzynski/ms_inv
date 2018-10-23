@@ -1,26 +1,30 @@
 -module(ms_prod_proxy).
--export([start_link/1,init/1,handle_call/3,handle_cast/2,stop/0]).
+-export([start_link/0,init/1,handle_call/3,handle_cast/2,stop/0]).
 -export([get/3]).
 -behaviour(gen_server).
 -record(loopData, {msProdNodes, closestNode}).
 
-start_link(ClosestNode) ->
+start_link() ->
   {ok,[MsProdNodes]} = file:consult(ms_prod_nodes),
-  LoopData = #loopData{msProdNodes = MsProdNodes, closestNode = ClosestNode},
+  LoopData = #loopData{msProdNodes = MsProdNodes},
   gen_server:start_link({local, ?MODULE}, ?MODULE, LoopData, []).
 
 init(LoopData) ->
 
   process_flag(trap_exit, true),
-  PingNode = fun(N) ->
-    io:format("ping node: ~p~n", [N]),
-    Ping = net_adm:ping(N),
-    io:format("ping result: ~p~n", [Ping])
-  end,
+  FunTime = fun(Node, Acc) -> Acc ++ [{Node, timer:tc(net_adm, ping, [Node])}] end,
 
-  lists:foreach(PingNode, LoopData#loopData.msProdNodes),
+  TimesList = lists:foldl(FunTime, [], LoopData#loopData.msProdNodes),
+
+  SortedTimeList = lists:sort(fun({_, {T1,_}}, {_, {T2,_}}) -> T1 =< T2 end, TimesList),
+  io:format("TimesList ~p~n", [SortedTimeList]),
+  {ClosestNode, _} = lists:nth(1, SortedTimeList),
+  io:format("closes node: ~p~n", [ClosestNode]),
+  NewLoopData = LoopData#loopData{closestNode = ClosestNode},
+
+  %%lists:foreach(PingNode, LoopData#loopData.msProdNodes),
   pg2:create(ms_prod),
-  {ok, LoopData}.
+  {ok, NewLoopData}.
 
 stop() -> gen_server:cast(?MODULE, stop).
 

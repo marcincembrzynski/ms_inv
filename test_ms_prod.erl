@@ -60,5 +60,4 @@ result() ->
   {{seconds, Seconds},
     {number_of_operations, NumberOfOperations},
     {error_list, ErrorList},
-    {operations_per_second, OperationsPerSecond},
-    {last_element, lists:last(SortedList)}}.
+    {operations_per_second, OperationsPerSecond}}.

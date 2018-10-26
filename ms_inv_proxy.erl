@@ -21,6 +21,8 @@ init(Args) ->
   lists:foreach(PingNode, Nodes),
   pg2:create(ms_inv),
   LoopData = #loopData{nodes = Nodes},
+  pg2:create(?MODULE),
+  pg2:join(?MODULE, self()),
   {ok, LoopData}.
 
 call(Msg) ->
@@ -92,9 +94,6 @@ get_status(N, NodesCount, LoopData) ->
       io:format("ms_inv_proxy retry attempt number: ~p~n", [NodesCount - N + 1]),
       get_status(N - 1, NodesCount, LoopData)
   end.
-
-
-
 
 
 remove_inventory(Node, ProductId, WarehouseId, RemoveQuantity, LoopData) ->

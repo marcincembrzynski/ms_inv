@@ -1,5 +1,5 @@
 -module(test_ms_prod).
--export([start/4, start/3,loop/0,result/0,inv_updates_loop/0]).
+-export([start/4, start/3,loop/0,result/0,inv_updates_loop/0,price_updates_loop/0]).
 
 
 start(Processes, Requests, ProductsPerRequest) ->
@@ -28,7 +28,12 @@ init(Processes, Requests, ProductsPerRequest, Start, Updates) ->
   case Updates of
     true ->
       InvUpdatePid = spawn(?MODULE, inv_updates_loop, []),
-      send_inv_update(InvUpdatePid , List, Pid);
+      send_inv_update(InvUpdatePid , List, Pid),
+
+      PriceUpdatePid = spawn(?MODULE, price_updates_loop, []),
+      send_price_update(PriceUpdatePid , List, Pid);
+
+
     false ->
       ok
   end,
@@ -65,14 +70,37 @@ inv_updates_loop() ->
         _ ->
           NewList = T ++ [ProdId],
           send_inv_update(self(), NewList, ProdPid),
-          timer:sleep(500),
+          timer:sleep(1000),
           inv_updates_loop()
 
       end
   end.
 
+
+price_updates_loop() ->
+
+  receive
+    {price_update, List, ProdPid} ->
+      [ProdId|T] = List,
+      Response = ms_price_proxy:update(ProdId, uk, ProdId, 20),
+      ets:insert(?MODULE, {erlang:timestamp(), price_update, Response}),
+      NewList = T ++ [ProdId],
+      case erlang:process_info(ProdPid) of
+        undefined ->
+          io:format("### stopping price updates process~n");
+        _ ->
+          NewList = T ++ [ProdId],
+          send_price_update(self(), NewList, ProdPid),
+          timer:sleep(5000),
+          price_updates_loop()
+      end
+  end.
+
 send_inv_update(Pid, List, ProdPid) ->
   Pid ! {inv_update, List, ProdPid}.
+
+send_price_update(Pid, List, ProdPid) ->
+  Pid ! {price_update, List, ProdPid}.
 
 send_prod_request(Pid, Requests, List) ->
   Pid ! {requests, Requests, List}.
@@ -83,6 +111,7 @@ result() ->
 
   List = lists:filter(result_filter(prod_request), ets:tab2list(?MODULE)),
   InvUpdates = lists:filter(result_filter(inv_update), ets:tab2list(?MODULE)),
+  PriceUpdates = lists:filter(result_filter(price_update), ets:tab2list(?MODULE)),
   TimeStampSort = fun({T1 ,_, _ },{T2 ,_, _ }) -> T1 =< T2 end,
   SortedList = lists:sort(TimeStampSort, List),
   [{First,_,_}|_] = SortedList,
@@ -98,6 +127,7 @@ result() ->
   {{seconds, Seconds},
     {number_of_prod_requests, NumberOfOperations},
     {inv_updates, length(InvUpdates)},
+    {price_updates, length(PriceUpdates)},
     {error_list, ErrorList},
     {operations_per_second, OperationsPerSecond}}.
 

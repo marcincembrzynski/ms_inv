@@ -41,11 +41,12 @@ get_price(ProductId, CountryId) ->
   io:format("#### repsonse: ~p~n", [Response]),
   case Response of
     {ok, {{ProductId, CountryId}, Price, _Version}} ->
-      {ok, {ProductId, CountryId, Price, _Version}};
+      {ok, {ProductId, CountryId, Price}};
     {error, Error} ->
       {error, Error}
   end.
 
 update_price(ProductId, CountryId, Price, LoopData) ->
-  gen_server:abcast(LoopData#loopData.msProdNodes, ms_prod, {price_update, {ProductId, CountryId, Price}}),
+  PriceUpdate = {price_update, {ProductId, CountryId, Price}},
+  gen_server:abcast(LoopData#loopData.msProdNodes, ms_prod, PriceUpdate),
   ms_db:write({ProductId, CountryId}, Price).

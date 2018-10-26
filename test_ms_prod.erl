@@ -1,9 +1,14 @@
 -module(test_ms_prod).
--export([start/3,loop/0,result/0]).
+-export([start/4, start/3,loop/0,result/0,inv_updates_loop/0]).
 
 
 start(Processes, Requests, ProductsPerRequest) ->
+  start(Processes, Requests, ProductsPerRequest, false).
 
+start(Processes, Requests, ProductsPerRequest, Updates) ->
+
+  ms_inv_proxy:start_link(),
+  ms_prod_proxy:start_link(),
   case ets:info(?MODULE) of
     undefined ->
       ets:new(?MODULE, [named_table, public]);
@@ -11,18 +16,25 @@ start(Processes, Requests, ProductsPerRequest) ->
       ets:delete_all_objects(?MODULE)
   end,
   Start = 1,
-  init(Processes, Requests, ProductsPerRequest, Start).
+  init(Processes, Requests, ProductsPerRequest, Start, Updates).
 
-init(0, _, _, _) -> ok;
+init(0, _, _, _, _) -> ok;
 
-init(Processes, Requests, ProductsPerRequest, Start) ->
+init(Processes, Requests, ProductsPerRequest, Start, Updates) ->
   List = lists:seq(Start, Start + (ProductsPerRequest - 1)),
   Pid = spawn(?MODULE, loop, []),
   Pid ! {requests, Requests, List},
 
-  io:format("started process: ~p~n", [Pid]),
-  init(Processes - 1, Requests, ProductsPerRequest, Start + ProductsPerRequest).
+  case Updates of
+    true ->
+      InvUpdatePid = spawn(?MODULE, inv_updates_loop, []),
+      send_inv_update(InvUpdatePid , List, Pid);
+    false ->
+      ok
+  end,
 
+  io:format("started process: ~p~n", [Pid]),
+  init(Processes - 1, Requests, ProductsPerRequest, Start + ProductsPerRequest, Updates).
 
 loop() ->
   receive
@@ -33,22 +45,48 @@ loop() ->
     {requests, Requests, List} ->
       [ProdId|T] = List,
       Response = ms_prod_proxy:get(ProdId, uk, en),
-      ets:insert(?MODULE, {erlang:timestamp(), Response}),
+      ets:insert(?MODULE, {erlang:timestamp(), prod_request, Response}),
       NewList = T ++ [ProdId],
-      self() ! {requests, Requests - 1, NewList},
+      send_prod_request(self(), Requests - 1, NewList),
       loop()
-
   end.
+
+inv_updates_loop() ->
+
+  receive
+    {inv_update, List, ProdPid} ->
+      [ProdId|T] = List,
+      Response = ms_inv_proxy:add(ProdId, uk, 1),
+      ets:insert(?MODULE, {erlang:timestamp(), inv_update, Response}),
+      NewList = T ++ [ProdId],
+      case erlang:process_info(ProdPid) of
+        undefined ->
+          io:format("### stopping inv updates process~n");
+        _ ->
+          NewList = T ++ [ProdId],
+          send_inv_update(self(), NewList, ProdPid),
+          timer:sleep(500),
+          inv_updates_loop()
+
+      end
+  end.
+
+send_inv_update(Pid, List, ProdPid) ->
+  Pid ! {inv_update, List, ProdPid}.
+
+send_prod_request(Pid, Requests, List) ->
+  Pid ! {requests, Requests, List}.
 
 
 result() ->
 
 
-  List = ets:tab2list(?MODULE),
-  TimeStampSort = fun({T1 ,_ },{T2 ,_ }) -> T1 =< T2 end,
+  List = lists:filter(result_filter(prod_request), ets:tab2list(?MODULE)),
+  InvUpdates = lists:filter(result_filter(inv_update), ets:tab2list(?MODULE)),
+  TimeStampSort = fun({T1 ,_, _ },{T2 ,_, _ }) -> T1 =< T2 end,
   SortedList = lists:sort(TimeStampSort, List),
-  [{First,_}|_] = SortedList,
-  {Last,_} = lists:last(SortedList),
+  [{First,_,_}|_] = SortedList,
+  {Last,_,_} = lists:last(SortedList),
   Time = timer:now_diff(Last, First),
   Seconds = Time / 1000000,
   NumberOfOperations = length(SortedList),
@@ -58,6 +96,16 @@ result() ->
   ErrorList = lists:filter(NotOkFun, List),
 
   {{seconds, Seconds},
-    {number_of_operations, NumberOfOperations},
+    {number_of_prod_requests, NumberOfOperations},
+    {inv_updates, length(InvUpdates)},
     {error_list, ErrorList},
     {operations_per_second, OperationsPerSecond}}.
+
+
+result_filter(ReqName) ->
+  fun(E) ->
+    case E of
+      {_, ReqName, _} -> true;
+      _ -> false
+    end
+  end.

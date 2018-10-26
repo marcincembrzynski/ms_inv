@@ -40,16 +40,21 @@ handle_call({update, {ProductId, LanguageId, Content}}, _From, LoopData) ->
   {reply, update_content(ProductId, LanguageId, Content), LoopData}.
 
 get_content(ProductId, LanguageId) ->
-  %%% retry
   Node = get_active(),
-  io:format("### calling node: ~p~n", [Node]),
-  ms_content:get(Node, ProductId, LanguageId).
+  try ms_content:get(Node, ProductId, LanguageId) of
+    Response -> Response
+  catch
+    _:_ -> ms_content:get(Node, ProductId, LanguageId)
+  end.
 
 update_content(ProductId, LanguageId, Content) ->
   %%% retry
   Node = get_active(),
-  io:format("### calling node: ~p~n", [Node]),
-  ms_content:update(Node, ProductId, LanguageId, Content).
+  try ms_content:update(Node, ProductId, LanguageId, Content) of
+    Response -> Response
+  catch
+    _:_ -> ms_content:update(Node, ProductId, LanguageId, Content)
+  end.
 
 get_active() ->
   Pids = pg2:get_members(ms_content),

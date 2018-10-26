@@ -46,5 +46,7 @@ get_content(ProductId, LanguageId) ->
   end.
 
 update_content(ProductId, LanguageId, Content, LoopData) ->
-  gen_server:abcast(LoopData#loopData.msProdNodes, ms_prod, {content_update, {ProductId, LanguageId, Content}}),
+  ContentUpdate = {content_update, {ProductId, LanguageId, Content}},
+  Nodes = LoopData#loopData.msProdNodes,
+  gen_server:abcast(Nodes, ms_prod, ContentUpdate),
   ms_db:write({ProductId, LanguageId}, Content).

@@ -40,6 +40,7 @@ handle_call({update, {ProductId, CountryId, Value, Tax}}, _From, LoopData) ->
   {reply, update_price(ProductId, CountryId, Value, Tax), LoopData}.
 
 get_price(ProductId, CountryId) ->
+  %%% retry
   Node = get_active(),
   io:format("### calling node: ~p~n", [Node]),
   ms_price:get(Node, ProductId, CountryId).

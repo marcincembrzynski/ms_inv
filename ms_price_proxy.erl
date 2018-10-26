@@ -40,15 +40,20 @@ handle_call({update, {ProductId, CountryId, Value, Tax}}, _From, LoopData) ->
   {reply, update_price(ProductId, CountryId, Value, Tax), LoopData}.
 
 get_price(ProductId, CountryId) ->
-  %%% retry
   Node = get_active(),
-  io:format("### calling node: ~p~n", [Node]),
-  ms_price:get(Node, ProductId, CountryId).
+  try ms_price:get(Node, ProductId, CountryId) of
+    Response -> Response
+  catch
+    _:_ -> get_price(ProductId, CountryId)
+  end.
 
 update_price(ProductId, CountryId, Value, Tax) ->
   Node = get_active(),
-  io:format("### calling node: ~p~n", [Node]),
-  ms_price:update(Node, ProductId, CountryId, Value, Tax).
+  try ms_price:update(Node, ProductId, CountryId, Value, Tax) of
+    Response -> Response
+  catch
+    _:_ -> ms_price:update(Node, ProductId, CountryId, Value, Tax)
+  end.
 
 get_active() ->
   Pids = pg2:get_members(ms_price),

@@ -38,7 +38,6 @@ handle_call({update, {ProductId, CountryId, Value, Tax}}, _From, LoopData) ->
 
 get_price(ProductId, CountryId) ->
   Response = ms_db:read({ProductId, CountryId}),
-  io:format("#### repsonse: ~p~n", [Response]),
   case Response of
     {ok, {{ProductId, CountryId}, Price, _Version}} ->
       {ok, {ProductId, CountryId, Price}};

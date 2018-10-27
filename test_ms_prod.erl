@@ -1,14 +1,19 @@
 -module(test_ms_prod).
--export([start/4, start/3,loop/0,result/0,inv_updates_loop/0,price_updates_loop/0]).
+-export([start_with_updates/3, start/3,loop/0,result/0,inv_updates_loop/0,price_updates_loop/0,content_updates_loop/0]).
 
 
 start(Processes, Requests, ProductsPerRequest) ->
   start(Processes, Requests, ProductsPerRequest, false).
 
+start_with_updates(Processes, Requests, ProductsPerRequest) ->
+  start(Processes, Requests, ProductsPerRequest, true).
+
 start(Processes, Requests, ProductsPerRequest, Updates) ->
 
   ms_inv_proxy:start_link(),
   ms_prod_proxy:start_link(),
+  ms_price_proxy:start_link(),
+  ms_price_proxy:start_link(),
   case ets:info(?MODULE) of
     undefined ->
       ets:new(?MODULE, [named_table, public]);
@@ -31,7 +36,10 @@ init(Processes, Requests, ProductsPerRequest, Start, Updates) ->
       send_inv_update(InvUpdatePid , List, Pid),
 
       PriceUpdatePid = spawn(?MODULE, price_updates_loop, []),
-      send_price_update(PriceUpdatePid , List, Pid);
+      send_price_update(PriceUpdatePid , List, Pid),
+
+      ContentUpdatePid = spawn(?MODULE, content_updates_loop, []),
+      send_content_update(ContentUpdatePid , List, Pid);
 
 
     false ->
@@ -96,11 +104,37 @@ price_updates_loop() ->
       end
   end.
 
+
+content_updates_loop() ->
+
+  receive
+    {content_update, List, ProdPid} ->
+      [ProdId|T] = List,
+      Title = string:concat("Test Title Product ", integer_to_list(ProdId)),
+      Description = string:concat("Test Description Product ", integer_to_list(ProdId)),
+      Content = [{title, Title}, {description, Description}],
+      Response = ms_content_proxy:update(ProdId, en, Content),
+      ets:insert(?MODULE, {erlang:timestamp(), content_update, Response}),
+      NewList = T ++ [ProdId],
+      case erlang:process_info(ProdPid) of
+        undefined ->
+          io:format("### stopping content updates process~n");
+        _ ->
+          NewList = T ++ [ProdId],
+          send_content_update(self(), NewList, ProdPid),
+          timer:sleep(40000),
+          content_updates_loop()
+      end
+  end.
+
 send_inv_update(Pid, List, ProdPid) ->
   Pid ! {inv_update, List, ProdPid}.
 
 send_price_update(Pid, List, ProdPid) ->
   Pid ! {price_update, List, ProdPid}.
+
+send_content_update(Pid, List, ProdPid) ->
+  Pid ! {content_update, List, ProdPid}.
 
 send_prod_request(Pid, Requests, List) ->
   Pid ! {requests, Requests, List}.
@@ -112,6 +146,7 @@ result() ->
   List = lists:filter(result_filter(prod_request), ets:tab2list(?MODULE)),
   InvUpdates = lists:filter(result_filter(inv_update), ets:tab2list(?MODULE)),
   PriceUpdates = lists:filter(result_filter(price_update), ets:tab2list(?MODULE)),
+  ContentUpdates = lists:filter(result_filter(content_update), ets:tab2list(?MODULE)),
   TimeStampSort = fun({T1 ,_, _ },{T2 ,_, _ }) -> T1 =< T2 end,
   SortedList = lists:sort(TimeStampSort, List),
   [{First,_,_}|_] = SortedList,
@@ -128,6 +163,7 @@ result() ->
     {number_of_prod_requests, NumberOfOperations},
     {inv_updates, length(InvUpdates)},
     {price_updates, length(PriceUpdates)},
+    {content_updates, length(ContentUpdates)},
     {error_list, ErrorList},
     {operations_per_second, OperationsPerSecond}}.
 

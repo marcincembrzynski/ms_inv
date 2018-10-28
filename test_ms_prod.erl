@@ -76,11 +76,10 @@ inv_updates_loop() ->
         undefined ->
           io:format("### stopping inv updates process~n");
         _ ->
+          timer:sleep(1000),
           NewList = T ++ [ProdId],
           send_inv_update(self(), NewList, ProdPid),
-          timer:sleep(1000),
           inv_updates_loop()
-
       end
   end.
 

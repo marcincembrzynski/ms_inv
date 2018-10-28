@@ -96,9 +96,9 @@ price_updates_loop() ->
         undefined ->
           io:format("### stopping price updates process~n");
         _ ->
+          timer:sleep(5000),
           NewList = T ++ [ProdId],
           send_price_update(self(), NewList, ProdPid),
-          timer:sleep(5000),
           price_updates_loop()
       end
   end.
@@ -119,9 +119,9 @@ content_updates_loop() ->
         undefined ->
           io:format("### stopping content updates process~n");
         _ ->
+          timer:sleep(40000),
           NewList = T ++ [ProdId],
           send_content_update(self(), NewList, ProdPid),
-          timer:sleep(40000),
           content_updates_loop()
       end
   end.

@@ -1,6 +1,9 @@
 -module(stop_node).
 -export([start/1,stop/0,loop/1,init/1]).
 
+start(0) ->
+  not_started;
+
 start(Interval) ->
   init(Interval).
 
